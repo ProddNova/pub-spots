@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mappa Luoghi Abbandonati</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        * { margin: 0; padding: 0; }
+        html, body, #map { height: 100%; width: 100%; }
+        .leaflet-popup-content { 
+            max-height: 500px; 
+            overflow-y: auto; 
+            max-width: 320px;
+            padding: 10px;
+        }
+        .open-gmaps-btn { 
+            background: #4285F4; color: white; border: none; padding: 10px; 
+            border-radius: 5px; margin-top: 10px; cursor: pointer; 
+            font-size: 14px; width: 100%; font-weight: bold;
+        }
+        .copy-coords-btn {
+            background: #34A853; color: white; border: none; padding: 8px; 
+            border-radius: 5px; margin-top: 8px; cursor: pointer; 
+            font-size: 13px; width: 100%;
+        }
+        .location-info {
+            font-size: 12px; color: #666; margin-top: 5px; padding: 5px; 
+            background: #f5f5f5; border-radius: 3px;
+        }
+        .popup-title { font-size: 16px; font-weight: bold; margin-bottom: 8px; color: #333; }
+        .popup-desc { font-size: 14px; margin-bottom: 10px; color: #444; }
+        .info-legend {
+            position: absolute; bottom: 20px; left: 20px; z-index: 1000; 
+            background: white; padding: 10px; border-radius: 5px; 
+            box-shadow: 0 0 10px rgba(0,0,0,0.2); font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const MAP_TILE_SERVER = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+        const DEFAULT_MAP_CENTER = [45.0, 10.0];
+        const DEFAULT_ZOOM = 6;
+
+        let locations = [];
+
+        // Funzione per estrarre coordinate (robusta)
+        function extractCoordinates(text) {
+            if (!text) return null;
+
+            const dmsPattern = /([0-9.]+)\s*°\s*([0-9.]+)\s*['′]?\s*([0-9.]+(?:\.[0-9]+)?)?\s*["″]?\s*([NSns])\s+([0-9.]+)\s*°\s*([0-9.]+)\s*['′]?\s*([0-9.]+(?:\.[0-9]+)?)?\s*["″]?\s*([EWew])/i;
+            const match = text.match(dmsPattern);
+
+            if (match) {
+                let latDeg = parseFloat(match[1]);
+                let latMin = parseFloat(match[2]);
+                let latSec = parseFloat(match[3] || '0');
+                let latDir = match[4].toUpperCase();
+
+                let lonDeg = parseFloat(match[5]);
+                let lonMin = parseFloat(match[6]);
+                let lonSec = parseFloat(match[7] || '0');
+                let lonDir = match[8].toUpperCase();
+
+                let lat = latDeg + latMin / 60 + latSec / 3600;
+                let lon = lonDeg + lonMin / 60 + lonSec / 3600;
+
+                if (latDir === 'S') lat = -lat;
+                if (lonDir === 'W') lon = -lon;
+
+                if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+                    return { lat: parseFloat(lat.toFixed(8)), lon: parseFloat(lon.toFixed(8)) };
+                }
+            }
+
+            const decimalPattern = /([+-]?\d+\.\d+)\s*[,;]?\s*([+-]?\d+\.\d+)/;
+            const decMatch = text.match(decimalPattern);
+            if (decMatch) {
+                let lat = parseFloat(decMatch[1]);
+                let lon = parseFloat(decMatch[2]);
+                if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+                    return { lat, lon };
+                }
+            }
+
+            return null;
+        }
+
+        // Carica e processa spot.json
+        async function loadAndProcessData() {
+            try {
+                const response = await fetch('spot.json');
+                const data = await response.json();
+
+                if (!Array.isArray(data)) {
+                    throw new Error("Il file spot.json deve essere un array di oggetti.");
+                }
+
+                let total = data.length;
+                let skipped = 0;
+
+                for (const pin of data) {
+                    let coordText = (pin.description || pin.grid_description || pin.title || pin.grid_title || "").trim();
+                    if (!coordText) {
+                        skipped++;
+                        continue;
+                    }
+
+                    coordText = coordText.replace(/&#39;/g, "'").replace(/&quot;/g, '"');
+                    coordText = coordText.replace(/\s+/g, ' ').trim();
+
+                    const coordMatch = extractCoordinates(coordText);
+                    if (!coordMatch) {
+                        skipped++;
+                        continue;
+                    }
+
+                    const title = (pin.title || pin.grid_title || "Luogo sconosciuto").trim();
+                    const description = (pin.grid_description || pin.description || pin.title || coordText).trim();
+
+                    let imageUrl = null;
+                    if (pin.story_pin_data && pin.story_pin_data.pages && pin.story_pin_data.pages.length > 0) {
+                        const firstPage = pin.story_pin_data.pages[0];
+                        if (firstPage.blocks) {
+                            for (const block of firstPage.blocks) {
+                                if (block.type === "story_pin_image_block" && block.image && block.image.images && block.image.images.originals) {
+                                    imageUrl = block.image.images.originals.url;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (!imageUrl && pin.image && pin.image.url) {
+                        imageUrl = pin.image.url;
+                    }
+
+                    locations.push({
+                        latitude: coordMatch.lat,
+                        longitude: coordMatch.lon,
+                        title: title,
+                        description: description,
+                        image: imageUrl
+                    });
+                }
+
+                console.log("Punti validi trovati:", locations.length);
+                console.log("Skipped:", skipped);
+
+                if (locations.length === 0) {
+                    alert(`Nessun punto valido trovato su ${total} totali. Tutti skipped. Verifica il formato delle coordinate.`);
+                    return;
+                }
+
+                initMap();
+
+            } catch (error) {
+                console.error("Errore:", error);
+                alert("Errore nel caricamento o elaborazione di spot.json: " + error.message);
+            }
+        }
+
+        // Inizializza la mappa
+        function initMap() {
+            const map = L.map('map');
+
+            L.tileLayer(MAP_TILE_SERVER, {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            const markers = [];
+            locations.forEach(loc => {
+                const marker = L.marker([loc.latitude, loc.longitude]).addTo(map);
+                markers.push(marker);
+
+                const coords = loc.latitude.toFixed(6) + ',' + loc.longitude.toFixed(6);
+
+                const popupContent = `
+                    <div>
+                        ${loc.image ? `
+                            <img src="${loc.image}" alt="${escapeHtml(loc.title)}" 
+                                 style="width:100%; height:auto; max-height:400px; object-fit:contain; border-radius:8px; margin-bottom:10px;" 
+                                 onerror="this.style.display='none'" />
+                        ` : ''}
+                        <div class="popup-title">${escapeHtml(loc.title)}</div>
+                        <div class="popup-desc">${escapeHtml(loc.description || 'Nessuna descrizione')}</div>
+                        <div class="location-info">
+                            <strong>Coordinate:</strong><br>
+                            ${coords}
+                        </div>
+                        <button class="copy-coords-btn" onclick="copyToClipboard('${coords}')">
+                            📋 Copia coordinate
+                        </button>
+                        <button class="open-gmaps-btn" onclick="openGoogleMaps(${loc.latitude}, ${loc.longitude})">
+                            🗺️ Apri in Google Maps
+                        </button>
+                    </div>
+                `;
+
+                marker.bindPopup(popupContent);
+            });
+
+            if (locations.length > 0) {
+                if (locations.length === 1) {
+                    map.setView([locations[0].latitude, locations[0].longitude], 13);
+                } else {
+                    const bounds = L.latLngBounds(markers.map(m => m.getLatLng()));
+                    map.fitBounds(bounds, { padding: [50, 50] });
+                }
+            } else {
+                map.setView(DEFAULT_MAP_CENTER, DEFAULT_ZOOM);
+            }
+
+            L.control.scale().addTo(map);
+
+            // Legenda con numero punti
+            const legend = document.createElement('div');
+            legend.className = 'info-legend';
+            legend.innerHTML = `<strong>${locations.length}</strong> luoghi caricati (marker singoli)`;
+            document.body.appendChild(legend);
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Coordinate copiate: ' + text);
+            }).catch(() => {
+                alert('Coordinate (copia manuale): ' + text);
+            });
+        }
+
+        function openGoogleMaps(lat, lon) {
+            const url = 'https://www.google.com/maps/search/?api=1&query=' + lat + ',' + lon;
+            if (confirm('Vuoi aprire questa posizione in Google Maps?')) {
+                window.open(url, '_blank');
+            }
+        }
+
+        // Avvia il caricamento
+        loadAndProcessData();
+    </script>
+</body>
+</html>
