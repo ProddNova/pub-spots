@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mappa Luoghi Abbandonati</title>
+  <title>Urbex Map LT-Unit</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
@@ -11,7 +11,7 @@
       margin: 0; 
       padding: 0; 
       box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
     html, body, #map { 
@@ -48,7 +48,7 @@
       z-index: 1000;
       background: rgba(18, 18, 18, 0.95);
       backdrop-filter: blur(10px);
-      padding: 12px 20px;
+      padding: 10px 20px;
       border-bottom: 2px solid var(--primary-red);
       display: flex;
       justify-content: space-between;
@@ -115,31 +115,123 @@
       margin-top: 2px;
     }
     
-    /* Pulsanti azione */
-    .action-buttons {
+    /* Social unlock modal */
+    .social-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--primary-black);
+      z-index: 10000;
       display: flex;
-      gap: 8px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
     }
     
-    .action-btn {
-      background: var(--secondary-black);
-      border: 1px solid var(--border-color);
-      color: var(--text-light);
-      padding: 8px 12px;
-      border-radius: 6px;
-      cursor: pointer;
+    .social-modal.hidden {
+      display: none;
+    }
+    
+    .social-logo {
+      width: 80px;
+      height: 80px;
+      background: var(--primary-red);
+      border-radius: 50%;
       display: flex;
       align-items: center;
-      gap: 6px;
-      font-size: 12px;
-      font-weight: 500;
-      transition: all 0.2s;
-      white-space: nowrap;
+      justify-content: center;
+      margin-bottom: 20px;
+      animation: pulse 2s infinite;
     }
     
-    .action-btn:hover {
-      background: var(--primary-red);
+    .social-logo i {
+      font-size: 36px;
+      color: white;
+    }
+    
+    .social-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    
+    .social-subtitle {
+      color: var(--text-gray);
+      text-align: center;
+      max-width: 500px;
+      line-height: 1.5;
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+    
+    .social-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 30px;
+    }
+    
+    .social-btn {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 15px 20px;
+      background: var(--secondary-black);
+      border: 2px solid var(--border-color);
+      border-radius: 10px;
+      color: var(--text-light);
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    
+    .social-btn:hover {
+      background: var(--primary-black);
       border-color: var(--primary-red);
+      transform: translateY(-2px);
+    }
+    
+    .social-btn i {
+      font-size: 24px;
+      width: 30px;
+      text-align: center;
+    }
+    
+    .social-btn.youtube i {
+      color: #FF0000;
+    }
+    
+    .social-btn.instagram i {
+      color: #E4405F;
+    }
+    
+    .social-btn.tiktok i {
+      color: #000000;
+    }
+    
+    .countdown {
+      font-size: 14px;
+      color: var(--text-gray);
+      text-align: center;
+      margin-top: 20px;
+    }
+    
+    .countdown.hidden {
+      display: none;
+    }
+    
+    .countdown-timer {
+      font-weight: bold;
+      color: var(--primary-red);
     }
     
     /* Popup ottimizzato */
@@ -261,6 +353,11 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 20px;
+    }
+    
+    .loader-overlay.hidden {
+      display: none;
     }
     
     .loader-logo {
@@ -342,7 +439,7 @@
     /* Mobile optimization */
     @media (max-width: 768px) {
       .header {
-        padding: 10px 15px;
+        padding: 8px 15px;
       }
       
       .brand-text h1 {
@@ -350,10 +447,6 @@
       }
       
       .brand-text p {
-        display: none;
-      }
-      
-      .action-buttons {
         display: none;
       }
       
@@ -373,21 +466,26 @@
         display: block;
       }
       
+      .social-title {
+        font-size: 24px;
+      }
+      
+      .social-subtitle {
+        font-size: 14px;
+        padding: 0 10px;
+      }
+      
+      .social-buttons {
+        padding: 0 10px;
+      }
+      
+      .social-btn {
+        padding: 12px 15px;
+        font-size: 14px;
+      }
+      
       .leaflet-popup-content-wrapper {
         max-width: 260px;
-      }
-      
-      .loader-text {
-        font-size: 20px;
-      }
-      
-      .loader-subtext {
-        font-size: 13px;
-        max-width: 250px;
-      }
-      
-      .loader-progress {
-        width: 250px;
       }
     }
     
@@ -407,49 +505,25 @@
       .stat-label {
         font-size: 8px;
       }
+      
+      .social-title {
+        font-size: 20px;
+      }
+      
+      .social-buttons {
+        width: 90%;
+      }
     }
     
-    /* Performance optimizations */
-    .leaflet-container {
-      background: var(--primary-black);
-      will-change: transform;
+    /* Animazioni */
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
     
-    /* Simple marker style for performance */
-    .simple-marker {
-      background: var(--primary-red);
-      border: 2px solid var(--primary-black);
-      border-radius: 50%;
-      width: 16px !important;
-      height: 16px !important;
-      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
-      transform: translate(-8px, -8px);
-      cursor: pointer;
-    }
-    
-    .simple-marker::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 6px;
-      height: 6px;
-      background: white;
-      border-radius: 50%;
-    }
-    
-    /* Performance hint */
-    .performance-hint {
-      position: absolute;
-      bottom: 10px;
-      right: 10px;
-      background: rgba(0, 0, 0, 0.7);
-      color: var(--text-gray);
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 10px;
-      z-index: 1000;
+    /* Stile per mappa senza zoom control */
+    .leaflet-control-zoom {
+      display: none !important;
     }
     
     /* Evita scroll nei popup su mobile */
@@ -468,15 +542,47 @@
   </style>
 </head>
 <body>
+  <!-- Social Unlock Modal -->
+  <div class="social-modal" id="socialModal">
+    <div class="social-logo">
+      <i class="fas fa-lock"></i>
+    </div>
+    <div class="social-title">Urbex Map LT-Unit</div>
+    <div class="social-subtitle">
+      Per sbloccare l'accesso alla mappa completa, seguici sui nostri social!
+    </div>
+    
+    <div class="social-buttons">
+      <a href="https://www.youtube.com/@LostTrace-Unit" target="_blank" class="social-btn youtube" id="youtubeBtn">
+        <i class="fab fa-youtube"></i>
+        <span>YouTube @LostTrace-Unit</span>
+      </a>
+      
+      <a href="https://www.instagram.com/losttrace__/" target="_blank" class="social-btn instagram" id="instagramBtn">
+        <i class="fab fa-instagram"></i>
+        <span>Instagram @losttrace__</span>
+      </a>
+      
+      <a href="https://www.tiktok.com/@lt_unit" target="_blank" class="social-btn tiktok" id="tiktokBtn">
+        <i class="fab fa-tiktok"></i>
+        <span>TikTok @lt_unit</span>
+      </a>
+    </div>
+    
+    <div class="countdown hidden" id="countdown">
+      Accesso in sblocco... <span class="countdown-timer" id="countdownTimer">45</span> secondi
+    </div>
+  </div>
+  
   <!-- Header -->
-  <div class="header">
+  <div class="header" id="mainHeader" style="display: none;">
     <div class="brand">
       <div class="logo">
         <i class="fas fa-skull-crossbones"></i>
       </div>
       <div class="brand-text">
-        <h1>Esplora Luoghi Abbandonati</h1>
-        <p>Scopri posti dimenticati in tutta Italia</p>
+        <h1>Urbex Map LT-Unit</h1>
+        <p>Mappa luoghi abbandonati</p>
       </div>
     </div>
     
@@ -486,40 +592,21 @@
         <span class="stat-label">Luoghi</span>
       </div>
       <div class="stat-item">
-        <span class="stat-number" id="filteredCount">0</span>
-        <span class="stat-label">In Italia</span>
-      </div>
-      <div class="stat-item">
         <span class="stat-number" id="progressPercent">0%</span>
         <span class="stat-label">Caricati</span>
       </div>
     </div>
-    
-    <div class="action-buttons">
-      <button class="action-btn" onclick="zoomToItaly()">
-        <i class="fas fa-italy"></i>
-        <span>Vista Italia</span>
-      </button>
-      <button class="action-btn" onclick="showAllMarkers()">
-        <i class="fas fa-eye"></i>
-        <span>Mostra Tutti</span>
-      </button>
-    </div>
   </div>
   
   <!-- Mappa -->
-  <div id="map"></div>
+  <div id="map" style="display: none;"></div>
   
   <!-- Footer Mobile -->
-  <div class="mobile-footer">
+  <div class="mobile-footer" id="mobileFooter" style="display: none;">
     <div class="mobile-stats">
       <div>
         <div class="stat-number" id="mobileLoadedCount">0</div>
         <div class="stat-label">Luoghi</div>
-      </div>
-      <div>
-        <div class="stat-number" id="mobileFilteredCount">0</div>
-        <div class="stat-label">In Italia</div>
       </div>
       <div>
         <div class="stat-number" id="mobileProgress">0%</div>
@@ -529,23 +616,18 @@
   </div>
   
   <!-- Loader -->
-  <div class="loader-overlay" id="loader">
+  <div class="loader-overlay hidden" id="loader">
     <div class="loader-logo">
       <i class="fas fa-map-marked-alt"></i>
     </div>
     <div class="loader-text">Caricamento Mappa</div>
     <div class="loader-subtext" id="loaderStatus">
-      Inizializzazione del sistema di esplorazione...
+      Inizializzazione sistema urbex...
     </div>
     <div class="loader-progress">
       <div class="loader-progress-bar" id="progressBar"></div>
     </div>
     <div class="progress-percent" id="progressText">0%</div>
-  </div>
-
-  <!-- Performance hint -->
-  <div class="performance-hint" id="performanceHint">
-    <i class="fas fa-bolt"></i> Ottimizzato per performance
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -557,7 +639,7 @@
       ITALY_CENTER: [42.5, 12.5],
       DEFAULT_ZOOM: 6,
       
-      // Bounding box Italia - più ristretto per performance
+      // Bounding box Italia
       ITALY_BOUNDS: {
         minLat: 36.5,
         maxLat: 47.0,
@@ -565,21 +647,32 @@
         maxLon: 18.5
       },
       
+      // Social unlock
+      UNLOCK_DELAY: 45, // 45 secondi di countdown
+      
       // Performance settings
-      BATCH_SIZE: 100, // Processa più punti per batch
-      MARKER_CLUSTER_THRESHOLD: 1000 // Soglia per abilitare clustering
+      BATCH_SIZE: 100
     };
     
     // Variabili globali
     let map = null;
     let markersLayer = null;
-    let allLocations = [];
+    let allMarkers = [];
     let filteredLocations = [];
+    
+    // Variabili social unlock
+    let socialClicks = {
+      youtube: false,
+      instagram: false,
+      tiktok: false
+    };
+    let unlockTimer = null;
+    let unlockTimeRemaining = CONFIG.UNLOCK_DELAY;
+    let unlockStarted = false;
     
     // Statistiche di caricamento
     const stats = {
       totalCSV: 0,
-      totalValid: 0,
       totalItaly: 0,
       currentStep: 0,
       steps: [
@@ -591,9 +684,99 @@
       ]
     };
     
+    // ===== FUNZIONI SOCIAL UNLOCK =====
+    
+    function initializeSocialUnlock() {
+      // Controlla se già sbloccato in precedenza
+      const alreadyUnlocked = localStorage.getItem('urbexMapUnlocked') === 'true';
+      
+      if (alreadyUnlocked) {
+        // Salta direttamente al caricamento
+        document.getElementById('socialModal').classList.add('hidden');
+        document.getElementById('mainHeader').style.display = 'flex';
+        document.getElementById('map').style.display = 'block';
+        document.getElementById('mobileFooter').style.display = 'block';
+        startMapLoading();
+      } else {
+        // Mostra il modal di sblocco
+        setupSocialButtons();
+      }
+    }
+    
+    function setupSocialButtons() {
+      const youtubeBtn = document.getElementById('youtubeBtn');
+      const instagramBtn = document.getElementById('instagramBtn');
+      const tiktokBtn = document.getElementById('tiktokBtn');
+      
+      youtubeBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        socialClicks.youtube = true;
+        checkSocialClicks();
+        window.open(this.href, '_blank');
+      });
+      
+      instagramBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        socialClicks.instagram = true;
+        checkSocialClicks();
+        window.open(this.href, '_blank');
+      });
+      
+      tiktokBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        socialClicks.tiktok = true;
+        checkSocialClicks();
+        window.open(this.href, '_blank');
+      });
+    }
+    
+    function checkSocialClicks() {
+      if (!unlockStarted) {
+        unlockStarted = true;
+        startUnlockCountdown();
+      }
+      
+      // Controlla se tutti i social sono stati cliccati
+      const allClicked = socialClicks.youtube && socialClicks.instagram && socialClicks.tiktok;
+      
+      if (allClicked) {
+        // Se cliccati tutti, sblocca immediatamente
+        unlockMap();
+      }
+    }
+    
+    function startUnlockCountdown() {
+      document.getElementById('countdown').classList.remove('hidden');
+      
+      unlockTimer = setInterval(() => {
+        unlockTimeRemaining--;
+        document.getElementById('countdownTimer').textContent = unlockTimeRemaining;
+        
+        if (unlockTimeRemaining <= 0) {
+          clearInterval(unlockTimer);
+          unlockMap();
+        }
+      }, 1000);
+    }
+    
+    function unlockMap() {
+      clearInterval(unlockTimer);
+      
+      // Salva lo sblocco in localStorage
+      localStorage.setItem('urbexMapUnlocked', 'true');
+      
+      // Nascondi modal e mostra tutto il resto
+      document.getElementById('socialModal').classList.add('hidden');
+      document.getElementById('mainHeader').style.display = 'flex';
+      document.getElementById('map').style.display = 'block';
+      document.getElementById('mobileFooter').style.display = 'block';
+      
+      // Inizia il caricamento della mappa
+      startMapLoading();
+    }
+    
     // ===== FUNZIONI DI UTILITY =====
     
-    // Aggiorna progresso loader
     function updateProgress(current, total, stepIndex = null) {
       const percent = Math.min(Math.round((current / total) * 100), 100);
       
@@ -615,8 +798,6 @@
       if (stats.totalItaly > 0) {
         document.getElementById('loadedCount').textContent = stats.totalItaly;
         document.getElementById('mobileLoadedCount').textContent = stats.totalItaly;
-        document.getElementById('filteredCount').textContent = stats.totalItaly;
-        document.getElementById('mobileFilteredCount').textContent = stats.totalItaly;
       }
       
       // Forza reflow per animazione fluida
@@ -835,11 +1016,11 @@
     // ===== INIZIALIZZAZIONE MAPPA =====
     
     function initializeMap() {
-      // Crea mappa
+      // Crea mappa senza controlli zoom
       map = L.map('map', {
-        zoomControl: false,
+        zoomControl: false, // Rimuove i controlli +/-
         attributionControl: false,
-        preferCanvas: true, // IMPORTANTE: usa canvas per performance
+        preferCanvas: true,
         maxZoom: 18,
         minZoom: 5
       }).setView(CONFIG.ITALY_CENTER, CONFIG.DEFAULT_ZOOM);
@@ -852,10 +1033,48 @@
       
       // Crea layer per marker
       markersLayer = L.layerGroup().addTo(map);
-      
-      // Aggiungi controlli
-      L.control.zoom({ position: 'bottomright' }).addTo(map);
-      L.control.scale({ imperial: false, position: 'bottomleft' }).addTo(map);
+    }
+    
+    // Icona marker personalizzata (rossa con icona nera)
+    function createCustomIcon() {
+      return L.divIcon({
+        className: 'custom-marker',
+        html: `
+          <div style="
+            width: 32px;
+            height: 32px;
+            background: #d32f2f;
+            border: 3px solid #121212;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.7);
+            position: relative;
+          ">
+            <div style="
+              color: #000000;
+              font-size: 16px;
+              font-weight: bold;
+              transform: translateY(-1px);
+            ">
+              <i class="fas fa-map-pin"></i>
+            </div>
+            <div style="
+              position: absolute;
+              bottom: -5px;
+              width: 0;
+              height: 0;
+              border-left: 6px solid transparent;
+              border-right: 6px solid transparent;
+              border-top: 8px solid #121212;
+            "></div>
+          </div>
+        `,
+        iconSize: [32, 40],
+        iconAnchor: [16, 40],
+        popupAnchor: [0, -35]
+      });
     }
     
     function addMarkersToMap(locations) {
@@ -864,17 +1083,13 @@
       // Cancella marker esistenti
       markersLayer.clearLayers();
       
-      // Crea marker ottimizzati
-      locations.forEach(location => {
-        // Crea marker semplice per performance
-        const marker = L.circleMarker([location.lat, location.lon], {
-          radius: 6,
-          fillColor: "#d32f2f",
-          fillOpacity: 0.9,
-          color: "#121212",
-          weight: 2,
-          opacity: 1,
-          className: 'simple-marker'
+      // Crea icona personalizzata
+      const customIcon = createCustomIcon();
+      
+      // Crea tutti i marker
+      allMarkers = locations.map(location => {
+        const marker = L.marker([location.lat, location.lon], {
+          icon: customIcon
         }).addTo(markersLayer);
         
         // Popup content (creato solo al click)
@@ -886,16 +1101,23 @@
         
         // Salva riferimento per performance
         marker.locationData = location;
+        
+        return marker;
       });
       
-      // Aggiorna vista
-      if (locations.length > 0) {
-        const bounds = markersLayer.getBounds();
+      // Aggiorna vista - FIX per errore getBounds
+      if (allMarkers.length > 0) {
+        // Crea bounds dai marker
+        const bounds = L.latLngBounds(allMarkers.map(m => m.getLatLng()));
+        
         if (bounds.isValid()) {
-          map.fitBounds(bounds, { 
-            padding: [50, 50],
-            maxZoom: 10
-          });
+          // Piccolo delay per assicurarsi che la mappa sia renderizzata
+          setTimeout(() => {
+            map.fitBounds(bounds, { 
+              padding: [50, 50],
+              maxZoom: 10
+            });
+          }, 100);
         }
       }
     }
@@ -978,41 +1200,22 @@
       window.open(url, '_blank');
     }
     
-    function zoomToItaly() {
-      if (map) {
-        map.setView(CONFIG.ITALY_CENTER, CONFIG.DEFAULT_ZOOM);
-      }
-    }
-    
-    function showAllMarkers() {
-      if (map && markersLayer) {
-        const bounds = markersLayer.getBounds();
-        if (bounds.isValid()) {
-          map.fitBounds(bounds, { padding: [100, 100] });
-        }
-      }
-    }
-    
     function hideLoader() {
       const loader = document.getElementById('loader');
       loader.style.opacity = '0';
       loader.style.transition = 'opacity 0.5s ease';
       
       setTimeout(() => {
-        loader.style.display = 'none';
-        // Mostra hint performance per 3 secondi
-        setTimeout(() => {
-          document.getElementById('performanceHint').style.opacity = '0';
-          setTimeout(() => {
-            document.getElementById('performanceHint').style.display = 'none';
-          }, 500);
-        }, 3000);
+        loader.classList.add('hidden');
       }, 500);
     }
     
     // ===== CARICAMENTO PRINCIPALE =====
     
-    async function loadAndInitialize() {
+    async function startMapLoading() {
+      // Mostra il loader
+      document.getElementById('loader').classList.remove('hidden');
+      
       try {
         // 1. Inizializza mappa (vuota)
         initializeMap();
@@ -1040,7 +1243,7 @@
         
         updateProgress(95, 100, 3);
         
-        // 5. Aggiungi TUTTI i marker in una volta (nessuna animazione)
+        // 5. Aggiungi TUTTI i marker in una volta
         addMarkersToMap(filteredLocations);
         
         // 6. Aggiorna statistiche finali
@@ -1066,7 +1269,7 @@
     
     // ===== INIZIALIZZA APP =====
     
-    document.addEventListener('DOMContentLoaded', loadAndInitialize);
+    document.addEventListener('DOMContentLoaded', initializeSocialUnlock);
     
     // Gestisci resize window
     let resizeTimeout;
