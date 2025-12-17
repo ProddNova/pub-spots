@@ -5,64 +5,313 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mappa Luoghi Abbandonati</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
-    * { margin: 0; padding: 0; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body, #map { height: 100%; width: 100%; }
+    
+    /* Toggle Dark Mode */
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+      background: white;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      transition: all 0.3s;
+    }
+    
+    .theme-toggle:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    
+    .dark-mode .theme-toggle {
+      background: #333;
+      color: white;
+    }
+    
+    /* Loading overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255,255,255,0.9);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.5s;
+    }
+    
+    .dark-mode .loading-overlay {
+      background: rgba(30,30,30,0.95);
+    }
+    
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #f3f3f3;
+      border-top: 5px solid #3498db;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    
+    .dark-mode .loader {
+      border: 5px solid #444;
+      border-top: 5px solid #3498db;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Popup styling */
     .leaflet-popup-content {
       max-height: 500px;
       overflow-y: auto;
       max-width: 320px;
-      padding: 10px;
+      padding: 15px;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
+    
     .open-gmaps-btn {
-      background: #4285F4; color: white; border: none; padding: 10px;
-      border-radius: 5px; margin-top: 10px; cursor: pointer;
-      font-size: 14px; width: 100%; font-weight: bold;
+      background: linear-gradient(to right, #4285F4, #34A853);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      width: 100%;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s;
     }
+    
+    .open-gmaps-btn:hover {
+      background: linear-gradient(to right, #3367D6, #2E8B57);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
     .copy-coords-btn {
-      background: #34A853; color: white; border: none; padding: 8px;
-      border-radius: 5px; margin-top: 8px; cursor: pointer;
-      font-size: 13px; width: 100%;
+      background: linear-gradient(to right, #34A853, #0F9D58);
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.3s;
     }
+    
+    .copy-coords-btn:hover {
+      background: linear-gradient(to right, #2E8B57, #0B8043);
+      transform: translateY(-2px);
+    }
+    
     .location-info {
-      font-size: 12px; color: #666; margin-top: 5px; padding: 5px;
-      background: #f5f5f5; border-radius: 3px;
+      font-size: 12px;
+      color: #666;
+      margin-top: 10px;
+      padding: 10px;
+      background: #f8f9fa;
+      border-radius: 5px;
+      border-left: 4px solid #4285F4;
     }
-    .popup-title { font-size: 16px; font-weight: bold; margin-bottom: 8px; color: #333; }
-    .popup-desc { font-size: 14px; margin-bottom: 10px; color: #444; }
+    
+    .dark-mode .location-info {
+      background: #2d3748;
+      color: #cbd5e0;
+    }
+    
+    .popup-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #333;
+      padding-bottom: 5px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    
+    .dark-mode .popup-title {
+      color: #e2e8f0;
+      border-bottom: 2px solid #4a5568;
+    }
+    
+    .popup-desc {
+      font-size: 14px;
+      margin-bottom: 15px;
+      color: #555;
+      line-height: 1.5;
+    }
+    
+    .dark-mode .popup-desc {
+      color: #cbd5e0;
+    }
+    
+    /* Stats/legend */
     .info-legend {
-      position: absolute; bottom: 20px; left: 20px; z-index: 1000;
-      background: white; padding: 10px; border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.2); font-size: 12px;
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      z-index: 1000;
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      font-size: 13px;
+      max-width: 250px;
+      backdrop-filter: blur(10px);
+      background: rgba(255,255,255,0.95);
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    .dark-mode .info-legend {
+      background: rgba(45, 55, 72, 0.95);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .legend-title {
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #333;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .dark-mode .legend-title {
+      color: #e2e8f0;
+    }
+    
+    .legend-stats {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid #eee;
+    }
+    
+    .dark-mode .legend-stats {
+      border-top: 1px solid #4a5568;
+    }
+    
+    /* Notification */
+    .notification {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #34A853;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      z-index: 1001;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .notification.show {
+      opacity: 1;
+    }
+    
+    /* Dark mode adjustments */
+    .dark-mode {
+      background: #1a202c;
+    }
+    
+    .dark-mode .leaflet-popup-content-wrapper {
+      background: #2d3748;
+      color: #e2e8f0;
+    }
+    
+    .dark-mode .leaflet-popup-tip {
+      background: #2d3748;
     }
   </style>
 </head>
 <body>
   <div id="map"></div>
+  
+  <!-- Theme Toggle Button -->
+  <button class="theme-toggle" id="themeToggle" title="Cambia tema">
+    <i class="fas fa-moon"></i>
+  </button>
+  
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loader"></div>
+    <p id="loadingText">Caricamento luoghi abbandonati...</p>
+    <p id="loadingProgress" style="margin-top: 10px; font-size: 12px; color: #666;"></p>
+  </div>
+  
+  <!-- Notification -->
+  <div class="notification" id="notification">
+    <i class="fas fa-check-circle"></i>
+    <span id="notificationText">Coordinate copiate!</span>
+  </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    const MAP_TILE_SERVER = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
-    const DEFAULT_MAP_CENTER = [45.0, 10.0];
+    // Configurazioni
+    const LIGHT_TILE_SERVER = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+    const DARK_TILE_SERVER = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png";
+    const DEFAULT_MAP_CENTER = [42.5, 12.5]; // Centro Italia
     const DEFAULT_ZOOM = 6;
+    
+    // Confini approssimativi dell'Italia
+    const ITALY_BOUNDS = {
+      north: 47.5,
+      south: 35.0,
+      west: 6.0,
+      east: 19.0
+    };
 
     let locations = [];
+    let map;
+    let currentTheme = 'light';
+    let darkLayer, lightLayer;
 
-    // ---------- Utils: HTML entities decode ----------
+    // ---------- Utility ----------
     function decodeHtmlEntities(str) {
       if (!str) return "";
-      // gestisce sia &quot; / &#39; sia eventuali altre entità
       const txt = document.createElement("textarea");
       txt.innerHTML = str;
       return txt.value;
     }
 
-    // ---------- Utils: CSV parsing (robusto) ----------
-    // Supporta:
-    // - separatore virgola
-    // - campi tra virgolette con virgole dentro
-    // - doppie virgolette dentro campo: "" -> "
-    // - newline dentro campi quotati
     function parseCSV(text) {
       const rows = [];
       let row = [];
@@ -74,7 +323,6 @@
 
         if (inQuotes) {
           if (c === '"') {
-            // "" -> "
             if (text[i + 1] === '"') {
               field += '"';
               i++;
@@ -91,7 +339,7 @@
             row.push(field);
             field = "";
           } else if (c === '\r') {
-            // ignora, gestiamo con \n
+            // ignora
           } else if (c === '\n') {
             row.push(field);
             field = "";
@@ -103,11 +351,9 @@
         }
       }
 
-      // ultimo campo
       row.push(field);
       rows.push(row);
 
-      // rimuove righe vuote finali
       while (rows.length && rows[rows.length - 1].every(v => (v ?? "").trim() === "")) {
         rows.pop();
       }
@@ -137,7 +383,7 @@
       return objs;
     }
 
-    // ---------- Estrazione coordinate (uguale al tuo, ma più tollerante su spazi) ----------
+    // ---------- Estrazione coordinate ----------
     function extractCoordinates(text) {
       if (!text) return null;
 
@@ -183,6 +429,67 @@
       return null;
     }
 
+    // ---------- Controllo se coordinate sono in Italia ----------
+    function isInItaly(lat, lon) {
+      return lat >= ITALY_BOUNDS.south && 
+             lat <= ITALY_BOUNDS.north && 
+             lon >= ITALY_BOUNDS.west && 
+             lon <= ITALY_BOUNDS.east;
+    }
+
+    // ---------- Creazione icona marker nera ----------
+    function createBlackIcon() {
+      return L.divIcon({
+        html: `<div style="
+          background-color: #000;
+          width: 32px;
+          height: 32px;
+          border-radius: 50% 50% 50% 0;
+          transform: rotate(-45deg);
+          position: relative;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+        ">
+          <div style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+            color: white;
+            font-size: 14px;
+          ">
+            <i class="fas fa-ghost"></i>
+          </div>
+          <div style="
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            background-color: #000;
+            border-radius: 50%;
+          "></div>
+        </div>`,
+        className: 'custom-black-marker',
+        iconSize: [32, 32],
+        iconAnchor: [16, 32],
+        popupAnchor: [0, -32]
+      });
+    }
+
+    // ---------- Notifiche ----------
+    function showNotification(message, duration = 3000) {
+      const notification = document.getElementById('notification');
+      const notificationText = document.getElementById('notificationText');
+      
+      notificationText.textContent = message;
+      notification.classList.add('show');
+      
+      setTimeout(() => {
+        notification.classList.remove('show');
+      }, duration);
+    }
+
     // ---------- Carica e processa spot.csv ----------
     async function loadAndProcessData() {
       try {
@@ -198,8 +505,19 @@
 
         let total = data.length;
         let skipped = 0;
+        let skippedOutsideItaly = 0;
+        let processed = 0;
+
+        // Aggiorna progresso
+        const updateProgress = () => {
+          const progressText = document.getElementById('loadingProgress');
+          progressText.textContent = `Elaborati: ${processed}/${total} | Italia: ${locations.length} | Saltati: ${skipped}`;
+        };
 
         for (const pin of data) {
+          processed++;
+          updateProgress();
+          
           // Scegli testo da cui estrarre coordinate
           let coordText =
             (pin["grid_description"] || pin["description"] || pin["title"] || pin["grid_title"] || "").trim();
@@ -219,13 +537,20 @@
             continue;
           }
 
+          // Controlla se le coordinate sono in Italia
+          if (!isInItaly(coordMatch.lat, coordMatch.lon)) {
+            skippedOutsideItaly++;
+            skipped++;
+            continue;
+          }
+
           const title = (pin["title"] || pin["grid_title"] || "Luogo sconosciuto").trim();
 
           const descriptionRaw =
             (pin["grid_description"] || pin["description"] || pin["title"] || coordText || "").trim();
           const description = decodeHtmlEntities(descriptionRaw).replace(/\s+/g, ' ').trim();
 
-          // Immagine: preferisci originals url dello story pin, altrimenti image/url
+          // Immagine: preferisci originals url dello story pin
           let imageUrl =
             (pin["story_pin_data/pages/0/blocks/0/image/images/originals/url"] || "").trim();
 
@@ -233,7 +558,6 @@
             imageUrl = (pin["image/url"] || "").trim();
           }
 
-          // Alcuni export usano URL thumbnail altrove, fallback opzionale:
           if (!imageUrl) {
             imageUrl = (pin["board/image_thumbnail_url"] || "").trim();
           }
@@ -248,32 +572,53 @@
         }
 
         console.log("Punti validi trovati:", locations.length);
-        console.log("Skipped:", skipped);
+        console.log("Skipped totali:", skipped);
+        console.log("Fuori Italia:", skippedOutsideItaly);
 
         if (locations.length === 0) {
           alert(`Nessun punto valido trovato su ${total} totali. Tutti skipped. Verifica il formato delle coordinate in grid_description/description.`);
           return;
         }
 
-        initMap();
+        // Nasconde loading overlay
+        setTimeout(() => {
+          document.getElementById('loadingOverlay').style.opacity = '0';
+          setTimeout(() => {
+            document.getElementById('loadingOverlay').style.display = 'none';
+            initMap();
+          }, 500);
+        }, 500);
 
       } catch (error) {
         console.error("Errore:", error);
+        document.getElementById('loadingText').textContent = "Errore nel caricamento dei dati";
         alert("Errore nel caricamento o elaborazione di spot.csv: " + error.message);
       }
     }
 
     // ---------- Mappa ----------
     function initMap() {
-      const map = L.map('map');
+      map = L.map('map');
 
-      L.tileLayer(MAP_TILE_SERVER, {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(map);
+      // Crea i layer per light e dark mode
+      lightLayer = L.tileLayer(LIGHT_TILE_SERVER, {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 19,
+      });
 
+      darkLayer = L.tileLayer(DARK_TILE_SERVER, {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        maxZoom: 19,
+      });
+
+      // Aggiungi il layer iniziale (light)
+      lightLayer.addTo(map);
+
+      const blackIcon = createBlackIcon();
       const markers = [];
+      
       locations.forEach(loc => {
-        const marker = L.marker([loc.latitude, loc.longitude]).addTo(map);
+        const marker = L.marker([loc.latitude, loc.longitude], { icon: blackIcon }).addTo(map);
         markers.push(marker);
 
         const coords = loc.latitude.toFixed(6) + ',' + loc.longitude.toFixed(6);
@@ -282,46 +627,111 @@
           <div>
             ${loc.image ? `
               <img src="${loc.image}" alt="${escapeHtml(loc.title)}"
-                   style="width:100%; height:auto; max-height:400px; object-fit:contain; border-radius:8px; margin-bottom:10px;"
+                   style="width:100%; height:auto; max-height:300px; object-fit:cover; border-radius:8px; margin-bottom:15px;"
                    onerror="this.style.display='none'" />
             ` : ''}
             <div class="popup-title">${escapeHtml(loc.title)}</div>
-            <div class="popup-desc">${escapeHtml(loc.description || 'Nessuna descrizione')}</div>
+            <div class="popup-desc">${escapeHtml(loc.description || 'Nessuna descrizione disponibile')}</div>
             <div class="location-info">
-              <strong>Coordinate:</strong><br>
-              ${coords}
+              <strong><i class="fas fa-map-marker-alt"></i> Coordinate:</strong><br>
+              ${coords}<br>
+              <small>Lat: ${loc.latitude.toFixed(6)}, Lon: ${loc.longitude.toFixed(6)}</small>
             </div>
             <button class="copy-coords-btn" onclick="copyToClipboard('${coords}')">
-              📋 Copia coordinate
+              <i class="fas fa-copy"></i> Copia coordinate
             </button>
             <button class="open-gmaps-btn" onclick="openGoogleMaps(${loc.latitude}, ${loc.longitude})">
-              🗺️ Apri in Google Maps
+              <i class="fas fa-external-link-alt"></i> Apri in Google Maps
             </button>
           </div>
         `;
 
         marker.bindPopup(popupContent);
+        
+        // Aggiungi effetto hover
+        marker.on('mouseover', function() {
+          this.openPopup();
+        });
       });
 
+      // Imposta vista della mappa
       if (locations.length > 0) {
         if (locations.length === 1) {
           map.setView([locations[0].latitude, locations[0].longitude], 13);
         } else {
           const bounds = L.latLngBounds(markers.map(m => m.getLatLng()));
-          map.fitBounds(bounds, { padding: [50, 50] });
+          map.fitBounds(bounds, { padding: [100, 100] });
         }
       } else {
         map.setView(DEFAULT_MAP_CENTER, DEFAULT_ZOOM);
       }
 
-      L.control.scale().addTo(map);
+      // Aggiungi controllo scala
+      L.control.scale({ imperial: false }).addTo(map);
 
+      // Aggiungi legenda con statistiche
       const legend = document.createElement('div');
       legend.className = 'info-legend';
-      legend.innerHTML = `<strong>${locations.length}</strong> luoghi caricati (marker singoli)`;
+      legend.innerHTML = `
+        <div class="legend-title">
+          <i class="fas fa-ghost"></i> Luoghi Abbandonati
+        </div>
+        <div>${locations.length} luoghi trovati in Italia</div>
+        <div style="font-size: 11px; margin-top: 5px; color: #666;" class="legend-subtitle">
+          <i class="fas fa-info-circle"></i> Clicca su un marker per i dettagli
+        </div>
+        <div class="legend-stats">
+          <div><i class="fas fa-map-pin"></i> ${locations.length}</div>
+          <div><i class="fas fa-map"></i> Italia</div>
+          <div><i class="fas fa-sync"></i> ${new Date().getFullYear()}</div>
+        </div>
+      `;
       document.body.appendChild(legend);
+
+      // Aggiungi controllo per i layer (light/dark)
+      const baseLayers = {
+        "Light Mode": lightLayer,
+        "Dark Mode": darkLayer
+      };
+      
+      L.control.layers(baseLayers).addTo(map);
     }
 
+    // ---------- Toggle Dark Mode ----------
+    function toggleDarkMode() {
+      const body = document.body;
+      const themeToggle = document.getElementById('themeToggle');
+      
+      if (currentTheme === 'light') {
+        body.classList.add('dark-mode');
+        themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+        themeToggle.title = "Passa a Light Mode";
+        
+        // Cambia layer mappa
+        if (map && lightLayer && darkLayer) {
+          map.removeLayer(lightLayer);
+          darkLayer.addTo(map);
+        }
+        
+        currentTheme = 'dark';
+        localStorage.setItem('mapTheme', 'dark');
+      } else {
+        body.classList.remove('dark-mode');
+        themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+        themeToggle.title = "Passa a Dark Mode";
+        
+        // Cambia layer mappa
+        if (map && lightLayer && darkLayer) {
+          map.removeLayer(darkLayer);
+          lightLayer.addTo(map);
+        }
+        
+        currentTheme = 'light';
+        localStorage.setItem('mapTheme', 'light');
+      }
+    }
+
+    // ---------- Utility ----------
     function escapeHtml(text) {
       if (!text) return '';
       const div = document.createElement('div');
@@ -331,21 +741,50 @@
 
     function copyToClipboard(text) {
       navigator.clipboard.writeText(text).then(() => {
-        alert('Coordinate copiate: ' + text);
+        showNotification('Coordinate copiate: ' + text);
       }).catch(() => {
-        alert('Coordinate (copia manuale): ' + text);
+        // Fallback per browser più vecchi
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        showNotification('Coordinate copiate: ' + text);
       });
     }
 
     function openGoogleMaps(lat, lon) {
       const url = 'https://www.google.com/maps/search/?api=1&query=' + lat + ',' + lon;
-      if (confirm('Vuoi aprire questa posizione in Google Maps?')) {
-        window.open(url, '_blank');
-      }
+      window.open(url, '_blank');
     }
 
-    // Avvia
-    loadAndProcessData();
+    // ---------- Inizializzazione ----------
+    document.addEventListener('DOMContentLoaded', function() {
+      // Controlla tema salvato
+      const savedTheme = localStorage.getItem('mapTheme');
+      if (savedTheme === 'dark') {
+        currentTheme = 'dark';
+        document.body.classList.add('dark-mode');
+        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i>';
+        document.getElementById('themeToggle').title = "Passa a Light Mode";
+      }
+      
+      // Aggiungi event listener per toggle tema
+      document.getElementById('themeToggle').addEventListener('click', toggleDarkMode);
+      
+      // Carica dati
+      loadAndProcessData();
+      
+      // Aggiungi tasti rapidi
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'd' || e.key === 'D') {
+          if (e.ctrlKey || e.metaKey) {
+            toggleDarkMode();
+          }
+        }
+      });
+    });
   </script>
 </body>
 </html>
