@@ -199,6 +199,11 @@
       cursor: not-allowed;
     }
     
+    .social-btn.verifying {
+      background: #2c3e50;
+      pointer-events: none;
+    }
+    
     .social-btn.verified {
       background: #1a5d1a;
       border-color: #2ecc71;
@@ -245,10 +250,6 @@
     
     .social-btn.verifying .verification-text {
       display: block;
-    }
-    
-    .social-btn.verifying {
-      pointer-events: none;
     }
     
     .unlock-message {
@@ -310,6 +311,7 @@
       overflow: hidden;
       border: 1px solid var(--border-color);
       transition: all 0.2s;
+      cursor: pointer;
     }
     
     .spot-card:hover {
@@ -383,15 +385,6 @@
       background: #444;
     }
     
-    .spot-card-btn.view {
-      background: #2c3e50;
-      color: white;
-    }
-    
-    .spot-card-btn.view:hover {
-      background: #34495e;
-    }
-    
     /* Loader ottimizzato */
     .loader-overlay {
       position: fixed;
@@ -442,6 +435,112 @@
       max-width: 280px;
       line-height: 1.4;
       font-size: 14px;
+    }
+    
+    /* Popup style - allineato con webapp */
+    .leaflet-popup-content-wrapper {
+      background: var(--card-bg);
+      color: var(--text-light);
+      border-radius: 10px;
+      border: 2px solid var(--primary-red);
+      box-shadow: 0 8px 25px var(--shadow-dark);
+      padding: 0;
+      overflow: hidden;
+      max-width: 300px;
+    }
+    
+    .leaflet-popup-content {
+      margin: 0;
+      padding: 0;
+      max-height: 350px;
+      overflow-y: auto;
+    }
+    
+    .leaflet-popup-tip {
+      background: var(--primary-red);
+    }
+    
+    .popup-header {
+      padding: 12px;
+      background: linear-gradient(135deg, var(--primary-red), var(--primary-red-dark));
+      color: white;
+    }
+    
+    .popup-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+    
+    .popup-coords {
+      font-size: 10px;
+      opacity: 0.9;
+      font-family: monospace;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .popup-body {
+      padding: 12px;
+    }
+    
+    .popup-image {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border-color);
+      background: #222;
+    }
+    
+    .popup-description {
+      font-size: 13px;
+      line-height: 1.4;
+      color: var(--text-gray);
+      margin-bottom: 12px;
+    }
+    
+    .popup-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    
+    .popup-btn {
+      padding: 8px;
+      border-radius: 5px;
+      border: none;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      transition: all 0.2s;
+    }
+    
+    .popup-btn.copy {
+      background: var(--secondary-black);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+    }
+    
+    .popup-btn.copy:hover {
+      background: var(--primary-red);
+      border-color: var(--primary-red);
+    }
+    
+    .popup-btn.maps {
+      background: var(--primary-red);
+      color: white;
+    }
+    
+    .popup-btn.maps:hover {
+      background: var(--primary-red-dark);
     }
     
     /* Mobile optimization */
@@ -589,6 +688,25 @@
     .sidebar-overlay.active {
       display: block;
     }
+    
+    /* Loader per lista */
+    .list-loader {
+      display: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1002;
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      border: 2px solid var(--primary-red);
+    }
+    
+    .list-loader.active {
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -603,26 +721,26 @@
     </div>
     
     <div class="social-buttons">
-      <div class="social-btn youtube" id="youtubeBtn">
+      <a href="https://www.youtube.com/@LostTrace-Unit" target="_blank" class="social-btn youtube" id="youtubeBtn">
         <i class="fab fa-youtube"></i>
         <span>YouTube @LostTrace-Unit</span>
         <div class="checkmark"><i class="fas fa-check"></i></div>
-        <div class="verification-text">Verifica iscritti...</div>
-      </div>
+        <div class="verification-text">Verifica iscrizione...</div>
+      </a>
       
-      <div class="social-btn instagram" id="instagramBtn">
+      <a href="https://www.instagram.com/losttrace__/" target="_blank" class="social-btn instagram" id="instagramBtn">
         <i class="fab fa-instagram"></i>
         <span>Instagram @losttrace__</span>
         <div class="checkmark"><i class="fas fa-check"></i></div>
         <div class="verification-text">Verifica follower...</div>
-      </div>
+      </a>
       
-      <div class="social-btn tiktok" id="tiktokBtn">
+      <a href="https://www.tiktok.com/@lt_unit" target="_blank" class="social-btn tiktok" id="tiktokBtn">
         <i class="fab fa-tiktok"></i>
         <span>TikTok @lt_unit</span>
         <div class="checkmark"><i class="fas fa-check"></i></div>
         <div class="verification-text">Verifica follower...</div>
-      </div>
+      </a>
     </div>
     
     <div class="unlock-message" id="unlockMessage"></div>
@@ -641,6 +759,14 @@
     </div>
   </div>
   
+  <!-- Loader per lista -->
+  <div class="list-loader" id="listLoader">
+    <div class="loader-logo" style="width: 50px; height: 50px; margin-bottom: 15px;">
+      <i class="fas fa-spinner fa-spin"></i>
+    </div>
+    <div class="loader-text" style="font-size: 16px;">Caricamento lista...</div>
+  </div>
+  
   <!-- Header -->
   <div class="header" id="mainHeader" style="display: none;">
     <div class="brand">
@@ -654,9 +780,9 @@
     </div>
     
     <div class="action-buttons">
-      <button class="action-btn" onclick="zoomToItaly()" title="Centra sull'Italia">
+      <button class="action-btn" onclick="zoomToItaly()" title="Centra la mappa sull'Italia">
         <i class="fas fa-italy"></i>
-        <span>Italia</span>
+        <span>Centra Italia</span>
       </button>
       <button class="action-btn" onclick="toggleSidebar()" title="Mostra lista luoghi">
         <i class="fas fa-list"></i>
@@ -696,6 +822,9 @@
         maxLon: 18.5
       },
       
+      // Social unlock settings
+      VERIFICATION_TIME: 30000, // 30 secondi
+      
       // Performance settings
       BATCH_SIZE: 100
     };
@@ -707,7 +836,7 @@
     let filteredLocations = [];
     
     // Variabili social unlock
-    let socialClicks = {
+    let socialVerifications = {
       youtube: false,
       instagram: false,
       tiktok: false
@@ -737,63 +866,63 @@
       const tiktokBtn = document.getElementById('tiktokBtn');
       const unlockMessage = document.getElementById('unlockMessage');
       
-      youtubeBtn.addEventListener('click', function() {
-        if (socialClicks.youtube) return;
+      // Funzione per gestire il click sui social
+      function handleSocialClick(social, button) {
+        // Se già verificato, non fare nulla
+        if (socialVerifications[social]) return;
         
-        // Inizia verifica
-        this.classList.add('verifying');
-        unlockMessage.textContent = "Verifica iscritti YouTube in corso...";
+        // Imposta il pulsante in stato di verifica
+        button.classList.add('verifying');
         
+        // Dopo il redirect, inizia il countdown di 30 secondi
         setTimeout(() => {
-          this.classList.remove('verifying');
-          this.classList.add('verified');
-          socialClicks.youtube = true;
-          window.open('https://www.youtube.com/@LostTrace-Unit', '_blank');
+          // Dopo 30 secondi, segna come verificato
+          button.classList.remove('verifying');
+          button.classList.add('verified');
+          socialVerifications[social] = true;
+          
+          // Controlla se tutti sono verificati
           checkAllSocials();
-        }, 3000); // 3 secondi di "verifica"
+        }, CONFIG.VERIFICATION_TIME);
+      }
+      
+      // Aggiungi event listener per il click (prima del redirect)
+      youtubeBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        handleSocialClick('youtube', this);
+        // Apre il link dopo aver gestito l'evento
+        setTimeout(() => {
+          window.open(this.href, '_blank');
+        }, 100);
       });
       
-      instagramBtn.addEventListener('click', function() {
-        if (socialClicks.instagram) return;
-        
-        // Inizia verifica
-        this.classList.add('verifying');
-        unlockMessage.textContent = "Verifica follower Instagram in corso...";
-        
+      instagramBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        handleSocialClick('instagram', this);
+        // Apre il link dopo aver gestito l'evento
         setTimeout(() => {
-          this.classList.remove('verifying');
-          this.classList.add('verified');
-          socialClicks.instagram = true;
-          window.open('https://www.instagram.com/losttrace__/', '_blank');
-          checkAllSocials();
-        }, 3000); // 3 secondi di "verifica"
+          window.open(this.href, '_blank');
+        }, 100);
       });
       
-      tiktokBtn.addEventListener('click', function() {
-        if (socialClicks.tiktok) return;
-        
-        // Inizia verifica
-        this.classList.add('verifying');
-        unlockMessage.textContent = "Verifica follower TikTok in corso...";
-        
+      tiktokBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        handleSocialClick('tiktok', this);
+        // Apre il link dopo aver gestito l'evento
         setTimeout(() => {
-          this.classList.remove('verifying');
-          this.classList.add('verified');
-          socialClicks.tiktok = true;
-          window.open('https://www.tiktok.com/@lt_unit', '_blank');
-          checkAllSocials();
-        }, 3000); // 3 secondi di "verifica"
+          window.open(this.href, '_blank');
+        }, 100);
       });
     }
     
     function checkAllSocials() {
-      const allClicked = socialClicks.youtube && socialClicks.instagram && socialClicks.tiktok;
+      const allVerified = socialVerifications.youtube && socialVerifications.instagram && socialVerifications.tiktok;
       
-      if (allClicked) {
+      if (allVerified) {
         document.getElementById('unlockMessage').textContent = "Accesso sbloccato! Caricamento della mappa...";
         setTimeout(unlockMap, 1500);
       } else {
-        const remaining = 3 - (socialClicks.youtube + socialClicks.instagram + socialClicks.tiktok);
+        const remaining = 3 - (socialVerifications.youtube + socialVerifications.instagram + socialVerifications.tiktok);
         document.getElementById('unlockMessage').textContent = `Segui ancora ${remaining} social per sbloccare l'accesso!`;
       }
     }
@@ -813,21 +942,31 @@
     
     // ===== FUNZIONI SIDEBAR =====
     
-    function toggleSidebar() {
+    async function toggleSidebar() {
       const sidebar = document.getElementById('spotsSidebar');
       const overlay = document.getElementById('sidebarOverlay');
+      const listLoader = document.getElementById('listLoader');
       
       if (sidebar.classList.contains('open')) {
         sidebar.classList.remove('open');
         overlay.classList.remove('active');
       } else {
+        // Mostra loader
+        listLoader.classList.add('active');
+        
+        // Apri sidebar
         sidebar.classList.add('open');
         overlay.classList.add('active');
-        populateSpotsList();
+        
+        // Popola la lista (con un piccolo delay per mostrare il loader)
+        setTimeout(async () => {
+          await populateSpotsList();
+          listLoader.classList.remove('active');
+        }, 50);
       }
     }
     
-    function populateSpotsList() {
+    async function populateSpotsList() {
       const spotsList = document.getElementById('spotsList');
       const spotsCount = document.getElementById('spotsCount');
       
@@ -841,6 +980,7 @@
       filteredLocations.forEach((location, index) => {
         const spotCard = document.createElement('div');
         spotCard.className = 'spot-card';
+        spotCard.onclick = () => showOnMap(location.lat, location.lon, index);
         
         const coords = `${location.lat.toFixed(6)}, ${location.lon.toFixed(6)}`;
         
@@ -850,14 +990,11 @@
             <div class="spot-card-title">${escapeHtml(location.title)}</div>
             <div class="spot-card-desc">${escapeHtml(location.description || 'Nessuna descrizione disponibile')}</div>
             <div class="spot-card-actions">
-              <button class="spot-card-btn maps" onclick="openMaps(${location.lat}, ${location.lon})">
+              <button class="spot-card-btn maps" onclick="event.stopPropagation(); openMaps(${location.lat}, ${location.lon})">
                 <i class="fab fa-google"></i> Maps
               </button>
-              <button class="spot-card-btn copy" onclick="copyCoords(${location.lat}, ${location.lon}, this)">
+              <button class="spot-card-btn copy" onclick="event.stopPropagation(); copyCoords(${location.lat}, ${location.lon}, this)">
                 <i class="far fa-copy"></i> Copia
-              </button>
-              <button class="spot-card-btn view" onclick="showOnMap(${location.lat}, ${location.lon}, ${index})">
-                <i class="fas fa-map-marker-alt"></i> Mappa
               </button>
             </div>
           </div>
@@ -868,15 +1005,34 @@
     }
     
     function showOnMap(lat, lon, index) {
-      if (map && allMarkers[index]) {
+      if (map) {
         // Chiudi sidebar
         toggleSidebar();
         
         // Centra la mappa sulla posizione
         map.setView([lat, lon], 14);
         
-        // Apri il popup del marker
-        allMarkers[index].openPopup();
+        // Evidenzia il marker (senza aprire popup)
+        if (allMarkers[index]) {
+          const marker = allMarkers[index];
+          const originalStyle = {
+            fillColor: marker.options.fillColor,
+            color: marker.options.color,
+            weight: marker.options.weight
+          };
+          
+          // Evidenzia il marker
+          marker.setStyle({
+            fillColor: '#ffeb3b',
+            color: '#ffeb3b',
+            weight: 4
+          });
+          
+          // Ripristina lo stile originale dopo 2 secondi
+          setTimeout(() => {
+            marker.setStyle(originalStyle);
+          }, 2000);
+        }
       }
     }
     
