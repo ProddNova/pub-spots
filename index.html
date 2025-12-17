@@ -3,418 +3,729 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mappa Luoghi Abbandonati Italia</title>
-  
+  <title>Mappa Luoghi Abbandonati</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body, #map { height: 100%; width: 100%; }
+    
+    /* Tema chiaro (default) */
     :root {
       --bg-color: #ffffff;
       --text-color: #333333;
-      --popup-bg: #ffffff;
-      --btn-bg: #f0f0f0;
-      --btn-hover: #e0e0e0;
-      --accent-color: #2c3e50;
+      --card-bg: #ffffff;
+      --card-border: #e0e0e0;
+      --button-primary: #4285F4;
+      --button-secondary: #34A853;
+      --button-dark: #2c3e50;
+      --shadow: rgba(0, 0, 0, 0.1);
     }
-
-    /* Variabili Dark Mode */
-    [data-theme="dark"] {
-      --bg-color: #1a1a1a;
-      --text-color: #e0e0e0;
-      --popup-bg: #2d2d2d;
-      --btn-bg: #404040;
-      --btn-hover: #505050;
-      --accent-color: #4ca1af;
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body, #map { height: 100%; width: 100%; transition: background 0.3s, color 0.3s; }
     
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-
-    /* --- UI Controls --- */
-    .control-container {
+    /* Tema scuro */
+    .dark-theme {
+      --bg-color: #1a1a1a;
+      --text-color: #f0f0f0;
+      --card-bg: #2d2d2d;
+      --card-border: #444444;
+      --button-primary: #5a9cff;
+      --button-secondary: #4caf50;
+      --button-dark: #34495e;
+      --shadow: rgba(0, 0, 0, 0.3);
+    }
+    
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      transition: background-color 0.3s, color 0.3s;
+    }
+    
+    /* Stili popup */
+    .leaflet-popup-content {
+      max-height: 500px;
+      overflow-y: auto;
+      max-width: 320px;
+      padding: 10px;
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      border-radius: 8px;
+    }
+    
+    .leaflet-popup-content-wrapper {
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      border: 1px solid var(--card-border);
+      box-shadow: 0 4px 12px var(--shadow);
+    }
+    
+    .leaflet-popup-tip {
+      background-color: var(--card-bg);
+    }
+    
+    .open-gmaps-btn {
+      background: var(--button-primary); 
+      color: white; 
+      border: none; 
+      padding: 10px;
+      border-radius: 5px; 
+      margin-top: 10px; 
+      cursor: pointer;
+      font-size: 14px; 
+      width: 100%; 
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    
+    .open-gmaps-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    
+    .copy-coords-btn {
+      background: var(--button-secondary); 
+      color: white; 
+      border: none; 
+      padding: 8px;
+      border-radius: 5px; 
+      margin-top: 8px; 
+      cursor: pointer;
+      font-size: 13px; 
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    
+    .copy-coords-btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    
+    .location-info {
+      font-size: 12px; 
+      color: var(--text-color); 
+      margin-top: 5px; 
+      padding: 5px;
+      background: rgba(0, 0, 0, 0.05); 
+      border-radius: 3px;
+      border-left: 3px solid var(--button-primary);
+    }
+    
+    .dark-theme .location-info {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    .popup-title { 
+      font-size: 16px; 
+      font-weight: bold; 
+      margin-bottom: 8px; 
+      color: var(--text-color); 
+    }
+    
+    .popup-desc { 
+      font-size: 14px; 
+      margin-bottom: 10px; 
+      color: var(--text-color); 
+      opacity: 0.9;
+      line-height: 1.4;
+    }
+    
+    /* Pannello controllo */
+    .control-panel {
       position: absolute;
       top: 20px;
       right: 20px;
       z-index: 1000;
-      display: flex;
-      gap: 10px;
+      background-color: var(--card-bg);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px var(--shadow);
+      border: 1px solid var(--card-border);
+      width: 280px;
+      transition: all 0.3s;
     }
-
-    .theme-toggle-btn {
-      background: var(--popup-bg);
-      color: var(--text-color);
-      border: 2px solid rgba(0,0,0,0.2);
-      padding: 10px 15px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    
+    .control-panel h3 {
+      margin-bottom: 12px;
+      font-size: 16px;
       display: flex;
       align-items: center;
+      gap: 8px;
+    }
+    
+    .control-panel h3 i {
+      color: var(--button-primary);
+    }
+    
+    .stats {
+      font-size: 13px;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--card-border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 5px;
     }
-    .theme-toggle-btn:hover { transform: translateY(-1px); }
-
-    /* --- Popup Styles --- */
-    .leaflet-popup-content-wrapper {
-      background: var(--popup-bg);
-      color: var(--text-color);
-      border-radius: 8px;
-    }
-    .leaflet-popup-tip { background: var(--popup-bg); }
     
-    .leaflet-popup-content {
-      max-height: 500px;
-      overflow-y: auto;
-      min-width: 280px;
-      max-width: 320px;
-      padding: 5px;
-      margin: 10px;
+    .stat-item {
+      display: flex;
+      justify-content: space-between;
     }
-
-    .popup-title { font-size: 16px; font-weight: bold; margin-bottom: 8px; color: var(--text-color); }
-    .popup-desc { font-size: 13px; margin-bottom: 12px; line-height: 1.4; opacity: 0.9; }
     
-    .location-info {
-      font-size: 11px;
-      margin-top: 8px;
-      padding: 8px;
-      background: var(--btn-bg);
-      border-radius: 4px;
-      border-left: 3px solid var(--accent-color);
+    .stat-value {
+      font-weight: bold;
+      color: var(--button-primary);
     }
-
-    /* Buttons inside Popup */
-    .action-btn {
-      width: 100%;
-      padding: 10px;
+    
+    .theme-toggle {
+      background-color: var(--button-dark);
+      color: white;
       border: none;
-      border-radius: 6px;
-      margin-top: 8px;
+      padding: 10px 15px;
+      border-radius: 5px;
       cursor: pointer;
-      font-weight: 600;
-      font-size: 13px;
+      width: 100%;
+      font-size: 14px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      transition: opacity 0.2s;
+      gap: 10px;
+      margin-top: 10px;
+      transition: all 0.2s;
     }
-    .action-btn:hover { opacity: 0.9; }
     
-    .btn-maps { background: #4285F4; color: white; }
-    .btn-copy { background: #34A853; color: white; }
-
-    /* --- Legend & Stats --- */
-    .info-legend {
+    .theme-toggle:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+    
+    /* Loader */
+    .loader {
       position: absolute;
-      bottom: 20px;
-      left: 20px;
-      z-index: 1000;
-      background: var(--popup-bg);
-      color: var(--text-color);
-      padding: 10px 15px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-      font-size: 13px;
-      border: 1px solid rgba(128,128,128,0.2);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1001;
+      background-color: var(--card-bg);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px var(--shadow);
+      border: 1px solid var(--card-border);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+      min-width: 250px;
     }
-
-    /* --- Loading Spinner --- */
-    #loading-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0,0,0,0.7); z-index: 9999;
-      display: flex; flex-direction: column;
-      justify-content: center; align-items: center; color: white;
-    }
+    
     .spinner {
-      border: 4px solid #f3f3f3; border-top: 4px solid #3498db;
-      border-radius: 50%; width: 40px; height: 40px;
-      animation: spin 1s linear infinite; margin-bottom: 15px;
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(0, 0, 0, 0.1);
+      border-radius: 50%;
+      border-top-color: var(--button-primary);
+      animation: spin 1s ease-in-out infinite;
     }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-    /* --- Custom Pin Icon CSS --- */
-    .custom-pin {
-      filter: drop-shadow(0px 3px 2px rgba(0,0,0,0.5));
+    
+    .dark-theme .spinner {
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top-color: var(--button-primary);
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .control-panel {
+        width: calc(100% - 40px);
+        top: 10px;
+        right: 10px;
+        left: 10px;
+      }
+      
+      .leaflet-popup-content {
+        max-width: 250px;
+      }
     }
   </style>
 </head>
 <body>
-
-  <div id="loading-overlay">
-    <div class="spinner"></div>
-    <div>Caricamento Luoghi...</div>
-  </div>
-
-  <div class="control-container">
-    <button class="theme-toggle-btn" onclick="toggleDarkMode()">
-      <span id="theme-icon">🌙</span> Dark Mode
+  <div id="map"></div>
+  
+  <!-- Pannello di controllo -->
+  <div class="control-panel" id="controlPanel" style="display: none;">
+    <h3><i class="fas fa-map-marked-alt"></i> Luoghi Abbandonati</h3>
+    
+    <div class="stats">
+      <div class="stat-item">
+        <span>Caricati:</span>
+        <span class="stat-value" id="loadedCount">0</span>
+      </div>
+      <div class="stat-item">
+        <span>Scartati:</span>
+        <span class="stat-value" id="skippedCount">0</span>
+      </div>
+      <div class="stat-item">
+        <span>Fuori Italia:</span>
+        <span class="stat-value" id="outsideItalyCount">0</span>
+      </div>
+      <div class="stat-item">
+        <span>Totali CSV:</span>
+        <span class="stat-value" id="totalCount">0</span>
+      </div>
+    </div>
+    
+    <button class="theme-toggle" id="themeToggle">
+      <i class="fas fa-moon"></i>
+      <span>Modalità Scura</span>
     </button>
   </div>
-
-  <div id="map"></div>
+  
+  <!-- Loader -->
+  <div class="loader" id="loader">
+    <div class="spinner"></div>
+    <div>Caricamento luoghi...</div>
+    <div style="font-size: 12px; opacity: 0.7;" id="loaderStatus">Inizializzazione</div>
+  </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
-
   <script>
-    // Configurazione Mappe
-    const TILE_LIGHT = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
-    const TILE_DARK = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
-    const ATTRIBUTION = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
-
-    // Bounding Box Approssimativo Italia (Lat Min/Max, Lon Min/Max)
-    // Esclude grossolanamente punti non italiani
+    // Configurazioni
+    const MAP_TILE_SERVER_LIGHT = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
+    const MAP_TILE_SERVER_DARK = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png";
+    const DEFAULT_MAP_CENTER = [42.5, 12.5]; // Centro Italia
+    const DEFAULT_ZOOM = 6;
+    
+    // Bounding box Italia (lat, lon)
     const ITALY_BOUNDS = {
-      minLat: 35.0, maxLat: 47.6,
-      minLon: 6.0,  maxLon: 19.0
+      minLat: 36.0,  // Sud
+      maxLat: 47.5,  // Nord
+      minLon: 6.0,   // Ovest
+      maxLon: 19.0   // Est
     };
-
-    let map;
-    let tileLayer;
-    let markersClusterGroup;
+    
     let locations = [];
-    let isDarkMode = false;
-
-    // ---------- Custom Black Icon ----------
-    // Creiamo un SVG data URI per un pin nero con icona casa
-    const customIconSvg = `
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" width="30" height="40">
-        <path fill="#212121" d="M384 192c0 87.4-117 243-168.3 307.2c-12.3 15.3-35.1 15.3-47.4 0C117 435 0 279.4 0 192C0 86 86 0 192 0s192 86 192 192z"/>
-        <path fill="#ffffff" transform="translate(96, 80) scale(0.5)" d="M575.8 255.5c0 18-15 32.1-32 32.1h-32l.7 160.2c0 2.7-.2 5.4-.5 8.1V472c0 22.1-17.9 40-40 40H456c-1.1 0-2.2 0-3.3-.1c-1.4 .1-2.8 .1-4.2 .1H416 392c-22.1 0-40-17.9-40-40V448 384c0-17.7-14.3-32-32-32H256c-17.7 0-32 14.3-32 32v64 24c0 22.1-17.9 40-40 40H160 128.1c-1.5 0-3-.1-4.5-.2c-1.2 .1-2.4 .2-3.6 .2H104c-22.1 0-40-17.9-40-40V360c0-.9 0-1.9 .1-2.8V287.6H32c-18 0-32-14-32-32.1c0-9 3-17 10-24L266.4 8c7-7 15-8 22-8s15 2 21 7L564.8 231.5c8 7 12 15 11 24z"/>
-      </svg>
-    `;
-
+    let map;
+    let darkMode = localStorage.getItem('darkMode') === 'true';
+    
+    // ---------- Icona personalizzata nera ----------
     const blackIcon = L.divIcon({
-      className: 'custom-pin',
-      html: customIconSvg,
-      iconSize: [30, 42],
-      iconAnchor: [15, 42],
-      popupAnchor: [0, -40]
+      className: 'custom-black-icon',
+      html: '<div style="background-color: #000000; border: 2px solid white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"><div style="width: 8px; height: 8px; background-color: white; border-radius: 50%;"></div></div>',
+      iconSize: [24, 24],
+      iconAnchor: [12, 12],
+      popupAnchor: [0, -12]
     });
-
-    // ---------- Utils: HTML & CSV ----------
+    
+    // ---------- Gestione tema ----------
+    function initTheme() {
+      if (darkMode) {
+        document.body.classList.add('dark-theme');
+        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i><span>Modalità Chiara</span>';
+      } else {
+        document.body.classList.remove('dark-theme');
+        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i><span>Modalità Scura</span>';
+      }
+      updateMapTiles();
+    }
+    
+    function toggleTheme() {
+      darkMode = !darkMode;
+      localStorage.setItem('darkMode', darkMode.toString());
+      initTheme();
+    }
+    
+    function updateMapTiles() {
+      if (map) {
+        map.eachLayer(function(layer) {
+          if (layer._url && layer._url.includes('tile.openstreetmap.org') || 
+              layer._url && layer._url.includes('cartocdn.com')) {
+            map.removeLayer(layer);
+          }
+        });
+        
+        const tileLayer = L.tileLayer(darkMode ? MAP_TILE_SERVER_DARK : MAP_TILE_SERVER_LIGHT, {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+      }
+    }
+    
+    // ---------- Controlla se coordinate sono in Italia ----------
+    function isInItaly(lat, lon) {
+      return lat >= ITALY_BOUNDS.minLat && 
+             lat <= ITALY_BOUNDS.maxLat && 
+             lon >= ITALY_BOUNDS.minLon && 
+             lon <= ITALY_BOUNDS.maxLon;
+    }
+    
+    // ---------- Utils: HTML entities decode ----------
     function decodeHtmlEntities(str) {
       if (!str) return "";
       const txt = document.createElement("textarea");
       txt.innerHTML = str;
       return txt.value;
     }
-
-    // Parser CSV migliorato
+    
+    // ---------- Utils: CSV parsing ----------
     function parseCSV(text) {
       const rows = [];
       let row = [];
       let field = "";
       let inQuotes = false;
+      
       for (let i = 0; i < text.length; i++) {
         const c = text[i];
+        
         if (inQuotes) {
           if (c === '"') {
-            if (text[i + 1] === '"') { field += '"'; i++; } 
-            else { inQuotes = false; }
-          } else { field += c; }
+            if (text[i + 1] === '"') {
+              field += '"';
+              i++;
+            } else {
+              inQuotes = false;
+            }
+          } else {
+            field += c;
+          }
         } else {
-          if (c === '"') { inQuotes = true; } 
-          else if (c === ',') { row.push(field); field = ""; } 
-          else if (c === '\n') { row.push(field); field = ""; rows.push(row); row = []; } 
-          else if (c !== '\r') { field += c; }
+          if (c === '"') {
+            inQuotes = true;
+          } else if (c === ',') {
+            row.push(field);
+            field = "";
+          } else if (c === '\r') {
+            // ignora
+          } else if (c === '\n') {
+            row.push(field);
+            field = "";
+            rows.push(row);
+            row = [];
+          } else {
+            field += c;
+          }
         }
       }
+      
+      // ultimo campo
       row.push(field);
       rows.push(row);
-      return rows.filter(r => r.length > 1 || (r[0] && r[0].trim() !== ""));
+      
+      // rimuove righe vuote finali
+      while (rows.length && rows[rows.length - 1].every(v => (v ?? "").trim() === "")) {
+        rows.pop();
+      }
+      
+      return rows;
     }
-
+    
     function csvToObjects(csvText) {
       const rows = parseCSV(csvText);
-      if (rows.length < 2) return [];
+      if (!rows.length) return [];
+      
       const headers = rows[0].map(h => (h ?? "").trim());
-      return rows.slice(1).map(row => {
+      const objs = [];
+      
+      for (let r = 1; r < rows.length; r++) {
+        const line = rows[r];
+        if (!line || line.every(v => (v ?? "").trim() === "")) continue;
+        
         const obj = {};
-        headers.forEach((h, i) => obj[h] = row[i] ?? "");
-        return obj;
-      });
+        for (let c = 0; c < headers.length; c++) {
+          const key = headers[c];
+          if (!key) continue;
+          obj[key] = line[c] ?? "";
+        }
+        objs.push(obj);
+      }
+      return objs;
     }
-
+    
+    // ---------- Estrazione coordinate ----------
     function extractCoordinates(text) {
       if (!text) return null;
-      // Decimali (priorità)
-      const decMatch = text.match(/([+-]?\d+\.\d+)\s*[,;]\s*([+-]?\d+\.\d+)/);
+      
+      // DMS tipo: 43°52'23.7"N 20°21'38.8"E
+      const dmsPattern =
+        /([0-9.]+)\s*°\s*([0-9.]+)\s*['′]?\s*([0-9.]+(?:\.[0-9]+)?)?\s*["″]?\s*([NSns])\s+([0-9.]+)\s*°\s*([0-9.]+)\s*['′]?\s*([0-9.]+(?:\.[0-9]+)?)?\s*["″]?\s*([EWew])/i;
+      
+      const match = text.match(dmsPattern);
+      
+      if (match) {
+        let latDeg = parseFloat(match[1]);
+        let latMin = parseFloat(match[2]);
+        let latSec = parseFloat(match[3] || '0');
+        let latDir = match[4].toUpperCase();
+        
+        let lonDeg = parseFloat(match[5]);
+        let lonMin = parseFloat(match[6]);
+        let lonSec = parseFloat(match[7] || '0');
+        let lonDir = match[8].toUpperCase();
+        
+        let lat = latDeg + latMin / 60 + latSec / 3600;
+        let lon = lonDeg + lonMin / 60 + lonSec / 3600;
+        
+        if (latDir === 'S') lat = -lat;
+        if (lonDir === 'W') lon = -lon;
+        
+        if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+          return { lat: parseFloat(lat.toFixed(8)), lon: parseFloat(lon.toFixed(8)) };
+        }
+      }
+      
+      // Decimali tipo: 45.12345, 9.12345
+      const decimalPattern = /([+-]?\d+\.\d+)\s*[,;]?\s*([+-]?\d+\.\d+)/;
+      const decMatch = text.match(decimalPattern);
       if (decMatch) {
         let lat = parseFloat(decMatch[1]);
         let lon = parseFloat(decMatch[2]);
-        if (isValidCoord(lat, lon)) return { lat, lon };
+        if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+          return { lat, lon };
+        }
       }
-      // DMS
-      const dmsPattern = /([0-9.]+)\s*°\s*([0-9.]+)\s*['′]?\s*([0-9.]+(?:\.[0-9]+)?)?.*([NS]).*([0-9.]+)\s*°\s*([0-9.]+)\s*['′]?\s*([0-9.]+(?:\.[0-9]+)?)?.*([EW])/i;
-      const match = text.match(dmsPattern);
-      if (match) {
-        let lat = parseFloat(match[1]) + parseFloat(match[2])/60 + (parseFloat(match[3]||0))/3600;
-        if (match[4].toUpperCase() === 'S') lat = -lat;
-        let lon = parseFloat(match[5]) + parseFloat(match[6])/60 + (parseFloat(match[7]||0))/3600;
-        if (match[8].toUpperCase() === 'W') lon = -lon;
-        if (isValidCoord(lat, lon)) return { lat, lon };
-      }
+      
       return null;
     }
-
-    function isValidCoord(lat, lon) {
-      return lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180;
-    }
-
-    // ---------- Filtro Italia ----------
-    function isInItaly(lat, lon) {
-      return (lat >= ITALY_BOUNDS.minLat && lat <= ITALY_BOUNDS.maxLat &&
-              lon >= ITALY_BOUNDS.minLon && lon <= ITALY_BOUNDS.maxLon);
-    }
-
-    // ---------- Core Logic ----------
+    
+    // ---------- Carica e processa spot.csv ----------
     async function loadAndProcessData() {
       try {
+        document.getElementById('loaderStatus').textContent = 'Download del file CSV...';
+        
         const response = await fetch('spot.csv');
-        if (!response.ok) throw new Error("File spot.csv non trovato");
-
+        if (!response.ok) throw new Error(`Impossibile caricare spot.csv (HTTP ${response.status})`);
+        
         const csvText = await response.text();
         const data = csvToObjects(csvText);
         
-        let skippedItaly = 0;
-        let skippedFormat = 0;
-
+        if (!Array.isArray(data)) {
+          throw new Error("Il CSV non è stato convertito correttamente in un array.");
+        }
+        
+        let total = data.length;
+        let skipped = 0;
+        let outsideItaly = 0;
+        let processed = 0;
+        
+        document.getElementById('loaderStatus').textContent = `Processamento ${total} luoghi...`;
+        
         for (const pin of data) {
-          let coordText = (pin["grid_description"] || pin["description"] || pin["title"] || "").trim();
-          coordText = decodeHtmlEntities(coordText).replace(/\s+/g, ' ').trim();
+          processed++;
+          if (processed % 10 === 0) {
+            document.getElementById('loaderStatus').textContent = `Processamento ${processed}/${total} luoghi...`;
+          }
           
-          const coords = extractCoordinates(coordText);
+          // Scegli testo da cui estrarre coordinate
+          let coordText =
+            (pin["grid_description"] || pin["description"] || pin["title"] || pin["grid_title"] || "").trim();
           
-          if (!coords) {
-            skippedFormat++;
+          if (!coordText) {
+            skipped++;
             continue;
           }
-
-          // ** Filtro Automatico Italia **
-          if (!isInItaly(coords.lat, coords.lon)) {
-            skippedItaly++;
+          
+          // Decodifica entità HTML, compatta spazi
+          coordText = decodeHtmlEntities(coordText);
+          coordText = coordText.replace(/\s+/g, ' ').trim();
+          
+          const coordMatch = extractCoordinates(coordText);
+          if (!coordMatch) {
+            skipped++;
             continue;
           }
-
-          let imageUrl = (pin["story_pin_data/pages/0/blocks/0/image/images/originals/url"] || 
-                          pin["image/url"] || pin["board/image_thumbnail_url"] || "").trim();
-
+          
+          // Controlla se le coordinate sono in Italia
+          if (!isInItaly(coordMatch.lat, coordMatch.lon)) {
+            outsideItaly++;
+            continue; // Salta i pin fuori dall'Italia
+          }
+          
+          const title = (pin["title"] || pin["grid_title"] || "Luogo sconosciuto").trim();
+          
+          const descriptionRaw =
+            (pin["grid_description"] || pin["description"] || pin["title"] || coordText || "").trim();
+          const description = decodeHtmlEntities(descriptionRaw).replace(/\s+/g, ' ').trim();
+          
+          // Immagine
+          let imageUrl =
+            (pin["story_pin_data/pages/0/blocks/0/image/images/originals/url"] || "").trim();
+          
+          if (!imageUrl) {
+            imageUrl = (pin["image/url"] || "").trim();
+          }
+          
+          if (!imageUrl) {
+            imageUrl = (pin["board/image_thumbnail_url"] || "").trim();
+          }
+          
           locations.push({
-            lat: coords.lat,
-            lon: coords.lon,
-            title: (pin["title"] || "Senza Titolo").trim(),
-            desc: decodeHtmlEntities(pin["description"] || coordText || "").trim(),
-            image: imageUrl
+            latitude: coordMatch.lat,
+            longitude: coordMatch.lon,
+            title: title,
+            description: description,
+            image: imageUrl || null
           });
         }
-
-        console.log(`Caricati: ${locations.length}. Fuori Italia: ${skippedItaly}. Errati: ${skippedFormat}`);
         
-        if (locations.length === 0) alert("Nessun luogo trovato in Italia.");
+        // Aggiorna statistiche
+        document.getElementById('loadedCount').textContent = locations.length;
+        document.getElementById('skippedCount').textContent = skipped;
+        document.getElementById('outsideItalyCount').textContent = outsideItaly;
+        document.getElementById('totalCount').textContent = total;
+        
+        console.log("Punti validi trovati:", locations.length);
+        console.log("Scartati (formato errato):", skipped);
+        console.log("Fuori Italia:", outsideItaly);
+        
+        if (locations.length === 0) {
+          alert(`Nessun punto valido trovato in Italia su ${total} totali. Verifica il formato delle coordinate.`);
+          return;
+        }
+        
+        // Nascondi loader e mostra controllo
+        document.getElementById('loader').style.display = 'none';
+        document.getElementById('controlPanel').style.display = 'block';
         
         initMap();
-
+        
       } catch (error) {
-        alert("Errore: " + error.message);
-      } finally {
-        document.getElementById('loading-overlay').style.display = 'none';
+        console.error("Errore:", error);
+        document.getElementById('loaderStatus').textContent = `Errore: ${error.message}`;
+        setTimeout(() => {
+          alert("Errore nel caricamento o elaborazione di spot.csv: " + error.message);
+        }, 500);
       }
     }
-
+    
+    // ---------- Inizializza mappa ----------
     function initMap() {
-      // Centro sull'Italia di default
-      map = L.map('map').setView([42.5, 12.5], 6);
-
-      // Layer Base (inizia con Light)
-      tileLayer = L.tileLayer(TILE_LIGHT, { attribution: ATTRIBUTION }).addTo(map);
-
-      // Marker Cluster Group (migliora UX)
-      markersClusterGroup = L.markerClusterGroup({
-        showCoverageOnHover: false,
-        maxClusterRadius: 50
-      });
-
+      map = L.map('map');
+      
+      // Usa il tema corretto
+      const tileServer = darkMode ? MAP_TILE_SERVER_DARK : MAP_TILE_SERVER_LIGHT;
+      L.tileLayer(tileServer, {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+      
+      const markers = [];
       locations.forEach(loc => {
-        const marker = L.marker([loc.lat, loc.lon], { icon: blackIcon });
+        const marker = L.marker([loc.latitude, loc.longitude], { icon: blackIcon }).addTo(map);
+        markers.push(marker);
         
-        const gmapsUrl = `https://www.google.com/maps/search/?api=1&query=${loc.lat},${loc.lon}`;
-        const coordString = `${loc.lat.toFixed(6)}, ${loc.lon.toFixed(6)}`;
-
-        const popupHtml = `
+        const coords = loc.latitude.toFixed(6) + ',' + loc.longitude.toFixed(6);
+        
+        const popupContent = `
           <div>
-            ${loc.image ? `<img src="${loc.image}" style="width:100%; height:180px; object-fit:cover; border-radius:6px; margin-bottom:8px;" onerror="this.style.display='none'">` : ''}
+            ${loc.image ? `
+              <img src="${loc.image}" alt="${escapeHtml(loc.title)}"
+                   style="width:100%; height:auto; max-height:400px; object-fit:contain; border-radius:8px; margin-bottom:10px;"
+                   onerror="this.style.display='none'" />
+            ` : ''}
             <div class="popup-title">${escapeHtml(loc.title)}</div>
-            <div class="popup-desc">${escapeHtml(loc.desc.substring(0, 150))}${loc.desc.length > 150 ? '...' : ''}</div>
-            
-            <div class="location-info">📍 ${coordString}</div>
-            
-            <button class="action-btn btn-copy" onclick="copyCoords('${coordString}')">
-              📋 Copia Coordinate
+            <div class="popup-desc">${escapeHtml(loc.description || 'Nessuna descrizione')}</div>
+            <div class="location-info">
+              <strong><i class="fas fa-map-marker-alt"></i> Coordinate:</strong><br>
+              ${coords}
+            </div>
+            <button class="copy-coords-btn" onclick="copyToClipboard('${coords}')">
+              <i class="far fa-copy"></i> Copia coordinate
             </button>
-            <button class="action-btn btn-maps" onclick="window.open('${gmapsUrl}', '_blank')">
-              🗺️ Apri Maps
+            <button class="open-gmaps-btn" onclick="openGoogleMaps(${loc.latitude}, ${loc.longitude})">
+              <i class="fab fa-google"></i> Apri in Google Maps
             </button>
           </div>
         `;
-
-        marker.bindPopup(popupHtml);
-        markersClusterGroup.addLayer(marker);
+        
+        marker.bindPopup(popupContent);
+        
+        // Aggiungi effetto hover
+        marker.on('mouseover', function() {
+          this.openPopup();
+        });
       });
-
-      map.addLayer(markersClusterGroup);
-
-      // Statistiche Legend
-      const legend = document.createElement('div');
-      legend.className = 'info-legend';
-      legend.innerHTML = `<strong>${locations.length}</strong> Luoghi in Italia`;
-      document.body.appendChild(legend);
-
-      // Fit bounds se ci sono punti
-      if (locations.length > 0) {
-        map.fitBounds(markersClusterGroup.getBounds(), { padding: [50, 50] });
-      }
-    }
-
-    // ---------- Funzioni Interfaccia ----------
-
-    function toggleDarkMode() {
-      isDarkMode = !isDarkMode;
-      const body = document.body;
-      const btnIcon = document.getElementById('theme-icon');
       
-      if (isDarkMode) {
-        body.setAttribute('data-theme', 'dark');
-        tileLayer.setUrl(TILE_DARK);
-        btnIcon.textContent = '☀️';
+      if (locations.length > 0) {
+        if (locations.length === 1) {
+          map.setView([locations[0].latitude, locations[0].longitude], 13);
+        } else {
+          const bounds = L.latLngBounds(markers.map(m => m.getLatLng()));
+          map.fitBounds(bounds, { padding: [50, 50] });
+        }
       } else {
-        body.removeAttribute('data-theme');
-        tileLayer.setUrl(TILE_LIGHT);
-        btnIcon.textContent = '🌙';
+        map.setView(DEFAULT_MAP_CENTER, DEFAULT_ZOOM);
       }
+      
+      // Aggiungi controllo scala
+      L.control.scale({ imperial: false }).addTo(map);
+      
+      // Aggiungi controllo zoom
+      L.control.zoom({ position: 'bottomright' }).addTo(map);
     }
-
-    function copyCoords(text) {
-      navigator.clipboard.writeText(text).then(() => {
-        alert('Coordinate copiate!');
-      }).catch(err => {
-        prompt("Copia manuale (CTRL+C):", text);
-      });
-    }
-
+    
     function escapeHtml(text) {
       if (!text) return '';
-      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
     }
-
-    // Start
-    loadAndProcessData();
+    
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        // Feedback visivo invece di alert
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> Coordinate copiate!';
+        btn.style.background = '#2ecc71';
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.style.background = '';
+        }, 2000);
+      }).catch(() => {
+        // Fallback
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> Coordinate copiate!';
+        btn.style.background = '#2ecc71';
+        
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.style.background = '';
+        }, 2000);
+      });
+    }
+    
+    function openGoogleMaps(lat, lon) {
+      const url = 'https://www.google.com/maps/search/?api=1&query=' + lat + ',' + lon;
+      window.open(url, '_blank');
+    }
+    
+    // ---------- Avvia applicazione ----------
+    document.addEventListener('DOMContentLoaded', function() {
+      // Imposta tema iniziale
+      initTheme();
+      
+      // Aggiungi listener al toggle tema
+      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+      
+      // Carica dati
+      loadAndProcessData();
+    });
   </script>
 </body>
 </html>
