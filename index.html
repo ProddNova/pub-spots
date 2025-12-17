@@ -17,6 +17,7 @@
     html, body, #map { 
       height: 100%; 
       width: 100%; 
+      overflow: hidden;
     }
     
     /* Variabili tema rosso/nero */
@@ -36,7 +37,6 @@
     body {
       background: var(--primary-black);
       color: var(--text-light);
-      overflow: hidden;
     }
     
     /* Header branding */
@@ -48,7 +48,7 @@
       z-index: 1000;
       background: rgba(18, 18, 18, 0.95);
       backdrop-filter: blur(10px);
-      padding: 15px 20px;
+      padding: 12px 20px;
       border-bottom: 2px solid var(--primary-red);
       display: flex;
       justify-content: space-between;
@@ -59,56 +59,56 @@
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
     
     .logo {
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       background: var(--primary-red);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
+      font-size: 16px;
       color: white;
       font-weight: bold;
     }
     
     .brand-text h1 {
-      font-size: 18px;
+      font-size: 16px;
       font-weight: 600;
       color: var(--text-light);
       line-height: 1.2;
     }
     
     .brand-text p {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--text-gray);
     }
     
-    /* Stats panel ridisegnato */
+    /* Stats panel ottimizzato */
     .stats-panel {
       display: flex;
-      gap: 20px;
+      gap: 15px;
       align-items: center;
     }
     
     .stat-item {
       text-align: center;
-      min-width: 60px;
+      min-width: 55px;
     }
     
     .stat-number {
       display: block;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: 700;
       color: var(--primary-red);
       line-height: 1;
     }
     
     .stat-label {
-      font-size: 10px;
+      font-size: 9px;
       color: var(--text-gray);
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -118,20 +118,20 @@
     /* Pulsanti azione */
     .action-buttons {
       display: flex;
-      gap: 10px;
+      gap: 8px;
     }
     
     .action-btn {
       background: var(--secondary-black);
       border: 1px solid var(--border-color);
       color: var(--text-light);
-      padding: 10px 16px;
-      border-radius: 8px;
+      padding: 8px 12px;
+      border-radius: 6px;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 8px;
-      font-size: 14px;
+      gap: 6px;
+      font-size: 12px;
       font-weight: 500;
       transition: all 0.2s;
       white-space: nowrap;
@@ -140,25 +140,24 @@
     .action-btn:hover {
       background: var(--primary-red);
       border-color: var(--primary-red);
-      transform: translateY(-2px);
     }
     
-    /* Popup personalizzato */
+    /* Popup ottimizzato */
     .leaflet-popup-content-wrapper {
       background: var(--card-bg);
       color: var(--text-light);
-      border-radius: 12px;
+      border-radius: 10px;
       border: 2px solid var(--primary-red);
-      box-shadow: 0 10px 30px var(--shadow-dark);
+      box-shadow: 0 8px 25px var(--shadow-dark);
       padding: 0;
       overflow: hidden;
+      max-width: 300px;
     }
     
     .leaflet-popup-content {
       margin: 0;
       padding: 0;
-      max-width: 300px;
-      max-height: 400px;
+      max-height: 350px;
       overflow-y: auto;
     }
     
@@ -167,19 +166,20 @@
     }
     
     .popup-header {
-      padding: 15px;
+      padding: 12px;
       background: linear-gradient(135deg, var(--primary-red), var(--primary-red-dark));
       color: white;
     }
     
     .popup-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 700;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
+      line-height: 1.2;
     }
     
     .popup-coords {
-      font-size: 11px;
+      font-size: 10px;
       opacity: 0.9;
       font-family: monospace;
       display: flex;
@@ -188,36 +188,37 @@
     }
     
     .popup-body {
-      padding: 15px;
+      padding: 12px;
     }
     
     .popup-image {
       width: 100%;
-      height: 150px;
+      height: 120px;
       object-fit: cover;
-      border-radius: 8px;
-      margin-bottom: 15px;
+      border-radius: 6px;
+      margin-bottom: 12px;
       border: 1px solid var(--border-color);
+      background: #222;
     }
     
     .popup-description {
-      font-size: 14px;
-      line-height: 1.5;
+      font-size: 13px;
+      line-height: 1.4;
       color: var(--text-gray);
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
     
     .popup-actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 8px;
     }
     
     .popup-btn {
-      padding: 10px;
-      border-radius: 6px;
+      padding: 8px;
+      border-radius: 5px;
       border: none;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 600;
       cursor: pointer;
       display: flex;
@@ -245,10 +246,9 @@
     
     .popup-btn.maps:hover {
       background: var(--primary-red-dark);
-      transform: translateY(-2px);
     }
     
-    /* Loader fullscreen */
+    /* Loader ottimizzato */
     .loader-overlay {
       position: fixed;
       top: 0;
@@ -261,64 +261,61 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      transition: opacity 0.5s;
     }
     
     .loader-logo {
-      width: 80px;
-      height: 80px;
+      width: 70px;
+      height: 70px;
       background: var(--primary-red);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 30px;
-      animation: pulse 2s infinite;
+      margin-bottom: 25px;
     }
     
     .loader-logo i {
-      font-size: 36px;
+      font-size: 32px;
       color: white;
     }
     
     .loader-text {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 700;
       color: var(--text-light);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       text-align: center;
     }
     
     .loader-subtext {
       color: var(--text-gray);
       text-align: center;
-      max-width: 300px;
-      line-height: 1.5;
+      max-width: 280px;
+      line-height: 1.4;
+      font-size: 14px;
     }
     
     .loader-progress {
-      width: 300px;
+      width: 280px;
       height: 4px;
       background: var(--secondary-black);
       border-radius: 2px;
-      margin-top: 30px;
+      margin-top: 25px;
       overflow: hidden;
     }
     
     .loader-progress-bar {
       height: 100%;
-      background: var(--primary-red);
+      background: linear-gradient(90deg, var(--primary-red), var(--accent-red));
       width: 0%;
-      transition: width 0.3s;
+      transition: width 0.3s ease;
     }
     
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    .progress-percent {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--primary-red);
+      margin-top: 8px;
     }
     
     /* Footer mobile */
@@ -330,7 +327,7 @@
       right: 0;
       background: rgba(18, 18, 18, 0.95);
       backdrop-filter: blur(10px);
-      padding: 15px;
+      padding: 12px 15px;
       border-top: 2px solid var(--primary-red);
       z-index: 1000;
     }
@@ -345,11 +342,11 @@
     /* Mobile optimization */
     @media (max-width: 768px) {
       .header {
-        padding: 12px 15px;
+        padding: 10px 15px;
       }
       
       .brand-text h1 {
-        font-size: 16px;
+        font-size: 14px;
       }
       
       .brand-text p {
@@ -361,27 +358,32 @@
       }
       
       .stats-panel {
-        gap: 15px;
+        gap: 12px;
       }
       
       .stat-item {
-        min-width: 50px;
+        min-width: 45px;
       }
       
       .stat-number {
-        font-size: 18px;
+        font-size: 16px;
       }
       
       .mobile-footer {
         display: block;
       }
       
-      .leaflet-popup-content {
-        max-width: 250px;
+      .leaflet-popup-content-wrapper {
+        max-width: 260px;
       }
       
       .loader-text {
         font-size: 20px;
+      }
+      
+      .loader-subtext {
+        font-size: 13px;
+        max-width: 250px;
       }
       
       .loader-progress {
@@ -391,7 +393,7 @@
     
     @media (max-width: 480px) {
       .header {
-        padding: 10px;
+        padding: 8px 10px;
       }
       
       .stat-item {
@@ -399,34 +401,69 @@
       }
       
       .stat-number {
-        font-size: 16px;
+        font-size: 14px;
       }
       
       .stat-label {
-        font-size: 9px;
+        font-size: 8px;
       }
     }
     
-    /* Stile mappa dark */
+    /* Performance optimizations */
     .leaflet-container {
       background: var(--primary-black);
+      will-change: transform;
     }
     
-    /* Icona pin personalizzata rosso/nero */
-    .red-black-icon {
-      filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.7));
+    /* Simple marker style for performance */
+    .simple-marker {
+      background: var(--primary-red);
+      border: 2px solid var(--primary-black);
+      border-radius: 50%;
+      width: 16px !important;
+      height: 16px !important;
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+      transform: translate(-8px, -8px);
+      cursor: pointer;
     }
     
-    /* Pulsanti mappa custom */
-    .leaflet-control-zoom a {
-      background: var(--secondary-black) !important;
-      color: var(--text-light) !important;
-      border: 1px solid var(--border-color) !important;
+    .simple-marker::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 6px;
+      height: 6px;
+      background: white;
+      border-radius: 50%;
     }
     
-    .leaflet-control-zoom a:hover {
-      background: var(--primary-red) !important;
-      border-color: var(--primary-red) !important;
+    /* Performance hint */
+    .performance-hint {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.7);
+      color: var(--text-gray);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      z-index: 1000;
+    }
+    
+    /* Evita scroll nei popup su mobile */
+    .leaflet-popup-content::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    .leaflet-popup-content::-webkit-scrollbar-track {
+      background: var(--secondary-black);
+    }
+    
+    .leaflet-popup-content::-webkit-scrollbar-thumb {
+      background: var(--primary-red);
+      border-radius: 3px;
     }
   </style>
 </head>
@@ -497,97 +534,104 @@
       <i class="fas fa-map-marked-alt"></i>
     </div>
     <div class="loader-text">Caricamento Mappa</div>
-    <div class="loader-subtext">
-      Sto cercando i luoghi abbandonati più interessanti per te...
+    <div class="loader-subtext" id="loaderStatus">
+      Inizializzazione del sistema di esplorazione...
     </div>
     <div class="loader-progress">
       <div class="loader-progress-bar" id="progressBar"></div>
     </div>
+    <div class="progress-percent" id="progressText">0%</div>
+  </div>
+
+  <!-- Performance hint -->
+  <div class="performance-hint" id="performanceHint">
+    <i class="fas fa-bolt"></i> Ottimizzato per performance
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    // Configurazioni
-    const MAP_TILE_SERVER_DARK = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png";
-    const ITALY_CENTER = [42.5, 12.5];
-    const DEFAULT_ZOOM = 6;
-    
-    // Bounding box Italia
-    const ITALY_BOUNDS = {
-      minLat: 36.0,
-      maxLat: 47.5,
-      minLon: 6.0,
-      maxLon: 19.0
+    // ===== CONFIGURAZIONI E VARIABILI GLOBALI =====
+    const CONFIG = {
+      MAP_TILE_DARK: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
+      MAP_TILE_ATTR: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      ITALY_CENTER: [42.5, 12.5],
+      DEFAULT_ZOOM: 6,
+      
+      // Bounding box Italia - più ristretto per performance
+      ITALY_BOUNDS: {
+        minLat: 36.5,
+        maxLat: 47.0,
+        minLon: 6.5,
+        maxLon: 18.5
+      },
+      
+      // Performance settings
+      BATCH_SIZE: 100, // Processa più punti per batch
+      MARKER_CLUSTER_THRESHOLD: 1000 // Soglia per abilitare clustering
     };
     
-    let locations = [];
-    let map;
-    let markers = [];
-    let totalProcessed = 0;
-    let totalLocations = 0;
+    // Variabili globali
+    let map = null;
+    let markersLayer = null;
+    let allLocations = [];
+    let filteredLocations = [];
     
-    // ---------- Icona personalizzata rosso/nero ----------
-    const RedBlackIcon = L.divIcon({
-      className: 'red-black-icon',
-      html: `
-        <div style="
-          width: 30px;
-          height: 30px;
-          background: #d32f2f;
-          border: 3px solid #121212;
-          border-radius: 50% 50% 50% 0;
-          transform: rotate(-45deg);
-          position: relative;
-          box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        ">
-          <div style="
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(45deg);
-            color: white;
-            font-size: 14px;
-            font-weight: bold;
-          ">
-            <i class="fas fa-map-pin"></i>
-          </div>
-        </div>
-      `,
-      iconSize: [30, 30],
-      iconAnchor: [15, 30],
-      popupAnchor: [0, -30]
-    });
-    
-    // ---------- Aggiorna progresso ----------
-    function updateProgress(current, total, step) {
-      const percent = Math.min(Math.round((current / total) * 100), 100);
-      document.getElementById('progressPercent').textContent = `${percent}%`;
-      document.getElementById('mobileProgress').textContent = `${percent}%`;
-      document.getElementById('progressBar').style.width = `${percent}%`;
-      
-      // Aggiorna testo loader
-      const steps = [
+    // Statistiche di caricamento
+    const stats = {
+      totalCSV: 0,
+      totalValid: 0,
+      totalItaly: 0,
+      currentStep: 0,
+      steps: [
         "Analizzo i dati...",
         "Trovo le coordinate...",
         "Filtro per l'Italia...",
         "Preparo la mappa...",
-        "Quasi pronto..."
-      ];
+        "Caricamento completato!"
+      ]
+    };
+    
+    // ===== FUNZIONI DI UTILITY =====
+    
+    // Aggiorna progresso loader
+    function updateProgress(current, total, stepIndex = null) {
+      const percent = Math.min(Math.round((current / total) * 100), 100);
       
-      if (step < steps.length) {
-        document.querySelector('.loader-subtext').textContent = steps[step];
+      // Aggiorna percentuali
+      document.getElementById('progressPercent').textContent = `${percent}%`;
+      document.getElementById('mobileProgress').textContent = `${percent}%`;
+      document.getElementById('progressText').textContent = `${percent}%`;
+      
+      // Progress bar
+      document.getElementById('progressBar').style.width = `${percent}%`;
+      
+      // Aggiorna testo loader
+      if (stepIndex !== null && stepIndex < stats.steps.length) {
+        document.getElementById('loaderStatus').textContent = stats.steps[stepIndex];
+        stats.currentStep = stepIndex;
       }
+      
+      // Aggiorna contatori
+      if (stats.totalItaly > 0) {
+        document.getElementById('loadedCount').textContent = stats.totalItaly;
+        document.getElementById('mobileLoadedCount').textContent = stats.totalItaly;
+        document.getElementById('filteredCount').textContent = stats.totalItaly;
+        document.getElementById('mobileFilteredCount').textContent = stats.totalItaly;
+      }
+      
+      // Forza reflow per animazione fluida
+      document.getElementById('progressBar').offsetHeight;
     }
     
-    // ---------- Controlla se in Italia ----------
+    // Controlla se coordinate sono in Italia
     function isInItaly(lat, lon) {
-      return lat >= ITALY_BOUNDS.minLat && 
-             lat <= ITALY_BOUNDS.maxLat && 
-             lon >= ITALY_BOUNDS.minLon && 
-             lon <= ITALY_BOUNDS.maxLon;
+      return lat >= CONFIG.ITALY_BOUNDS.minLat && 
+             lat <= CONFIG.ITALY_BOUNDS.maxLat && 
+             lon >= CONFIG.ITALY_BOUNDS.minLon && 
+             lon <= CONFIG.ITALY_BOUNDS.maxLon;
     }
     
-    // ---------- Decodifica HTML ----------
+    // Decodifica HTML entities
     function decodeHtmlEntities(str) {
       if (!str) return "";
       const txt = document.createElement("textarea");
@@ -595,100 +639,116 @@
       return txt.value;
     }
     
-    // ---------- CSV Parsing ----------
+    // Parsing CSV ottimizzato
     function parseCSV(text) {
       const rows = [];
-      let row = [];
-      let field = "";
+      let currentRow = [];
+      let currentField = "";
       let inQuotes = false;
       
       for (let i = 0; i < text.length; i++) {
-        const c = text[i];
+        const char = text[i];
         
         if (inQuotes) {
-          if (c === '"') {
-            if (text[i + 1] === '"') {
-              field += '"';
-              i++;
-            } else {
-              inQuotes = false;
-            }
+          if (char === '"' && text[i + 1] === '"') {
+            currentField += '"';
+            i++;
+          } else if (char === '"') {
+            inQuotes = false;
           } else {
-            field += c;
+            currentField += char;
           }
         } else {
-          if (c === '"') {
+          if (char === '"') {
             inQuotes = true;
-          } else if (c === ',') {
-            row.push(field);
-            field = "";
-          } else if (c === '\r') {
-            // ignora
-          } else if (c === '\n') {
-            row.push(field);
-            field = "";
-            rows.push(row);
-            row = [];
+          } else if (char === ',') {
+            currentRow.push(currentField);
+            currentField = "";
+          } else if (char === '\r') {
+            continue;
+          } else if (char === '\n') {
+            currentRow.push(currentField);
+            rows.push(currentRow);
+            currentRow = [];
+            currentField = "";
           } else {
-            field += c;
+            currentField += char;
           }
         }
       }
       
-      // ultimo campo
-      row.push(field);
-      rows.push(row);
-      
-      // rimuove righe vuote
-      while (rows.length && rows[rows.length - 1].every(v => (v ?? "").trim() === "")) {
-        rows.pop();
+      if (currentField || currentRow.length) {
+        currentRow.push(currentField);
+        rows.push(currentRow);
       }
       
-      return rows;
+      return rows.filter(row => row.some(field => field.trim()));
     }
     
+    // Converti CSV in oggetti
     function csvToObjects(csvText) {
-      const rows = parseCSV(csvText);
-      if (!rows.length) return [];
-      
-      const headers = rows[0].map(h => (h ?? "").trim());
-      const objs = [];
-      
-      for (let r = 1; r < rows.length; r++) {
-        const line = rows[r];
-        if (!line || line.every(v => (v ?? "").trim() === "")) continue;
+      try {
+        const rows = parseCSV(csvText);
+        if (rows.length < 2) return [];
         
-        const obj = {};
-        for (let c = 0; c < headers.length; c++) {
-          const key = headers[c];
-          if (!key) continue;
-          obj[key] = line[c] ?? "";
+        const headers = rows[0].map(h => h.trim());
+        const result = [];
+        
+        for (let i = 1; i < rows.length; i++) {
+          const row = rows[i];
+          const obj = {};
+          
+          for (let j = 0; j < headers.length; j++) {
+            if (j < row.length) {
+              obj[headers[j]] = row[j] || "";
+            } else {
+              obj[headers[j]] = "";
+            }
+          }
+          
+          result.push(obj);
         }
-        objs.push(obj);
+        
+        return result;
+      } catch (error) {
+        console.error("Errore parsing CSV:", error);
+        return [];
       }
-      return objs;
     }
     
-    // ---------- Estrazione coordinate ----------
+    // Estrazione coordinate ottimizzata
     function extractCoordinates(text) {
       if (!text) return null;
       
-      // DMS tipo: 43°52'23.7"N 20°21'38.8"E
-      const dmsPattern =
-        /([0-9.]+)\s*°\s*([0-9.]+)\s*['′]?\s*([0-9.]+(?:\.[0-9]+)?)?\s*["″]?\s*([NSns])\s+([0-9.]+)\s*°\s*([0-9.]+)\s*['′]?\s*([0-9.]+(?:\.[0-9]+)?)?\s*["″]?\s*([EWew])/i;
+      // Cerca prima coordinate decimali (più comune)
+      const decimalPattern = /([+-]?\d+\.\d+)\s*[,;]?\s*([+-]?\d+\.\d+)/;
+      const decMatch = text.match(decimalPattern);
       
-      const match = text.match(dmsPattern);
-      
-      if (match) {
-        let latDeg = parseFloat(match[1]);
-        let latMin = parseFloat(match[2]);
-        let latSec = parseFloat(match[3] || '0');
-        let latDir = match[4].toUpperCase();
+      if (decMatch) {
+        const lat = parseFloat(decMatch[1]);
+        const lon = parseFloat(decMatch[2]);
         
-        let lonDeg = parseFloat(match[5]);
-        let lonMin = parseFloat(match[6]);
-        let lonSec = parseFloat(match[7] || '0');
-        let lonDir = match[8].toUpperCase();
+        if (!isNaN(lat) && !isNaN(lon) && 
+            lat >= -90 && lat <= 90 && 
+            lon >= -180 && lon <= 180) {
+          return { lat, lon };
+        }
+      }
+      
+      // Fallback: cerca coordinate DMS
+      const dmsPattern = /(\d+)[°º]\s*(\d+)[′']\s*([\d.]+)?[″"]?\s*([NS])\s+(\d+)[°º]\s*(\d+)[′']\s*([\d.]+)?[″"]?\s*([EW])/i;
+      const dmsMatch = text.match(dmsPattern);
+      
+      if (dmsMatch) {
+        const latDeg = parseFloat(dmsMatch[1]);
+        const latMin = parseFloat(dmsMatch[2]);
+        const latSec = parseFloat(dmsMatch[3] || "0");
+        const latDir = dmsMatch[4].toUpperCase();
+        
+        const lonDeg = parseFloat(dmsMatch[5]);
+        const lonMin = parseFloat(dmsMatch[6]);
+        const lonSec = parseFloat(dmsMatch[7] || "0");
+        const lonDir = dmsMatch[8].toUpperCase();
         
         let lat = latDeg + latMin / 60 + latSec / 3600;
         let lon = lonDeg + lonMin / 60 + lonSec / 3600;
@@ -696,18 +756,9 @@
         if (latDir === 'S') lat = -lat;
         if (lonDir === 'W') lon = -lon;
         
-        if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
-          return { lat: parseFloat(lat.toFixed(8)), lon: parseFloat(lon.toFixed(8)) };
-        }
-      }
-      
-      // Decimali tipo: 45.12345, 9.12345
-      const decimalPattern = /([+-]?\d+\.\d+)\s*[,;]?\s*([+-]?\d+\.\d+)/;
-      const decMatch = text.match(decimalPattern);
-      if (decMatch) {
-        let lat = parseFloat(decMatch[1]);
-        let lon = parseFloat(decMatch[2]);
-        if (lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180) {
+        if (!isNaN(lat) && !isNaN(lon) && 
+            lat >= -90 && lat <= 90 && 
+            lon >= -180 && lon <= 180) {
           return { lat, lon };
         }
       }
@@ -715,216 +766,175 @@
       return null;
     }
     
-    // ---------- Carica e processa dati ----------
-    async function loadAndProcessData() {
-      try {
-        updateProgress(0, 100, 0);
+    // ===== PROCESSAMENTO DATI =====
+    
+    async function processDataInBatches(data, batchSize, progressCallback) {
+      const total = data.length;
+      const batches = Math.ceil(total / batchSize);
+      const results = [];
+      
+      stats.totalCSV = total;
+      updateProgress(0, total, 0);
+      
+      for (let i = 0; i < batches; i++) {
+        const start = i * batchSize;
+        const end = Math.min(start + batchSize, total);
+        const batch = data.slice(start, end);
         
-        // Simula un piccolo ritardo per mostrare il loader
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        const response = await fetch('spot.csv');
-        if (!response.ok) throw new Error(`Impossibile caricare i dati (HTTP ${response.status})`);
-        
-        const csvText = await response.text();
-        const data = csvToObjects(csvText);
-        
-        if (!Array.isArray(data)) {
-          throw new Error("Formato dati non riconosciuto");
-        }
-        
-        totalLocations = data.length;
-        let validInItaly = 0;
-        let currentStep = 0;
-        
-        updateProgress(0, totalLocations, 1);
-        
-        // Processa in batch per non bloccare l'UI
-        const batchSize = 50;
-        for (let i = 0; i < data.length; i += batchSize) {
-          const batch = data.slice(i, i + batchSize);
+        // Processa batch
+        for (const item of batch) {
+          // Cerca coordinate
+          const coordText = (
+            item["grid_description"] || 
+            item["description"] || 
+            item["title"] || 
+            item["grid_title"] || 
+            ""
+          ).trim();
           
-          for (const pin of batch) {
-            totalProcessed++;
-            
-            // Aggiorna progresso ogni 10 elementi
-            if (totalProcessed % 10 === 0 || totalProcessed === totalLocations) {
-              updateProgress(totalProcessed, totalLocations, currentStep);
-              currentStep = Math.min(Math.floor(totalProcessed / (totalLocations / 4)), 4);
-              
-              // Piccola pausa per non sovraccaricare l'UI
-              await new Promise(resolve => setTimeout(resolve, 1));
-            }
-            
-            // Estrai coordinate
-            let coordText =
-              (pin["grid_description"] || pin["description"] || pin["title"] || pin["grid_title"] || "").trim();
-            
-            if (!coordText) continue;
-            
-            coordText = decodeHtmlEntities(coordText).replace(/\s+/g, ' ').trim();
-            const coordMatch = extractCoordinates(coordText);
-            
-            if (!coordMatch) continue;
-            
-            // Filtra per Italia
-            if (!isInItaly(coordMatch.lat, coordMatch.lon)) continue;
-            
-            validInItaly++;
-            
-            const title = (pin["title"] || pin["grid_title"] || "Luogo Sconosciuto").trim();
-            const descriptionRaw = (pin["grid_description"] || pin["description"] || "").trim();
-            const description = decodeHtmlEntities(descriptionRaw).replace(/\s+/g, ' ').trim();
-            
-            // Immagine
-            let imageUrl =
-              (pin["story_pin_data/pages/0/blocks/0/image/images/originals/url"] || "").trim();
-            
-            if (!imageUrl) {
-              imageUrl = (pin["image/url"] || "").trim();
-            }
-            
-            locations.push({
-              latitude: coordMatch.lat,
-              longitude: coordMatch.lon,
-              title: title.substring(0, 100),
-              description: description.substring(0, 200),
-              image: imageUrl || null
-            });
-          }
+          if (!coordText) continue;
+          
+          const cleanText = decodeHtmlEntities(coordText).replace(/\s+/g, ' ');
+          const coords = extractCoordinates(cleanText);
+          
+          if (!coords) continue;
+          
+          // Filtra per Italia
+          if (!isInItaly(coords.lat, coords.lon)) continue;
+          
+          // Estrai dati
+          const title = (item["title"] || item["grid_title"] || "Luogo Abbandonato").trim();
+          const desc = (item["grid_description"] || item["description"] || "").trim();
+          const image = (
+            item["story_pin_data/pages/0/blocks/0/image/images/originals/url"] ||
+            item["image/url"] || 
+            ""
+          ).trim();
+          
+          results.push({
+            lat: coords.lat,
+            lon: coords.lon,
+            title: title.substring(0, 80),
+            description: desc.substring(0, 150),
+            image: image || null
+          });
+          
+          stats.totalItaly++;
         }
         
-        // Aggiorna statistiche
-        document.getElementById('loadedCount').textContent = locations.length;
-        document.getElementById('mobileLoadedCount').textContent = locations.length;
-        document.getElementById('filteredCount').textContent = validInItaly;
-        document.getElementById('mobileFilteredCount').textContent = validInItaly;
+        // Aggiorna progresso
+        updateProgress(end, total, Math.min(3, Math.floor((end / total) * 4)));
         
-        if (locations.length === 0) {
-          document.querySelector('.loader-text').textContent = "Nessun luogo trovato";
-          document.querySelector('.loader-subtext').textContent = "Non ho trovato luoghi abbandonati in Italia nel tuo file dati";
-          setTimeout(() => {
-            initMap();
-            hideLoader();
-          }, 2000);
-          return;
-        }
-        
-        // Inizializza mappa
-        initMap();
-        
-        // Piccolo ritardo per mostrare il 100%
-        setTimeout(hideLoader, 500);
-        
-      } catch (error) {
-        console.error("Errore:", error);
-        document.querySelector('.loader-text').textContent = "Errore nel caricamento";
-        document.querySelector('.loader-subtext').textContent = error.message;
-        document.getElementById('progressBar').style.background = "#ff4444";
-        
-        setTimeout(() => {
-          alert("Errore: " + error.message);
-          initMap();
-          hideLoader();
-        }, 3000);
+        // Piccola pausa per non bloccare l'UI
+        await new Promise(resolve => setTimeout(resolve, 0));
       }
+      
+      return results;
     }
     
-    // ---------- Nascondi loader ----------
-    function hideLoader() {
-      const loader = document.getElementById('loader');
-      loader.style.opacity = '0';
-      setTimeout(() => {
-        loader.style.display = 'none';
-      }, 500);
-    }
+    // ===== INIZIALIZZAZIONE MAPPA =====
     
-    // ---------- Inizializza mappa ----------
-    function initMap() {
+    function initializeMap() {
+      // Crea mappa
       map = L.map('map', {
         zoomControl: false,
-        attributionControl: false
-      }).setView(ITALY_CENTER, DEFAULT_ZOOM);
+        attributionControl: false,
+        preferCanvas: true, // IMPORTANTE: usa canvas per performance
+        maxZoom: 18,
+        minZoom: 5
+      }).setView(CONFIG.ITALY_CENTER, CONFIG.DEFAULT_ZOOM);
       
-      // Tile dark
-      L.tileLayer(MAP_TILE_SERVER_DARK, {
-        attribution: '© OpenStreetMap contributors'
+      // Aggiungi tile layer
+      L.tileLayer(CONFIG.MAP_TILE_DARK, {
+        attribution: CONFIG.MAP_TILE_ATTR,
+        maxZoom: 19
       }).addTo(map);
       
-      // Aggiungi marker
-      addMarkersToMap();
+      // Crea layer per marker
+      markersLayer = L.layerGroup().addTo(map);
       
       // Aggiungi controlli
       L.control.zoom({ position: 'bottomright' }).addTo(map);
       L.control.scale({ imperial: false, position: 'bottomleft' }).addTo(map);
     }
     
-    // ---------- Aggiungi marker alla mappa ----------
-    function addMarkersToMap() {
-      markers = [];
+    function addMarkersToMap(locations) {
+      if (!map || !markersLayer) return;
       
-      locations.forEach((loc, index) => {
-        // Piccolo ritardo per animazione
-        setTimeout(() => {
-          const marker = L.marker([loc.latitude, loc.longitude], {
-            icon: RedBlackIcon
-          }).addTo(map);
-          
-          markers.push(marker);
-          
-          // Popup content
-          const popupContent = `
-            <div class="popup-header">
-              <div class="popup-title">${escapeHtml(loc.title)}</div>
-              <div class="popup-coords">
-                <i class="fas fa-map-marker-alt"></i>
-                ${loc.latitude.toFixed(6)}, ${loc.longitude.toFixed(6)}
-              </div>
-            </div>
-            <div class="popup-body">
-              ${loc.image ? `
-                <img src="${loc.image}" class="popup-image" 
-                     alt="${escapeHtml(loc.title)}"
-                     onerror="this.style.display='none'">
-              ` : ''}
-              <div class="popup-description">
-                ${escapeHtml(loc.description || 'Nessuna descrizione disponibile')}
-              </div>
-              <div class="popup-actions">
-                <button class="popup-btn copy" onclick="copyCoords(${loc.latitude}, ${loc.longitude}, this)">
-                  <i class="far fa-copy"></i> Copia
-                </button>
-                <button class="popup-btn maps" onclick="openMaps(${loc.latitude}, ${loc.longitude})">
-                  <i class="fab fa-google"></i> Google Maps
-                </button>
-              </div>
-            </div>
-          `;
-          
-          marker.bindPopup(popupContent);
-          
-          // Solo click apre il popup (rimosso hover)
-          marker.on('click', function() {
-            this.openPopup();
-          });
-          
-        }, index * 20); // Piccolo delay per effetto a cascata
+      // Cancella marker esistenti
+      markersLayer.clearLayers();
+      
+      // Crea marker ottimizzati
+      locations.forEach(location => {
+        // Crea marker semplice per performance
+        const marker = L.circleMarker([location.lat, location.lon], {
+          radius: 6,
+          fillColor: "#d32f2f",
+          fillOpacity: 0.9,
+          color: "#121212",
+          weight: 2,
+          opacity: 1,
+          className: 'simple-marker'
+        }).addTo(markersLayer);
+        
+        // Popup content (creato solo al click)
+        marker.bindPopup(() => createPopupContent(location));
+        
+        // SOLO CLICK apre il popup (no hover)
+        marker.off('mouseover');
+        marker.off('mouseout');
+        
+        // Salva riferimento per performance
+        marker.locationData = location;
       });
       
-      // Centra la mappa sui marker
+      // Aggiorna vista
       if (locations.length > 0) {
-        setTimeout(() => {
-          if (locations.length === 1) {
-            map.setView([locations[0].latitude, locations[0].longitude], 13);
-          } else {
-            const bounds = L.latLngBounds(markers.map(m => m.getLatLng()));
-            map.fitBounds(bounds, { padding: [50, 50] });
-          }
-        }, locations.length * 20 + 100);
+        const bounds = markersLayer.getBounds();
+        if (bounds.isValid()) {
+          map.fitBounds(bounds, { 
+            padding: [50, 50],
+            maxZoom: 10
+          });
+        }
       }
     }
     
-    // ---------- Funzioni utility ----------
+    function createPopupContent(location) {
+      const coords = `${location.lat.toFixed(6)}, ${location.lon.toFixed(6)}`;
+      
+      return `
+        <div class="popup-header">
+          <div class="popup-title">${escapeHtml(location.title)}</div>
+          <div class="popup-coords">
+            <i class="fas fa-map-marker-alt"></i>
+            ${coords}
+          </div>
+        </div>
+        <div class="popup-body">
+          ${location.image ? `
+            <img src="${location.image}" class="popup-image" 
+                 alt="${escapeHtml(location.title)}"
+                 loading="lazy"
+                 onerror="this.style.display='none'">
+          ` : ''}
+          <div class="popup-description">
+            ${escapeHtml(location.description || 'Nessuna descrizione disponibile')}
+          </div>
+          <div class="popup-actions">
+            <button class="popup-btn copy" onclick="copyCoords(${location.lat}, ${location.lon}, this)">
+              <i class="far fa-copy"></i> Copia
+            </button>
+            <button class="popup-btn maps" onclick="openMaps(${location.lat}, ${location.lon})">
+              <i class="fab fa-google"></i> Mappe
+            </button>
+          </div>
+        </div>
+      `;
+    }
+    
+    // ===== FUNZIONI INTERATTIVE =====
+    
     function escapeHtml(text) {
       if (!text) return '';
       const div = document.createElement('div');
@@ -969,27 +979,102 @@
     }
     
     function zoomToItaly() {
-      map.setView(ITALY_CENTER, DEFAULT_ZOOM);
-    }
-    
-    function showAllMarkers() {
-      if (markers.length > 0) {
-        const bounds = L.latLngBounds(markers.map(m => m.getLatLng()));
-        map.fitBounds(bounds, { padding: [100, 100] });
+      if (map) {
+        map.setView(CONFIG.ITALY_CENTER, CONFIG.DEFAULT_ZOOM);
       }
     }
     
-    // ---------- Inizializza app ----------
-    document.addEventListener('DOMContentLoaded', function() {
-      // Avvia caricamento dati
-      loadAndProcessData();
-      
-      // Aggiungi listener per resize
-      window.addEventListener('resize', function() {
-        if (map) {
-          map.invalidateSize();
+    function showAllMarkers() {
+      if (map && markersLayer) {
+        const bounds = markersLayer.getBounds();
+        if (bounds.isValid()) {
+          map.fitBounds(bounds, { padding: [100, 100] });
         }
-      });
+      }
+    }
+    
+    function hideLoader() {
+      const loader = document.getElementById('loader');
+      loader.style.opacity = '0';
+      loader.style.transition = 'opacity 0.5s ease';
+      
+      setTimeout(() => {
+        loader.style.display = 'none';
+        // Mostra hint performance per 3 secondi
+        setTimeout(() => {
+          document.getElementById('performanceHint').style.opacity = '0';
+          setTimeout(() => {
+            document.getElementById('performanceHint').style.display = 'none';
+          }, 500);
+        }, 3000);
+      }, 500);
+    }
+    
+    // ===== CARICAMENTO PRINCIPALE =====
+    
+    async function loadAndInitialize() {
+      try {
+        // 1. Inizializza mappa (vuota)
+        initializeMap();
+        updateProgress(10, 100, 0);
+        
+        // 2. Carica dati CSV
+        const response = await fetch('spot.csv');
+        if (!response.ok) throw new Error(`Errore caricamento dati: ${response.status}`);
+        
+        const csvText = await response.text();
+        updateProgress(20, 100, 1);
+        
+        // 3. Converti CSV
+        const csvData = csvToObjects(csvText);
+        if (!csvData.length) throw new Error("Nessun dato trovato nel file");
+        
+        updateProgress(30, 100, 2);
+        
+        // 4. Processa dati (in batch per non bloccare UI)
+        filteredLocations = await processDataInBatches(csvData, CONFIG.BATCH_SIZE, updateProgress);
+        
+        if (filteredLocations.length === 0) {
+          throw new Error("Nessun luogo valido trovato in Italia");
+        }
+        
+        updateProgress(95, 100, 3);
+        
+        // 5. Aggiungi TUTTI i marker in una volta (nessuna animazione)
+        addMarkersToMap(filteredLocations);
+        
+        // 6. Aggiorna statistiche finali
+        updateProgress(100, 100, 4);
+        
+        // 7. Nascondi loader dopo breve delay
+        setTimeout(hideLoader, 500);
+        
+      } catch (error) {
+        console.error("Errore:", error);
+        
+        // Mostra errore nel loader
+        document.getElementById('loaderStatus').textContent = `Errore: ${error.message}`;
+        document.getElementById('progressBar').style.background = "#ff4444";
+        
+        // Inizializza comunque mappa vuota
+        if (!map) initializeMap();
+        
+        // Nascondi loader dopo 3 secondi
+        setTimeout(hideLoader, 3000);
+      }
+    }
+    
+    // ===== INIZIALIZZA APP =====
+    
+    document.addEventListener('DOMContentLoaded', loadAndInitialize);
+    
+    // Gestisci resize window
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(() => {
+        if (map) map.invalidateSize();
+      }, 100);
     });
   </script>
 </body>
