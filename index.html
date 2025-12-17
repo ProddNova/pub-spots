@@ -7,359 +7,579 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body, #map { height: 100%; width: 100%; }
-    
-    /* Tema chiaro (default) */
-    :root {
-      --bg-color: #ffffff;
-      --text-color: #333333;
-      --card-bg: #ffffff;
-      --card-border: #e0e0e0;
-      --button-primary: #4285F4;
-      --button-secondary: #34A853;
-      --button-dark: #2c3e50;
-      --shadow: rgba(0, 0, 0, 0.1);
+    * { 
+      margin: 0; 
+      padding: 0; 
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
     }
     
-    /* Tema scuro */
-    .dark-theme {
-      --bg-color: #1a1a1a;
-      --text-color: #f0f0f0;
-      --card-bg: #2d2d2d;
-      --card-border: #444444;
-      --button-primary: #5a9cff;
-      --button-secondary: #4caf50;
-      --button-dark: #34495e;
-      --shadow: rgba(0, 0, 0, 0.3);
+    html, body, #map { 
+      height: 100%; 
+      width: 100%; 
+    }
+    
+    /* Variabili tema rosso/nero */
+    :root {
+      --primary-red: #d32f2f;
+      --primary-red-dark: #b71c1c;
+      --primary-black: #121212;
+      --secondary-black: #1e1e1e;
+      --accent-red: #ff5252;
+      --text-light: #ffffff;
+      --text-gray: #b0b0b0;
+      --card-bg: #1a1a1a;
+      --border-color: #333333;
+      --shadow-dark: rgba(0, 0, 0, 0.5);
     }
     
     body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      transition: background-color 0.3s, color 0.3s;
+      background: var(--primary-black);
+      color: var(--text-light);
+      overflow: hidden;
     }
     
-    /* Stili popup */
-    .leaflet-popup-content {
-      max-height: 500px;
-      overflow-y: auto;
-      max-width: 320px;
-      padding: 10px;
-      background-color: var(--card-bg);
-      color: var(--text-color);
-      border-radius: 8px;
-    }
-    
-    .leaflet-popup-content-wrapper {
-      background-color: var(--card-bg);
-      color: var(--text-color);
-      border: 1px solid var(--card-border);
-      box-shadow: 0 4px 12px var(--shadow);
-    }
-    
-    .leaflet-popup-tip {
-      background-color: var(--card-bg);
-    }
-    
-    .open-gmaps-btn {
-      background: var(--button-primary); 
-      color: white; 
-      border: none; 
-      padding: 10px;
-      border-radius: 5px; 
-      margin-top: 10px; 
-      cursor: pointer;
-      font-size: 14px; 
-      width: 100%; 
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.2s;
-    }
-    
-    .open-gmaps-btn:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
-    }
-    
-    .copy-coords-btn {
-      background: var(--button-secondary); 
-      color: white; 
-      border: none; 
-      padding: 8px;
-      border-radius: 5px; 
-      margin-top: 8px; 
-      cursor: pointer;
-      font-size: 13px; 
-      width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      transition: all 0.2s;
-    }
-    
-    .copy-coords-btn:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
-    }
-    
-    .location-info {
-      font-size: 12px; 
-      color: var(--text-color); 
-      margin-top: 5px; 
-      padding: 5px;
-      background: rgba(0, 0, 0, 0.05); 
-      border-radius: 3px;
-      border-left: 3px solid var(--button-primary);
-    }
-    
-    .dark-theme .location-info {
-      background: rgba(255, 255, 255, 0.05);
-    }
-    
-    .popup-title { 
-      font-size: 16px; 
-      font-weight: bold; 
-      margin-bottom: 8px; 
-      color: var(--text-color); 
-    }
-    
-    .popup-desc { 
-      font-size: 14px; 
-      margin-bottom: 10px; 
-      color: var(--text-color); 
-      opacity: 0.9;
-      line-height: 1.4;
-    }
-    
-    /* Pannello controllo */
-    .control-panel {
+    /* Header branding */
+    .header {
       position: absolute;
-      top: 20px;
-      right: 20px;
+      top: 0;
+      left: 0;
+      right: 0;
       z-index: 1000;
-      background-color: var(--card-bg);
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px var(--shadow);
-      border: 1px solid var(--card-border);
-      width: 280px;
-      transition: all 0.3s;
+      background: rgba(18, 18, 18, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 15px 20px;
+      border-bottom: 2px solid var(--primary-red);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px var(--shadow-dark);
     }
     
-    .control-panel h3 {
-      margin-bottom: 12px;
-      font-size: 16px;
+    .brand {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
     }
     
-    .control-panel h3 i {
-      color: var(--button-primary);
+    .logo {
+      width: 40px;
+      height: 40px;
+      background: var(--primary-red);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: white;
+      font-weight: bold;
     }
     
-    .stats {
-      font-size: 13px;
-      margin-bottom: 15px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--card-border);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5px;
+    .brand-text h1 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-light);
+      line-height: 1.2;
+    }
+    
+    .brand-text p {
+      font-size: 12px;
+      color: var(--text-gray);
+    }
+    
+    /* Stats panel ridisegnato */
+    .stats-panel {
+      display: flex;
+      gap: 20px;
+      align-items: center;
     }
     
     .stat-item {
+      text-align: center;
+      min-width: 60px;
+    }
+    
+    .stat-number {
+      display: block;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary-red);
+      line-height: 1;
+    }
+    
+    .stat-label {
+      font-size: 10px;
+      color: var(--text-gray);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 2px;
+    }
+    
+    /* Pulsanti azione */
+    .action-buttons {
       display: flex;
-      justify-content: space-between;
+      gap: 10px;
     }
     
-    .stat-value {
-      font-weight: bold;
-      color: var(--button-primary);
-    }
-    
-    .theme-toggle {
-      background-color: var(--button-dark);
-      color: white;
-      border: none;
-      padding: 10px 15px;
-      border-radius: 5px;
+    .action-btn {
+      background: var(--secondary-black);
+      border: 1px solid var(--border-color);
+      color: var(--text-light);
+      padding: 10px 16px;
+      border-radius: 8px;
       cursor: pointer;
-      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    
+    .action-btn:hover {
+      background: var(--primary-red);
+      border-color: var(--primary-red);
+      transform: translateY(-2px);
+    }
+    
+    /* Popup personalizzato */
+    .leaflet-popup-content-wrapper {
+      background: var(--card-bg);
+      color: var(--text-light);
+      border-radius: 12px;
+      border: 2px solid var(--primary-red);
+      box-shadow: 0 10px 30px var(--shadow-dark);
+      padding: 0;
+      overflow: hidden;
+    }
+    
+    .leaflet-popup-content {
+      margin: 0;
+      padding: 0;
+      max-width: 300px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .leaflet-popup-tip {
+      background: var(--primary-red);
+    }
+    
+    .popup-header {
+      padding: 15px;
+      background: linear-gradient(135deg, var(--primary-red), var(--primary-red-dark));
+      color: white;
+    }
+    
+    .popup-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+    
+    .popup-coords {
+      font-size: 11px;
+      opacity: 0.9;
+      font-family: monospace;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .popup-body {
+      padding: 15px;
+    }
+    
+    .popup-image {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      border: 1px solid var(--border-color);
+    }
+    
+    .popup-description {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-gray);
+      margin-bottom: 15px;
+    }
+    
+    .popup-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    
+    .popup-btn {
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      margin-top: 10px;
+      gap: 5px;
       transition: all 0.2s;
     }
     
-    .theme-toggle:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
+    .popup-btn.copy {
+      background: var(--secondary-black);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
     }
     
-    /* Loader */
-    .loader {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 1001;
-      background-color: var(--card-bg);
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 4px 15px var(--shadow);
-      border: 1px solid var(--card-border);
-      text-align: center;
+    .popup-btn.copy:hover {
+      background: var(--primary-red);
+      border-color: var(--primary-red);
+    }
+    
+    .popup-btn.maps {
+      background: var(--primary-red);
+      color: white;
+    }
+    
+    .popup-btn.maps:hover {
+      background: var(--primary-red-dark);
+      transform: translateY(-2px);
+    }
+    
+    /* Loader fullscreen */
+    .loader-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--primary-black);
+      z-index: 9999;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 15px;
-      min-width: 250px;
+      justify-content: center;
+      transition: opacity 0.5s;
     }
     
-    .spinner {
-      width: 40px;
-      height: 40px;
-      border: 4px solid rgba(0, 0, 0, 0.1);
+    .loader-logo {
+      width: 80px;
+      height: 80px;
+      background: var(--primary-red);
       border-radius: 50%;
-      border-top-color: var(--button-primary);
-      animation: spin 1s ease-in-out infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 30px;
+      animation: pulse 2s infinite;
     }
     
-    .dark-theme .spinner {
-      border: 4px solid rgba(255, 255, 255, 0.1);
-      border-top-color: var(--button-primary);
+    .loader-logo i {
+      font-size: 36px;
+      color: white;
+    }
+    
+    .loader-text {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: 10px;
+      text-align: center;
+    }
+    
+    .loader-subtext {
+      color: var(--text-gray);
+      text-align: center;
+      max-width: 300px;
+      line-height: 1.5;
+    }
+    
+    .loader-progress {
+      width: 300px;
+      height: 4px;
+      background: var(--secondary-black);
+      border-radius: 2px;
+      margin-top: 30px;
+      overflow: hidden;
+    }
+    
+    .loader-progress-bar {
+      height: 100%;
+      background: var(--primary-red);
+      width: 0%;
+      transition: width 0.3s;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
     }
     
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
     
-    /* Responsive */
+    /* Footer mobile */
+    .mobile-footer {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(18, 18, 18, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 15px;
+      border-top: 2px solid var(--primary-red);
+      z-index: 1000;
+    }
+    
+    .mobile-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      text-align: center;
+    }
+    
+    /* Mobile optimization */
     @media (max-width: 768px) {
-      .control-panel {
-        width: calc(100% - 40px);
-        top: 10px;
-        right: 10px;
-        left: 10px;
+      .header {
+        padding: 12px 15px;
+      }
+      
+      .brand-text h1 {
+        font-size: 16px;
+      }
+      
+      .brand-text p {
+        display: none;
+      }
+      
+      .action-buttons {
+        display: none;
+      }
+      
+      .stats-panel {
+        gap: 15px;
+      }
+      
+      .stat-item {
+        min-width: 50px;
+      }
+      
+      .stat-number {
+        font-size: 18px;
+      }
+      
+      .mobile-footer {
+        display: block;
       }
       
       .leaflet-popup-content {
         max-width: 250px;
       }
+      
+      .loader-text {
+        font-size: 20px;
+      }
+      
+      .loader-progress {
+        width: 250px;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .header {
+        padding: 10px;
+      }
+      
+      .stat-item {
+        min-width: 40px;
+      }
+      
+      .stat-number {
+        font-size: 16px;
+      }
+      
+      .stat-label {
+        font-size: 9px;
+      }
+    }
+    
+    /* Stile mappa dark */
+    .leaflet-container {
+      background: var(--primary-black);
+    }
+    
+    /* Icona pin personalizzata rosso/nero */
+    .red-black-icon {
+      filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.7));
+    }
+    
+    /* Pulsanti mappa custom */
+    .leaflet-control-zoom a {
+      background: var(--secondary-black) !important;
+      color: var(--text-light) !important;
+      border: 1px solid var(--border-color) !important;
+    }
+    
+    .leaflet-control-zoom a:hover {
+      background: var(--primary-red) !important;
+      border-color: var(--primary-red) !important;
     }
   </style>
 </head>
 <body>
-  <div id="map"></div>
-  
-  <!-- Pannello di controllo -->
-  <div class="control-panel" id="controlPanel" style="display: none;">
-    <h3><i class="fas fa-map-marked-alt"></i> Luoghi Abbandonati</h3>
-    
-    <div class="stats">
-      <div class="stat-item">
-        <span>Caricati:</span>
-        <span class="stat-value" id="loadedCount">0</span>
+  <!-- Header -->
+  <div class="header">
+    <div class="brand">
+      <div class="logo">
+        <i class="fas fa-skull-crossbones"></i>
       </div>
-      <div class="stat-item">
-        <span>Scartati:</span>
-        <span class="stat-value" id="skippedCount">0</span>
-      </div>
-      <div class="stat-item">
-        <span>Fuori Italia:</span>
-        <span class="stat-value" id="outsideItalyCount">0</span>
-      </div>
-      <div class="stat-item">
-        <span>Totali CSV:</span>
-        <span class="stat-value" id="totalCount">0</span>
+      <div class="brand-text">
+        <h1>Esplora Luoghi Abbandonati</h1>
+        <p>Scopri posti dimenticati in tutta Italia</p>
       </div>
     </div>
     
-    <button class="theme-toggle" id="themeToggle">
-      <i class="fas fa-moon"></i>
-      <span>Modalità Scura</span>
-    </button>
+    <div class="stats-panel">
+      <div class="stat-item">
+        <span class="stat-number" id="loadedCount">0</span>
+        <span class="stat-label">Luoghi</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number" id="filteredCount">0</span>
+        <span class="stat-label">In Italia</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-number" id="progressPercent">0%</span>
+        <span class="stat-label">Caricati</span>
+      </div>
+    </div>
+    
+    <div class="action-buttons">
+      <button class="action-btn" onclick="zoomToItaly()">
+        <i class="fas fa-italy"></i>
+        <span>Vista Italia</span>
+      </button>
+      <button class="action-btn" onclick="showAllMarkers()">
+        <i class="fas fa-eye"></i>
+        <span>Mostra Tutti</span>
+      </button>
+    </div>
+  </div>
+  
+  <!-- Mappa -->
+  <div id="map"></div>
+  
+  <!-- Footer Mobile -->
+  <div class="mobile-footer">
+    <div class="mobile-stats">
+      <div>
+        <div class="stat-number" id="mobileLoadedCount">0</div>
+        <div class="stat-label">Luoghi</div>
+      </div>
+      <div>
+        <div class="stat-number" id="mobileFilteredCount">0</div>
+        <div class="stat-label">In Italia</div>
+      </div>
+      <div>
+        <div class="stat-number" id="mobileProgress">0%</div>
+        <div class="stat-label">Caricati</div>
+      </div>
+    </div>
   </div>
   
   <!-- Loader -->
-  <div class="loader" id="loader">
-    <div class="spinner"></div>
-    <div>Caricamento luoghi...</div>
-    <div style="font-size: 12px; opacity: 0.7;" id="loaderStatus">Inizializzazione</div>
+  <div class="loader-overlay" id="loader">
+    <div class="loader-logo">
+      <i class="fas fa-map-marked-alt"></i>
+    </div>
+    <div class="loader-text">Caricamento Mappa</div>
+    <div class="loader-subtext">
+      Sto cercando i luoghi abbandonati più interessanti per te...
+    </div>
+    <div class="loader-progress">
+      <div class="loader-progress-bar" id="progressBar"></div>
+    </div>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     // Configurazioni
-    const MAP_TILE_SERVER_LIGHT = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
     const MAP_TILE_SERVER_DARK = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png";
-    const DEFAULT_MAP_CENTER = [42.5, 12.5]; // Centro Italia
+    const ITALY_CENTER = [42.5, 12.5];
     const DEFAULT_ZOOM = 6;
     
-    // Bounding box Italia (lat, lon)
+    // Bounding box Italia
     const ITALY_BOUNDS = {
-      minLat: 36.0,  // Sud
-      maxLat: 47.5,  // Nord
-      minLon: 6.0,   // Ovest
-      maxLon: 19.0   // Est
+      minLat: 36.0,
+      maxLat: 47.5,
+      minLon: 6.0,
+      maxLon: 19.0
     };
     
     let locations = [];
     let map;
-    let darkMode = localStorage.getItem('darkMode') === 'true';
+    let markers = [];
+    let totalProcessed = 0;
+    let totalLocations = 0;
     
-    // ---------- Icona personalizzata nera ----------
-    const blackIcon = L.divIcon({
-      className: 'custom-black-icon',
-      html: '<div style="background-color: #000000; border: 2px solid white; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"><div style="width: 8px; height: 8px; background-color: white; border-radius: 50%;"></div></div>',
-      iconSize: [24, 24],
-      iconAnchor: [12, 12],
-      popupAnchor: [0, -12]
+    // ---------- Icona personalizzata rosso/nero ----------
+    const RedBlackIcon = L.divIcon({
+      className: 'red-black-icon',
+      html: `
+        <div style="
+          width: 30px;
+          height: 30px;
+          background: #d32f2f;
+          border: 3px solid #121212;
+          border-radius: 50% 50% 50% 0;
+          transform: rotate(-45deg);
+          position: relative;
+          box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        ">
+          <div style="
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+          ">
+            <i class="fas fa-map-pin"></i>
+          </div>
+        </div>
+      `,
+      iconSize: [30, 30],
+      iconAnchor: [15, 30],
+      popupAnchor: [0, -30]
     });
     
-    // ---------- Gestione tema ----------
-    function initTheme() {
-      if (darkMode) {
-        document.body.classList.add('dark-theme');
-        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-sun"></i><span>Modalità Chiara</span>';
-      } else {
-        document.body.classList.remove('dark-theme');
-        document.getElementById('themeToggle').innerHTML = '<i class="fas fa-moon"></i><span>Modalità Scura</span>';
-      }
-      updateMapTiles();
-    }
-    
-    function toggleTheme() {
-      darkMode = !darkMode;
-      localStorage.setItem('darkMode', darkMode.toString());
-      initTheme();
-    }
-    
-    function updateMapTiles() {
-      if (map) {
-        map.eachLayer(function(layer) {
-          if (layer._url && layer._url.includes('tile.openstreetmap.org') || 
-              layer._url && layer._url.includes('cartocdn.com')) {
-            map.removeLayer(layer);
-          }
-        });
-        
-        const tileLayer = L.tileLayer(darkMode ? MAP_TILE_SERVER_DARK : MAP_TILE_SERVER_LIGHT, {
-          attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        }).addTo(map);
+    // ---------- Aggiorna progresso ----------
+    function updateProgress(current, total, step) {
+      const percent = Math.min(Math.round((current / total) * 100), 100);
+      document.getElementById('progressPercent').textContent = `${percent}%`;
+      document.getElementById('mobileProgress').textContent = `${percent}%`;
+      document.getElementById('progressBar').style.width = `${percent}%`;
+      
+      // Aggiorna testo loader
+      const steps = [
+        "Analizzo i dati...",
+        "Trovo le coordinate...",
+        "Filtro per l'Italia...",
+        "Preparo la mappa...",
+        "Quasi pronto..."
+      ];
+      
+      if (step < steps.length) {
+        document.querySelector('.loader-subtext').textContent = steps[step];
       }
     }
     
-    // ---------- Controlla se coordinate sono in Italia ----------
+    // ---------- Controlla se in Italia ----------
     function isInItaly(lat, lon) {
       return lat >= ITALY_BOUNDS.minLat && 
              lat <= ITALY_BOUNDS.maxLat && 
@@ -367,7 +587,7 @@
              lon <= ITALY_BOUNDS.maxLon;
     }
     
-    // ---------- Utils: HTML entities decode ----------
+    // ---------- Decodifica HTML ----------
     function decodeHtmlEntities(str) {
       if (!str) return "";
       const txt = document.createElement("textarea");
@@ -375,7 +595,7 @@
       return txt.value;
     }
     
-    // ---------- Utils: CSV parsing ----------
+    // ---------- CSV Parsing ----------
     function parseCSV(text) {
       const rows = [];
       let row = [];
@@ -419,7 +639,7 @@
       row.push(field);
       rows.push(row);
       
-      // rimuove righe vuote finali
+      // rimuove righe vuote
       while (rows.length && rows[rows.length - 1].every(v => (v ?? "").trim() === "")) {
         rows.pop();
       }
@@ -495,181 +715,216 @@
       return null;
     }
     
-    // ---------- Carica e processa spot.csv ----------
+    // ---------- Carica e processa dati ----------
     async function loadAndProcessData() {
       try {
-        document.getElementById('loaderStatus').textContent = 'Download del file CSV...';
+        updateProgress(0, 100, 0);
+        
+        // Simula un piccolo ritardo per mostrare il loader
+        await new Promise(resolve => setTimeout(resolve, 500));
         
         const response = await fetch('spot.csv');
-        if (!response.ok) throw new Error(`Impossibile caricare spot.csv (HTTP ${response.status})`);
+        if (!response.ok) throw new Error(`Impossibile caricare i dati (HTTP ${response.status})`);
         
         const csvText = await response.text();
         const data = csvToObjects(csvText);
         
         if (!Array.isArray(data)) {
-          throw new Error("Il CSV non è stato convertito correttamente in un array.");
+          throw new Error("Formato dati non riconosciuto");
         }
         
-        let total = data.length;
-        let skipped = 0;
-        let outsideItaly = 0;
-        let processed = 0;
+        totalLocations = data.length;
+        let validInItaly = 0;
+        let currentStep = 0;
         
-        document.getElementById('loaderStatus').textContent = `Processamento ${total} luoghi...`;
+        updateProgress(0, totalLocations, 1);
         
-        for (const pin of data) {
-          processed++;
-          if (processed % 10 === 0) {
-            document.getElementById('loaderStatus').textContent = `Processamento ${processed}/${total} luoghi...`;
+        // Processa in batch per non bloccare l'UI
+        const batchSize = 50;
+        for (let i = 0; i < data.length; i += batchSize) {
+          const batch = data.slice(i, i + batchSize);
+          
+          for (const pin of batch) {
+            totalProcessed++;
+            
+            // Aggiorna progresso ogni 10 elementi
+            if (totalProcessed % 10 === 0 || totalProcessed === totalLocations) {
+              updateProgress(totalProcessed, totalLocations, currentStep);
+              currentStep = Math.min(Math.floor(totalProcessed / (totalLocations / 4)), 4);
+              
+              // Piccola pausa per non sovraccaricare l'UI
+              await new Promise(resolve => setTimeout(resolve, 1));
+            }
+            
+            // Estrai coordinate
+            let coordText =
+              (pin["grid_description"] || pin["description"] || pin["title"] || pin["grid_title"] || "").trim();
+            
+            if (!coordText) continue;
+            
+            coordText = decodeHtmlEntities(coordText).replace(/\s+/g, ' ').trim();
+            const coordMatch = extractCoordinates(coordText);
+            
+            if (!coordMatch) continue;
+            
+            // Filtra per Italia
+            if (!isInItaly(coordMatch.lat, coordMatch.lon)) continue;
+            
+            validInItaly++;
+            
+            const title = (pin["title"] || pin["grid_title"] || "Luogo Sconosciuto").trim();
+            const descriptionRaw = (pin["grid_description"] || pin["description"] || "").trim();
+            const description = decodeHtmlEntities(descriptionRaw).replace(/\s+/g, ' ').trim();
+            
+            // Immagine
+            let imageUrl =
+              (pin["story_pin_data/pages/0/blocks/0/image/images/originals/url"] || "").trim();
+            
+            if (!imageUrl) {
+              imageUrl = (pin["image/url"] || "").trim();
+            }
+            
+            locations.push({
+              latitude: coordMatch.lat,
+              longitude: coordMatch.lon,
+              title: title.substring(0, 100),
+              description: description.substring(0, 200),
+              image: imageUrl || null
+            });
           }
-          
-          // Scegli testo da cui estrarre coordinate
-          let coordText =
-            (pin["grid_description"] || pin["description"] || pin["title"] || pin["grid_title"] || "").trim();
-          
-          if (!coordText) {
-            skipped++;
-            continue;
-          }
-          
-          // Decodifica entità HTML, compatta spazi
-          coordText = decodeHtmlEntities(coordText);
-          coordText = coordText.replace(/\s+/g, ' ').trim();
-          
-          const coordMatch = extractCoordinates(coordText);
-          if (!coordMatch) {
-            skipped++;
-            continue;
-          }
-          
-          // Controlla se le coordinate sono in Italia
-          if (!isInItaly(coordMatch.lat, coordMatch.lon)) {
-            outsideItaly++;
-            continue; // Salta i pin fuori dall'Italia
-          }
-          
-          const title = (pin["title"] || pin["grid_title"] || "Luogo sconosciuto").trim();
-          
-          const descriptionRaw =
-            (pin["grid_description"] || pin["description"] || pin["title"] || coordText || "").trim();
-          const description = decodeHtmlEntities(descriptionRaw).replace(/\s+/g, ' ').trim();
-          
-          // Immagine
-          let imageUrl =
-            (pin["story_pin_data/pages/0/blocks/0/image/images/originals/url"] || "").trim();
-          
-          if (!imageUrl) {
-            imageUrl = (pin["image/url"] || "").trim();
-          }
-          
-          if (!imageUrl) {
-            imageUrl = (pin["board/image_thumbnail_url"] || "").trim();
-          }
-          
-          locations.push({
-            latitude: coordMatch.lat,
-            longitude: coordMatch.lon,
-            title: title,
-            description: description,
-            image: imageUrl || null
-          });
         }
         
         // Aggiorna statistiche
         document.getElementById('loadedCount').textContent = locations.length;
-        document.getElementById('skippedCount').textContent = skipped;
-        document.getElementById('outsideItalyCount').textContent = outsideItaly;
-        document.getElementById('totalCount').textContent = total;
-        
-        console.log("Punti validi trovati:", locations.length);
-        console.log("Scartati (formato errato):", skipped);
-        console.log("Fuori Italia:", outsideItaly);
+        document.getElementById('mobileLoadedCount').textContent = locations.length;
+        document.getElementById('filteredCount').textContent = validInItaly;
+        document.getElementById('mobileFilteredCount').textContent = validInItaly;
         
         if (locations.length === 0) {
-          alert(`Nessun punto valido trovato in Italia su ${total} totali. Verifica il formato delle coordinate.`);
+          document.querySelector('.loader-text').textContent = "Nessun luogo trovato";
+          document.querySelector('.loader-subtext').textContent = "Non ho trovato luoghi abbandonati in Italia nel tuo file dati";
+          setTimeout(() => {
+            initMap();
+            hideLoader();
+          }, 2000);
           return;
         }
         
-        // Nascondi loader e mostra controllo
-        document.getElementById('loader').style.display = 'none';
-        document.getElementById('controlPanel').style.display = 'block';
-        
+        // Inizializza mappa
         initMap();
+        
+        // Piccolo ritardo per mostrare il 100%
+        setTimeout(hideLoader, 500);
         
       } catch (error) {
         console.error("Errore:", error);
-        document.getElementById('loaderStatus').textContent = `Errore: ${error.message}`;
+        document.querySelector('.loader-text').textContent = "Errore nel caricamento";
+        document.querySelector('.loader-subtext').textContent = error.message;
+        document.getElementById('progressBar').style.background = "#ff4444";
+        
         setTimeout(() => {
-          alert("Errore nel caricamento o elaborazione di spot.csv: " + error.message);
-        }, 500);
+          alert("Errore: " + error.message);
+          initMap();
+          hideLoader();
+        }, 3000);
       }
+    }
+    
+    // ---------- Nascondi loader ----------
+    function hideLoader() {
+      const loader = document.getElementById('loader');
+      loader.style.opacity = '0';
+      setTimeout(() => {
+        loader.style.display = 'none';
+      }, 500);
     }
     
     // ---------- Inizializza mappa ----------
     function initMap() {
-      map = L.map('map');
+      map = L.map('map', {
+        zoomControl: false,
+        attributionControl: false
+      }).setView(ITALY_CENTER, DEFAULT_ZOOM);
       
-      // Usa il tema corretto
-      const tileServer = darkMode ? MAP_TILE_SERVER_DARK : MAP_TILE_SERVER_LIGHT;
-      L.tileLayer(tileServer, {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      // Tile dark
+      L.tileLayer(MAP_TILE_SERVER_DARK, {
+        attribution: '© OpenStreetMap contributors'
       }).addTo(map);
       
-      const markers = [];
-      locations.forEach(loc => {
-        const marker = L.marker([loc.latitude, loc.longitude], { icon: blackIcon }).addTo(map);
-        markers.push(marker);
-        
-        const coords = loc.latitude.toFixed(6) + ',' + loc.longitude.toFixed(6);
-        
-        const popupContent = `
-          <div>
-            ${loc.image ? `
-              <img src="${loc.image}" alt="${escapeHtml(loc.title)}"
-                   style="width:100%; height:auto; max-height:400px; object-fit:contain; border-radius:8px; margin-bottom:10px;"
-                   onerror="this.style.display='none'" />
-            ` : ''}
-            <div class="popup-title">${escapeHtml(loc.title)}</div>
-            <div class="popup-desc">${escapeHtml(loc.description || 'Nessuna descrizione')}</div>
-            <div class="location-info">
-              <strong><i class="fas fa-map-marker-alt"></i> Coordinate:</strong><br>
-              ${coords}
-            </div>
-            <button class="copy-coords-btn" onclick="copyToClipboard('${coords}')">
-              <i class="far fa-copy"></i> Copia coordinate
-            </button>
-            <button class="open-gmaps-btn" onclick="openGoogleMaps(${loc.latitude}, ${loc.longitude})">
-              <i class="fab fa-google"></i> Apri in Google Maps
-            </button>
-          </div>
-        `;
-        
-        marker.bindPopup(popupContent);
-        
-        // Aggiungi effetto hover
-        marker.on('mouseover', function() {
-          this.openPopup();
-        });
-      });
+      // Aggiungi marker
+      addMarkersToMap();
       
-      if (locations.length > 0) {
-        if (locations.length === 1) {
-          map.setView([locations[0].latitude, locations[0].longitude], 13);
-        } else {
-          const bounds = L.latLngBounds(markers.map(m => m.getLatLng()));
-          map.fitBounds(bounds, { padding: [50, 50] });
-        }
-      } else {
-        map.setView(DEFAULT_MAP_CENTER, DEFAULT_ZOOM);
-      }
-      
-      // Aggiungi controllo scala
-      L.control.scale({ imperial: false }).addTo(map);
-      
-      // Aggiungi controllo zoom
+      // Aggiungi controlli
       L.control.zoom({ position: 'bottomright' }).addTo(map);
+      L.control.scale({ imperial: false, position: 'bottomleft' }).addTo(map);
     }
     
+    // ---------- Aggiungi marker alla mappa ----------
+    function addMarkersToMap() {
+      markers = [];
+      
+      locations.forEach((loc, index) => {
+        // Piccolo ritardo per animazione
+        setTimeout(() => {
+          const marker = L.marker([loc.latitude, loc.longitude], {
+            icon: RedBlackIcon
+          }).addTo(map);
+          
+          markers.push(marker);
+          
+          // Popup content
+          const popupContent = `
+            <div class="popup-header">
+              <div class="popup-title">${escapeHtml(loc.title)}</div>
+              <div class="popup-coords">
+                <i class="fas fa-map-marker-alt"></i>
+                ${loc.latitude.toFixed(6)}, ${loc.longitude.toFixed(6)}
+              </div>
+            </div>
+            <div class="popup-body">
+              ${loc.image ? `
+                <img src="${loc.image}" class="popup-image" 
+                     alt="${escapeHtml(loc.title)}"
+                     onerror="this.style.display='none'">
+              ` : ''}
+              <div class="popup-description">
+                ${escapeHtml(loc.description || 'Nessuna descrizione disponibile')}
+              </div>
+              <div class="popup-actions">
+                <button class="popup-btn copy" onclick="copyCoords(${loc.latitude}, ${loc.longitude}, this)">
+                  <i class="far fa-copy"></i> Copia
+                </button>
+                <button class="popup-btn maps" onclick="openMaps(${loc.latitude}, ${loc.longitude})">
+                  <i class="fab fa-google"></i> Google Maps
+                </button>
+              </div>
+            </div>
+          `;
+          
+          marker.bindPopup(popupContent);
+          
+          // Solo click apre il popup (rimosso hover)
+          marker.on('click', function() {
+            this.openPopup();
+          });
+          
+        }, index * 20); // Piccolo delay per effetto a cascata
+      });
+      
+      // Centra la mappa sui marker
+      if (locations.length > 0) {
+        setTimeout(() => {
+          if (locations.length === 1) {
+            map.setView([locations[0].latitude, locations[0].longitude], 13);
+          } else {
+            const bounds = L.latLngBounds(markers.map(m => m.getLatLng()));
+            map.fitBounds(bounds, { padding: [50, 50] });
+          }
+        }, locations.length * 20 + 100);
+      }
+    }
+    
+    // ---------- Funzioni utility ----------
     function escapeHtml(text) {
       if (!text) return '';
       const div = document.createElement('div');
@@ -677,54 +932,64 @@
       return div.innerHTML;
     }
     
-    function copyToClipboard(text) {
-      navigator.clipboard.writeText(text).then(() => {
-        // Feedback visivo invece di alert
-        const btn = event.target;
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check"></i> Coordinate copiate!';
-        btn.style.background = '#2ecc71';
+    function copyCoords(lat, lon, button) {
+      const coords = `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
+      navigator.clipboard.writeText(coords).then(() => {
+        const original = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-check"></i> Copiato!';
+        button.style.background = '#4CAF50';
         
         setTimeout(() => {
-          btn.innerHTML = originalText;
-          btn.style.background = '';
+          button.innerHTML = original;
+          button.style.background = '';
         }, 2000);
       }).catch(() => {
         // Fallback
         const textArea = document.createElement('textarea');
-        textArea.value = text;
+        textArea.value = coords;
         document.body.appendChild(textArea);
         textArea.select();
         document.execCommand('copy');
         document.body.removeChild(textArea);
         
-        const btn = event.target;
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check"></i> Coordinate copiate!';
-        btn.style.background = '#2ecc71';
+        const original = button.innerHTML;
+        button.innerHTML = '<i class="fas fa-check"></i> Copiato!';
+        button.style.background = '#4CAF50';
         
         setTimeout(() => {
-          btn.innerHTML = originalText;
-          btn.style.background = '';
+          button.innerHTML = original;
+          button.style.background = '';
         }, 2000);
       });
     }
     
-    function openGoogleMaps(lat, lon) {
-      const url = 'https://www.google.com/maps/search/?api=1&query=' + lat + ',' + lon;
+    function openMaps(lat, lon) {
+      const url = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
       window.open(url, '_blank');
     }
     
-    // ---------- Avvia applicazione ----------
+    function zoomToItaly() {
+      map.setView(ITALY_CENTER, DEFAULT_ZOOM);
+    }
+    
+    function showAllMarkers() {
+      if (markers.length > 0) {
+        const bounds = L.latLngBounds(markers.map(m => m.getLatLng()));
+        map.fitBounds(bounds, { padding: [100, 100] });
+      }
+    }
+    
+    // ---------- Inizializza app ----------
     document.addEventListener('DOMContentLoaded', function() {
-      // Imposta tema iniziale
-      initTheme();
-      
-      // Aggiungi listener al toggle tema
-      document.getElementById('themeToggle').addEventListener('click', toggleTheme);
-      
-      // Carica dati
+      // Avvia caricamento dati
       loadAndProcessData();
+      
+      // Aggiungi listener per resize
+      window.addEventListener('resize', function() {
+        if (map) {
+          map.invalidateSize();
+        }
+      });
     });
   </script>
 </body>
