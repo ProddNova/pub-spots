@@ -195,13 +195,17 @@
     }
     
     .social-btn.disabled {
-      opacity: 0.5;
+      opacity: 0.7;
       cursor: not-allowed;
     }
     
     .social-btn.verifying {
       background: #2c3e50;
       pointer-events: none;
+    }
+    
+    .social-btn.verifying.disabled {
+      opacity: 1;
     }
     
     .social-btn.verified {
@@ -258,6 +262,98 @@
       text-align: center;
       margin-top: 20px;
       min-height: 20px;
+    }
+    
+    /* Warning modal */
+    .warning-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--primary-black);
+      z-index: 10001;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    
+    .warning-modal.active {
+      display: flex;
+    }
+    
+    .warning-content {
+      background: var(--card-bg);
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 600px;
+      width: 90%;
+      border: 3px solid var(--primary-red);
+      box-shadow: 0 10px 30px var(--shadow-dark);
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    
+    .warning-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary-red);
+      margin-bottom: 20px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .warning-text {
+      color: var(--text-light);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    
+    .warning-text p {
+      margin-bottom: 15px;
+    }
+    
+    .warning-text ul {
+      margin-left: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .warning-text li {
+      margin-bottom: 8px;
+    }
+    
+    .warning-highlight {
+      color: var(--primary-red);
+      font-weight: 600;
+      background: rgba(211, 47, 47, 0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    
+    .warning-accept-btn {
+      background: var(--primary-red);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      display: block;
+      margin: 30px auto 0;
+      transition: all 0.3s;
+      width: 100%;
+      max-width: 300px;
+    }
+    
+    .warning-accept-btn:hover {
+      background: var(--primary-red-dark);
+      transform: translateY(-2px);
     }
     
     /* Sidebar lista spot */
@@ -437,7 +533,7 @@
       font-size: 14px;
     }
     
-    /* Popup style - allineato con webapp */
+    /* Popup style */
     .leaflet-popup-content-wrapper {
       background: var(--card-bg);
       color: var(--text-light);
@@ -446,13 +542,13 @@
       box-shadow: 0 8px 25px var(--shadow-dark);
       padding: 0;
       overflow: hidden;
-      max-width: 300px;
+      max-width: 320px;
     }
     
     .leaflet-popup-content {
       margin: 0;
       padding: 0;
-      max-height: 350px;
+      max-height: 400px;
       overflow-y: auto;
     }
     
@@ -461,20 +557,20 @@
     }
     
     .popup-header {
-      padding: 12px;
-      background: linear-gradient(135deg, var(--primary-red), var(--primary-red-dark));
+      padding: 15px;
+      background: var(--primary-red);
       color: white;
     }
     
     .popup-title {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 700;
-      margin-bottom: 4px;
+      margin-bottom: 5px;
       line-height: 1.2;
     }
     
     .popup-coords {
-      font-size: 10px;
+      font-size: 11px;
       opacity: 0.9;
       font-family: monospace;
       display: flex;
@@ -483,43 +579,43 @@
     }
     
     .popup-body {
-      padding: 12px;
+      padding: 15px;
     }
     
     .popup-image {
       width: 100%;
-      height: 120px;
+      height: 150px;
       object-fit: cover;
       border-radius: 6px;
-      margin-bottom: 12px;
+      margin-bottom: 15px;
       border: 1px solid var(--border-color);
       background: #222;
     }
     
     .popup-description {
       font-size: 13px;
-      line-height: 1.4;
+      line-height: 1.5;
       color: var(--text-gray);
-      margin-bottom: 12px;
+      margin-bottom: 15px;
     }
     
     .popup-actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
+      gap: 10px;
     }
     
     .popup-btn {
-      padding: 8px;
-      border-radius: 5px;
+      padding: 10px;
+      border-radius: 6px;
       border: none;
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 5px;
+      gap: 6px;
       transition: all 0.2s;
     }
     
@@ -530,8 +626,7 @@
     }
     
     .popup-btn.copy:hover {
-      background: var(--primary-red);
-      border-color: var(--primary-red);
+      background: #444;
     }
     
     .popup-btn.maps {
@@ -566,27 +661,56 @@
         font-size: 11px;
       }
       
+      .action-btn span {
+        display: none;
+      }
+      
+      .action-btn i {
+        margin: 0;
+      }
+      
       .spots-sidebar {
         width: 100%;
         right: -100%;
       }
       
       .social-title {
-        font-size: 24px;
+        font-size: 22px;
       }
       
       .social-subtitle {
         font-size: 14px;
-        padding: 0 10px;
+        padding: 0 15px;
       }
       
       .social-buttons {
-        padding: 0 10px;
+        padding: 0 15px;
       }
       
       .social-btn {
         padding: 12px 15px;
         font-size: 14px;
+      }
+      
+      .warning-content {
+        padding: 20px;
+        width: 95%;
+      }
+      
+      .warning-title {
+        font-size: 20px;
+      }
+      
+      .leaflet-popup-content-wrapper {
+        max-width: 280px;
+      }
+      
+      .popup-header {
+        padding: 12px;
+      }
+      
+      .popup-body {
+        padding: 12px;
       }
     }
     
@@ -595,23 +719,27 @@
         padding: 8px 10px;
       }
       
-      .action-btn span {
-        display: none;
-      }
-      
       .action-btn {
         padding: 8px;
-        width: 36px;
-        height: 36px;
+        width: 40px;
+        height: 40px;
         justify-content: center;
       }
       
       .social-title {
-        font-size: 20px;
+        font-size: 18px;
       }
       
       .social-buttons {
-        width: 90%;
+        width: 95%;
+      }
+      
+      .warning-title {
+        font-size: 18px;
+      }
+      
+      .warning-text {
+        font-size: 14px;
       }
     }
     
@@ -707,6 +835,13 @@
     .list-loader.active {
       display: block;
     }
+    
+    /* Stile per desktop */
+    @media (min-width: 769px) {
+      .action-btn span {
+        display: inline;
+      }
+    }
   </style>
 </head>
 <body>
@@ -728,14 +863,14 @@
         <div class="verification-text">Verifica iscrizione...</div>
       </a>
       
-      <a href="https://www.instagram.com/losttrace__/" target="_blank" class="social-btn instagram" id="instagramBtn">
+      <a href="https://www.instagram.com/losttrace__/" target="_blank" class="social-btn instagram disabled" id="instagramBtn">
         <i class="fab fa-instagram"></i>
         <span>Instagram @losttrace__</span>
         <div class="checkmark"><i class="fas fa-check"></i></div>
         <div class="verification-text">Verifica follower...</div>
       </a>
       
-      <a href="https://www.tiktok.com/@lt_unit" target="_blank" class="social-btn tiktok" id="tiktokBtn">
+      <a href="https://www.tiktok.com/@lt_unit" target="_blank" class="social-btn tiktok disabled" id="tiktokBtn">
         <i class="fab fa-tiktok"></i>
         <span>TikTok @lt_unit</span>
         <div class="checkmark"><i class="fas fa-check"></i></div>
@@ -744,6 +879,31 @@
     </div>
     
     <div class="unlock-message" id="unlockMessage"></div>
+  </div>
+  
+  <!-- Warning Modal -->
+  <div class="warning-modal" id="warningModal">
+    <div class="warning-content">
+      <div class="warning-title">
+        <i class="fas fa-exclamation-triangle"></i>
+        AVVERTENZA IMPORTANTE
+      </div>
+      <div class="warning-text">
+        <p>Questa mappa mostra luoghi abbandonati in Italia. Tieni presente che:</p>
+        <ul>
+          <li><span class="warning-highlight">NON siamo responsabili</span> per eventuali danni o conseguenze derivanti dalla visita di questi luoghi.</li>
+          <li>Non incitiamo a visitare questi luoghi e <span class="warning-highlight">non ci assumiamo responsabilità</span> per eventuali incidenti.</li>
+          <li>Alcuni luoghi potrebbero non essere più abbandonati, essere stati demoliti, essere pericolosi o proprietà privata.</li>
+          <li>Questa mappa è <span class="warning-highlight">molto limitata</span> - la nostra vera mappa contiene molti più spot ma <span class="warning-highlight">non verrà mai resa pubblica</span> per prevenire vandalismi.</li>
+          <li>Gli spot presenti sono stati raccolti da <span class="warning-highlight">informazioni pubbliche</span> e potrebbero essere incompleti o imprecisi.</li>
+          <li>La nostra mappa reale rimarrà sempre <span class="warning-highlight">privata e accessibile solo ai membri del team</span> per proteggere i luoghi.</li>
+        </ul>
+        <p>Procedendo, dichiari di aver compreso e accettato questi termini.</p>
+      </div>
+      <button class="warning-accept-btn" onclick="acceptWarning()">
+        <i class="fas fa-check"></i> Accetto e procedi alla mappa
+      </button>
+    </div>
   </div>
   
   <!-- Sidebar overlay -->
@@ -782,7 +942,7 @@
     <div class="action-buttons">
       <button class="action-btn" onclick="zoomToItaly()" title="Centra la mappa sull'Italia">
         <i class="fas fa-italy"></i>
-        <span>Centra Italia</span>
+        <span>Italia</span>
       </button>
       <button class="action-btn" onclick="toggleSidebar()" title="Mostra lista luoghi">
         <i class="fas fa-list"></i>
@@ -842,6 +1002,13 @@
       tiktok: false
     };
     
+    let activeVerification = null;
+    let verificationTimers = {
+      youtube: null,
+      instagram: null,
+      tiktok: null
+    };
+    
     // ===== FUNZIONI SOCIAL UNLOCK =====
     
     function initializeSocialUnlock() {
@@ -866,52 +1033,141 @@
       const tiktokBtn = document.getElementById('tiktokBtn');
       const unlockMessage = document.getElementById('unlockMessage');
       
-      // Funzione per gestire il click sui social
-      function handleSocialClick(social, button) {
-        // Se già verificato, non fare nulla
-        if (socialVerifications[social]) return;
+      // Inizializza bottoni social
+      updateSocialButtonsState();
+      
+      // Funzione per aggiornare lo stato dei bottoni
+      function updateSocialButtonsState() {
+        // Disabilita tutti i bottoni non ancora sbloccati se c'è una verifica in corso
+        const anyVerifying = Object.values(verificationTimers).some(timer => timer !== null);
         
-        // Imposta il pulsante in stato di verifica
+        if (anyVerifying) {
+          // Disabilita i bottoni non verificati
+          if (!socialVerifications.instagram) {
+            instagramBtn.classList.add('disabled');
+          }
+          if (!socialVerifications.tiktok) {
+            tiktokBtn.classList.add('disabled');
+          }
+        } else {
+          // Riabilita i bottoni non verificati
+          if (!socialVerifications.instagram) {
+            instagramBtn.classList.remove('disabled');
+          }
+          if (!socialVerifications.tiktok) {
+            tiktokBtn.classList.remove('disabled');
+          }
+        }
+      }
+      
+      // Funzione per avviare la verifica di un social
+      function startVerification(social, button) {
+        if (activeVerification && activeVerification !== social) {
+          unlockMessage.textContent = "Completa prima la verifica in corso!";
+          return;
+        }
+        
+        // Imposta la verifica attiva
+        activeVerification = social;
+        
+        // Disabilita tutti gli altri bottoni
+        updateSocialButtonsState();
+        
+        // Aggiungi classe verifying
         button.classList.add('verifying');
         
-        // Dopo il redirect, inizia il countdown di 30 secondi
-        setTimeout(() => {
-          // Dopo 30 secondi, segna come verificato
+        // Avvia il timer di verifica
+        verificationTimers[social] = setTimeout(() => {
+          // Verifica completata
           button.classList.remove('verifying');
           button.classList.add('verified');
           socialVerifications[social] = true;
+          activeVerification = null;
+          verificationTimers[social] = null;
+          
+          // Riabilita i bottoni successivi
+          updateSocialButtonsState();
           
           // Controlla se tutti sono verificati
           checkAllSocials();
         }, CONFIG.VERIFICATION_TIME);
       }
       
-      // Aggiungi event listener per il click (prima del redirect)
+      // Gestione click su YouTube
       youtubeBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        handleSocialClick('youtube', this);
-        // Apre il link dopo aver gestito l'evento
-        setTimeout(() => {
+        
+        if (socialVerifications.youtube) {
+          // Già verificato, riapri solo il link
           window.open(this.href, '_blank');
-        }, 100);
+          return;
+        }
+        
+        if (verificationTimers.youtube) {
+          // Verifica già in corso, riapri il link
+          window.open(this.href, '_blank');
+          return;
+        }
+        
+        // Apri il link
+        window.open(this.href, '_blank');
+        
+        // Avvia verifica
+        startVerification('youtube', this);
       });
       
+      // Gestione click su Instagram
       instagramBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        handleSocialClick('instagram', this);
-        // Apre il link dopo aver gestito l'evento
-        setTimeout(() => {
+        
+        if (socialVerifications.instagram) {
           window.open(this.href, '_blank');
-        }, 100);
+          return;
+        }
+        
+        if (verificationTimers.instagram) {
+          window.open(this.href, '_blank');
+          return;
+        }
+        
+        if (!socialVerifications.youtube) {
+          unlockMessage.textContent = "Completa prima la verifica di YouTube!";
+          return;
+        }
+        
+        if (this.classList.contains('disabled')) {
+          return;
+        }
+        
+        window.open(this.href, '_blank');
+        startVerification('instagram', this);
       });
       
+      // Gestione click su TikTok
       tiktokBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        handleSocialClick('tiktok', this);
-        // Apre il link dopo aver gestito l'evento
-        setTimeout(() => {
+        
+        if (socialVerifications.tiktok) {
           window.open(this.href, '_blank');
-        }, 100);
+          return;
+        }
+        
+        if (verificationTimers.tiktok) {
+          window.open(this.href, '_blank');
+          return;
+        }
+        
+        if (!socialVerifications.youtube || !socialVerifications.instagram) {
+          unlockMessage.textContent = "Completa prima le verifiche di YouTube e Instagram!";
+          return;
+        }
+        
+        if (this.classList.contains('disabled')) {
+          return;
+        }
+        
+        window.open(this.href, '_blank');
+        startVerification('tiktok', this);
       });
     }
     
@@ -919,20 +1175,27 @@
       const allVerified = socialVerifications.youtube && socialVerifications.instagram && socialVerifications.tiktok;
       
       if (allVerified) {
-        document.getElementById('unlockMessage').textContent = "Accesso sbloccato! Caricamento della mappa...";
-        setTimeout(unlockMap, 1500);
+        document.getElementById('unlockMessage').textContent = "Tutti i social verificati!";
+        
+        // Piccolo delay prima di mostrare l'avvertenza
+        setTimeout(() => {
+          document.getElementById('socialModal').classList.add('hidden');
+          document.getElementById('warningModal').classList.add('active');
+        }, 1000);
       } else {
         const remaining = 3 - (socialVerifications.youtube + socialVerifications.instagram + socialVerifications.tiktok);
         document.getElementById('unlockMessage').textContent = `Segui ancora ${remaining} social per sbloccare l'accesso!`;
       }
     }
     
-    function unlockMap() {
+    function acceptWarning() {
+      // Nascondi il modal di avvertenza
+      document.getElementById('warningModal').classList.remove('active');
+      
       // Salva lo sblocco in localStorage
       localStorage.setItem('urbexMapUnlocked', 'true');
       
-      // Nascondi modal e mostra tutto il resto
-      document.getElementById('socialModal').classList.add('hidden');
+      // Mostra header e mappa
       document.getElementById('mainHeader').style.display = 'flex';
       document.getElementById('map').style.display = 'block';
       
