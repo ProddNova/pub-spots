@@ -87,32 +87,31 @@
       color: var(--text-gray);
     }
     
-    /* Stats panel ottimizzato */
-    .stats-panel {
+    /* Action buttons */
+    .action-buttons {
       display: flex;
-      gap: 15px;
+      gap: 10px;
+    }
+    
+    .action-btn {
+      background: var(--secondary-black);
+      border: 1px solid var(--border-color);
+      color: var(--text-light);
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
       align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s;
+      white-space: nowrap;
     }
     
-    .stat-item {
-      text-align: center;
-      min-width: 55px;
-    }
-    
-    .stat-number {
-      display: block;
-      font-size: 18px;
-      font-weight: 700;
-      color: var(--primary-red);
-      line-height: 1;
-    }
-    
-    .stat-label {
-      font-size: 9px;
-      color: var(--text-gray);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-top: 2px;
+    .action-btn:hover {
+      background: var(--primary-red);
+      border-color: var(--primary-red);
     }
     
     /* Social unlock modal */
@@ -192,12 +191,17 @@
       font-weight: 600;
       transition: all 0.3s;
       cursor: pointer;
+      position: relative;
     }
     
-    .social-btn:hover {
-      background: var(--primary-black);
-      border-color: var(--primary-red);
-      transform: translateY(-2px);
+    .social-btn.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .social-btn.verified {
+      background: #1a5d1a;
+      border-color: #2ecc71;
     }
     
     .social-btn i {
@@ -218,95 +222,135 @@
       color: #000000;
     }
     
-    .countdown {
+    .social-btn .checkmark {
+      position: absolute;
+      right: 15px;
+      color: #2ecc71;
+      font-size: 18px;
+      display: none;
+    }
+    
+    .social-btn.verified .checkmark {
+      display: block;
+    }
+    
+    .verification-text {
+      position: absolute;
+      right: 15px;
+      color: var(--primary-red);
+      font-size: 12px;
+      display: none;
+      animation: blink 1.5s infinite;
+    }
+    
+    .social-btn.verifying .verification-text {
+      display: block;
+    }
+    
+    .social-btn.verifying {
+      pointer-events: none;
+    }
+    
+    .unlock-message {
       font-size: 14px;
       color: var(--text-gray);
       text-align: center;
       margin-top: 20px;
+      min-height: 20px;
     }
     
-    .countdown.hidden {
-      display: none;
+    /* Sidebar lista spot */
+    .spots-sidebar {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 380px;
+      height: 100%;
+      background: var(--secondary-black);
+      z-index: 1001;
+      transition: right 0.3s ease;
+      box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
     }
     
-    .countdown-timer {
-      font-weight: bold;
+    .spots-sidebar.open {
+      right: 0;
+    }
+    
+    .sidebar-header {
+      padding: 20px;
+      border-bottom: 2px solid var(--primary-red);
+      background: var(--primary-black);
+    }
+    
+    .sidebar-header h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .sidebar-header h3 i {
       color: var(--primary-red);
     }
     
-    /* Popup ottimizzato */
-    .leaflet-popup-content-wrapper {
-      background: var(--card-bg);
-      color: var(--text-light);
-      border-radius: 10px;
-      border: 2px solid var(--primary-red);
-      box-shadow: 0 8px 25px var(--shadow-dark);
-      padding: 0;
-      overflow: hidden;
-      max-width: 300px;
-    }
-    
-    .leaflet-popup-content {
-      margin: 0;
-      padding: 0;
-      max-height: 350px;
+    .spots-list {
+      flex: 1;
       overflow-y: auto;
+      padding: 15px;
     }
     
-    .leaflet-popup-tip {
-      background: var(--primary-red);
-    }
-    
-    .popup-header {
-      padding: 12px;
-      background: linear-gradient(135deg, var(--primary-red), var(--primary-red-dark));
-      color: white;
-    }
-    
-    .popup-title {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 4px;
-      line-height: 1.2;
-    }
-    
-    .popup-coords {
-      font-size: 10px;
-      opacity: 0.9;
-      font-family: monospace;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-    
-    .popup-body {
-      padding: 12px;
-    }
-    
-    .popup-image {
-      width: 100%;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 6px;
-      margin-bottom: 12px;
+    .spot-card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      margin-bottom: 15px;
+      overflow: hidden;
       border: 1px solid var(--border-color);
+      transition: all 0.2s;
+    }
+    
+    .spot-card:hover {
+      border-color: var(--primary-red);
+      transform: translateY(-2px);
+    }
+    
+    .spot-card-image {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
       background: #222;
     }
     
-    .popup-description {
-      font-size: 13px;
-      line-height: 1.4;
-      color: var(--text-gray);
-      margin-bottom: 12px;
+    .spot-card-content {
+      padding: 15px;
     }
     
-    .popup-actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    .spot-card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-light);
+      margin-bottom: 8px;
+    }
+    
+    .spot-card-desc {
+      font-size: 13px;
+      color: var(--text-gray);
+      margin-bottom: 12px;
+      line-height: 1.4;
+      max-height: 80px;
+      overflow: hidden;
+    }
+    
+    .spot-card-actions {
+      display: flex;
       gap: 8px;
     }
     
-    .popup-btn {
+    .spot-card-btn {
+      flex: 1;
       padding: 8px;
       border-radius: 5px;
       border: none;
@@ -320,24 +364,32 @@
       transition: all 0.2s;
     }
     
-    .popup-btn.copy {
+    .spot-card-btn.maps {
+      background: var(--primary-red);
+      color: white;
+    }
+    
+    .spot-card-btn.maps:hover {
+      background: var(--primary-red-dark);
+    }
+    
+    .spot-card-btn.copy {
       background: var(--secondary-black);
       color: var(--text-light);
       border: 1px solid var(--border-color);
     }
     
-    .popup-btn.copy:hover {
-      background: var(--primary-red);
-      border-color: var(--primary-red);
+    .spot-card-btn.copy:hover {
+      background: #444;
     }
     
-    .popup-btn.maps {
-      background: var(--primary-red);
+    .spot-card-btn.view {
+      background: #2c3e50;
       color: white;
     }
     
-    .popup-btn.maps:hover {
-      background: var(--primary-red-dark);
+    .spot-card-btn.view:hover {
+      background: #34495e;
     }
     
     /* Loader ottimizzato */
@@ -392,50 +444,6 @@
       font-size: 14px;
     }
     
-    .loader-progress {
-      width: 280px;
-      height: 4px;
-      background: var(--secondary-black);
-      border-radius: 2px;
-      margin-top: 25px;
-      overflow: hidden;
-    }
-    
-    .loader-progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary-red), var(--accent-red));
-      width: 0%;
-      transition: width 0.3s ease;
-    }
-    
-    .progress-percent {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--primary-red);
-      margin-top: 8px;
-    }
-    
-    /* Footer mobile */
-    .mobile-footer {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(18, 18, 18, 0.95);
-      backdrop-filter: blur(10px);
-      padding: 12px 15px;
-      border-top: 2px solid var(--primary-red);
-      z-index: 1000;
-    }
-    
-    .mobile-stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      text-align: center;
-    }
-    
     /* Mobile optimization */
     @media (max-width: 768px) {
       .header {
@@ -450,20 +458,18 @@
         display: none;
       }
       
-      .stats-panel {
-        gap: 12px;
+      .action-buttons {
+        gap: 8px;
       }
       
-      .stat-item {
-        min-width: 45px;
+      .action-btn {
+        padding: 6px 10px;
+        font-size: 11px;
       }
       
-      .stat-number {
-        font-size: 16px;
-      }
-      
-      .mobile-footer {
-        display: block;
+      .spots-sidebar {
+        width: 100%;
+        right: -100%;
       }
       
       .social-title {
@@ -483,10 +489,6 @@
         padding: 12px 15px;
         font-size: 14px;
       }
-      
-      .leaflet-popup-content-wrapper {
-        max-width: 260px;
-      }
     }
     
     @media (max-width: 480px) {
@@ -494,16 +496,15 @@
         padding: 8px 10px;
       }
       
-      .stat-item {
-        min-width: 40px;
+      .action-btn span {
+        display: none;
       }
       
-      .stat-number {
-        font-size: 14px;
-      }
-      
-      .stat-label {
-        font-size: 8px;
+      .action-btn {
+        padding: 8px;
+        width: 36px;
+        height: 36px;
+        justify-content: center;
       }
       
       .social-title {
@@ -521,9 +522,42 @@
       50% { transform: scale(1.05); }
     }
     
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
     /* Stile per mappa senza zoom control */
     .leaflet-control-zoom {
       display: none !important;
+    }
+    
+    .leaflet-control-attribution {
+      display: none !important;
+    }
+    
+    /* Simple marker style - ottimizzato per performance */
+    .simple-marker {
+      background: var(--primary-red);
+      border: 3px solid var(--primary-black);
+      border-radius: 50%;
+      width: 20px !important;
+      height: 20px !important;
+      box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.1);
+      transform: translate(-10px, -10px);
+      cursor: pointer;
+    }
+    
+    .simple-marker::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      background: #000000;
+      border-radius: 50%;
     }
     
     /* Evita scroll nei popup su mobile */
@@ -539,6 +573,22 @@
       background: var(--primary-red);
       border-radius: 3px;
     }
+    
+    /* Overlay per sidebar */
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      display: none;
+    }
+    
+    .sidebar-overlay.active {
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -549,28 +599,45 @@
     </div>
     <div class="social-title">Urbex Map LT-Unit</div>
     <div class="social-subtitle">
-      Per sbloccare l'accesso alla mappa completa, seguici sui nostri social!
+      Per sbloccare l'accesso alla mappa, segui tutti i nostri social!
     </div>
     
     <div class="social-buttons">
-      <a href="https://www.youtube.com/@LostTrace-Unit" target="_blank" class="social-btn youtube" id="youtubeBtn">
+      <div class="social-btn youtube" id="youtubeBtn">
         <i class="fab fa-youtube"></i>
         <span>YouTube @LostTrace-Unit</span>
-      </a>
+        <div class="checkmark"><i class="fas fa-check"></i></div>
+        <div class="verification-text">Verifica iscritti...</div>
+      </div>
       
-      <a href="https://www.instagram.com/losttrace__/" target="_blank" class="social-btn instagram" id="instagramBtn">
+      <div class="social-btn instagram" id="instagramBtn">
         <i class="fab fa-instagram"></i>
         <span>Instagram @losttrace__</span>
-      </a>
+        <div class="checkmark"><i class="fas fa-check"></i></div>
+        <div class="verification-text">Verifica follower...</div>
+      </div>
       
-      <a href="https://www.tiktok.com/@lt_unit" target="_blank" class="social-btn tiktok" id="tiktokBtn">
+      <div class="social-btn tiktok" id="tiktokBtn">
         <i class="fab fa-tiktok"></i>
         <span>TikTok @lt_unit</span>
-      </a>
+        <div class="checkmark"><i class="fas fa-check"></i></div>
+        <div class="verification-text">Verifica follower...</div>
+      </div>
     </div>
     
-    <div class="countdown hidden" id="countdown">
-      Accesso in sblocco... <span class="countdown-timer" id="countdownTimer">45</span> secondi
+    <div class="unlock-message" id="unlockMessage"></div>
+  </div>
+  
+  <!-- Sidebar overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  
+  <!-- Sidebar lista spot -->
+  <div class="spots-sidebar" id="spotsSidebar">
+    <div class="sidebar-header">
+      <h3><i class="fas fa-list"></i> Lista Luoghi (<span id="spotsCount">0</span>)</h3>
+    </div>
+    <div class="spots-list" id="spotsList">
+      <!-- Gli spot verranno inseriti qui dinamicamente -->
     </div>
   </div>
   
@@ -586,34 +653,20 @@
       </div>
     </div>
     
-    <div class="stats-panel">
-      <div class="stat-item">
-        <span class="stat-number" id="loadedCount">0</span>
-        <span class="stat-label">Luoghi</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-number" id="progressPercent">0%</span>
-        <span class="stat-label">Caricati</span>
-      </div>
+    <div class="action-buttons">
+      <button class="action-btn" onclick="zoomToItaly()" title="Centra sull'Italia">
+        <i class="fas fa-italy"></i>
+        <span>Italia</span>
+      </button>
+      <button class="action-btn" onclick="toggleSidebar()" title="Mostra lista luoghi">
+        <i class="fas fa-list"></i>
+        <span>Lista</span>
+      </button>
     </div>
   </div>
   
   <!-- Mappa -->
   <div id="map" style="display: none;"></div>
-  
-  <!-- Footer Mobile -->
-  <div class="mobile-footer" id="mobileFooter" style="display: none;">
-    <div class="mobile-stats">
-      <div>
-        <div class="stat-number" id="mobileLoadedCount">0</div>
-        <div class="stat-label">Luoghi</div>
-      </div>
-      <div>
-        <div class="stat-number" id="mobileProgress">0%</div>
-        <div class="stat-label">Caricati</div>
-      </div>
-    </div>
-  </div>
   
   <!-- Loader -->
   <div class="loader-overlay hidden" id="loader">
@@ -624,10 +677,6 @@
     <div class="loader-subtext" id="loaderStatus">
       Inizializzazione sistema urbex...
     </div>
-    <div class="loader-progress">
-      <div class="loader-progress-bar" id="progressBar"></div>
-    </div>
-    <div class="progress-percent" id="progressText">0%</div>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -635,7 +684,7 @@
     // ===== CONFIGURAZIONI E VARIABILI GLOBALI =====
     const CONFIG = {
       MAP_TILE_DARK: "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png",
-      MAP_TILE_ATTR: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      MAP_TILE_ATTR: '&copy; OpenStreetMap',
       ITALY_CENTER: [42.5, 12.5],
       DEFAULT_ZOOM: 6,
       
@@ -646,9 +695,6 @@
         minLon: 6.5,
         maxLon: 18.5
       },
-      
-      // Social unlock
-      UNLOCK_DELAY: 45, // 45 secondi di countdown
       
       // Performance settings
       BATCH_SIZE: 100
@@ -666,23 +712,6 @@
       instagram: false,
       tiktok: false
     };
-    let unlockTimer = null;
-    let unlockTimeRemaining = CONFIG.UNLOCK_DELAY;
-    let unlockStarted = false;
-    
-    // Statistiche di caricamento
-    const stats = {
-      totalCSV: 0,
-      totalItaly: 0,
-      currentStep: 0,
-      steps: [
-        "Analizzo i dati...",
-        "Trovo le coordinate...",
-        "Filtro per l'Italia...",
-        "Preparo la mappa...",
-        "Caricamento completato!"
-      ]
-    };
     
     // ===== FUNZIONI SOCIAL UNLOCK =====
     
@@ -695,7 +724,6 @@
         document.getElementById('socialModal').classList.add('hidden');
         document.getElementById('mainHeader').style.display = 'flex';
         document.getElementById('map').style.display = 'block';
-        document.getElementById('mobileFooter').style.display = 'block';
         startMapLoading();
       } else {
         // Mostra il modal di sblocco
@@ -707,61 +735,70 @@
       const youtubeBtn = document.getElementById('youtubeBtn');
       const instagramBtn = document.getElementById('instagramBtn');
       const tiktokBtn = document.getElementById('tiktokBtn');
+      const unlockMessage = document.getElementById('unlockMessage');
       
-      youtubeBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        socialClicks.youtube = true;
-        checkSocialClicks();
-        window.open(this.href, '_blank');
+      youtubeBtn.addEventListener('click', function() {
+        if (socialClicks.youtube) return;
+        
+        // Inizia verifica
+        this.classList.add('verifying');
+        unlockMessage.textContent = "Verifica iscritti YouTube in corso...";
+        
+        setTimeout(() => {
+          this.classList.remove('verifying');
+          this.classList.add('verified');
+          socialClicks.youtube = true;
+          window.open('https://www.youtube.com/@LostTrace-Unit', '_blank');
+          checkAllSocials();
+        }, 3000); // 3 secondi di "verifica"
       });
       
-      instagramBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        socialClicks.instagram = true;
-        checkSocialClicks();
-        window.open(this.href, '_blank');
+      instagramBtn.addEventListener('click', function() {
+        if (socialClicks.instagram) return;
+        
+        // Inizia verifica
+        this.classList.add('verifying');
+        unlockMessage.textContent = "Verifica follower Instagram in corso...";
+        
+        setTimeout(() => {
+          this.classList.remove('verifying');
+          this.classList.add('verified');
+          socialClicks.instagram = true;
+          window.open('https://www.instagram.com/losttrace__/', '_blank');
+          checkAllSocials();
+        }, 3000); // 3 secondi di "verifica"
       });
       
-      tiktokBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        socialClicks.tiktok = true;
-        checkSocialClicks();
-        window.open(this.href, '_blank');
+      tiktokBtn.addEventListener('click', function() {
+        if (socialClicks.tiktok) return;
+        
+        // Inizia verifica
+        this.classList.add('verifying');
+        unlockMessage.textContent = "Verifica follower TikTok in corso...";
+        
+        setTimeout(() => {
+          this.classList.remove('verifying');
+          this.classList.add('verified');
+          socialClicks.tiktok = true;
+          window.open('https://www.tiktok.com/@lt_unit', '_blank');
+          checkAllSocials();
+        }, 3000); // 3 secondi di "verifica"
       });
     }
     
-    function checkSocialClicks() {
-      if (!unlockStarted) {
-        unlockStarted = true;
-        startUnlockCountdown();
-      }
-      
-      // Controlla se tutti i social sono stati cliccati
+    function checkAllSocials() {
       const allClicked = socialClicks.youtube && socialClicks.instagram && socialClicks.tiktok;
       
       if (allClicked) {
-        // Se cliccati tutti, sblocca immediatamente
-        unlockMap();
+        document.getElementById('unlockMessage').textContent = "Accesso sbloccato! Caricamento della mappa...";
+        setTimeout(unlockMap, 1500);
+      } else {
+        const remaining = 3 - (socialClicks.youtube + socialClicks.instagram + socialClicks.tiktok);
+        document.getElementById('unlockMessage').textContent = `Segui ancora ${remaining} social per sbloccare l'accesso!`;
       }
     }
     
-    function startUnlockCountdown() {
-      document.getElementById('countdown').classList.remove('hidden');
-      
-      unlockTimer = setInterval(() => {
-        unlockTimeRemaining--;
-        document.getElementById('countdownTimer').textContent = unlockTimeRemaining;
-        
-        if (unlockTimeRemaining <= 0) {
-          clearInterval(unlockTimer);
-          unlockMap();
-        }
-      }, 1000);
-    }
-    
     function unlockMap() {
-      clearInterval(unlockTimer);
-      
       // Salva lo sblocco in localStorage
       localStorage.setItem('urbexMapUnlocked', 'true');
       
@@ -769,40 +806,81 @@
       document.getElementById('socialModal').classList.add('hidden');
       document.getElementById('mainHeader').style.display = 'flex';
       document.getElementById('map').style.display = 'block';
-      document.getElementById('mobileFooter').style.display = 'block';
       
       // Inizia il caricamento della mappa
       startMapLoading();
     }
     
-    // ===== FUNZIONI DI UTILITY =====
+    // ===== FUNZIONI SIDEBAR =====
     
-    function updateProgress(current, total, stepIndex = null) {
-      const percent = Math.min(Math.round((current / total) * 100), 100);
+    function toggleSidebar() {
+      const sidebar = document.getElementById('spotsSidebar');
+      const overlay = document.getElementById('sidebarOverlay');
       
-      // Aggiorna percentuali
-      document.getElementById('progressPercent').textContent = `${percent}%`;
-      document.getElementById('mobileProgress').textContent = `${percent}%`;
-      document.getElementById('progressText').textContent = `${percent}%`;
-      
-      // Progress bar
-      document.getElementById('progressBar').style.width = `${percent}%`;
-      
-      // Aggiorna testo loader
-      if (stepIndex !== null && stepIndex < stats.steps.length) {
-        document.getElementById('loaderStatus').textContent = stats.steps[stepIndex];
-        stats.currentStep = stepIndex;
+      if (sidebar.classList.contains('open')) {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('active');
+      } else {
+        sidebar.classList.add('open');
+        overlay.classList.add('active');
+        populateSpotsList();
       }
-      
-      // Aggiorna contatori
-      if (stats.totalItaly > 0) {
-        document.getElementById('loadedCount').textContent = stats.totalItaly;
-        document.getElementById('mobileLoadedCount').textContent = stats.totalItaly;
-      }
-      
-      // Forza reflow per animazione fluida
-      document.getElementById('progressBar').offsetHeight;
     }
+    
+    function populateSpotsList() {
+      const spotsList = document.getElementById('spotsList');
+      const spotsCount = document.getElementById('spotsCount');
+      
+      // Aggiorna contatore
+      spotsCount.textContent = filteredLocations.length;
+      
+      // Svuota la lista
+      spotsList.innerHTML = '';
+      
+      // Aggiungi ogni spot alla lista
+      filteredLocations.forEach((location, index) => {
+        const spotCard = document.createElement('div');
+        spotCard.className = 'spot-card';
+        
+        const coords = `${location.lat.toFixed(6)}, ${location.lon.toFixed(6)}`;
+        
+        spotCard.innerHTML = `
+          ${location.image ? `<img src="${location.image}" class="spot-card-image" alt="${escapeHtml(location.title)}" onerror="this.style.display='none'">` : ''}
+          <div class="spot-card-content">
+            <div class="spot-card-title">${escapeHtml(location.title)}</div>
+            <div class="spot-card-desc">${escapeHtml(location.description || 'Nessuna descrizione disponibile')}</div>
+            <div class="spot-card-actions">
+              <button class="spot-card-btn maps" onclick="openMaps(${location.lat}, ${location.lon})">
+                <i class="fab fa-google"></i> Maps
+              </button>
+              <button class="spot-card-btn copy" onclick="copyCoords(${location.lat}, ${location.lon}, this)">
+                <i class="far fa-copy"></i> Copia
+              </button>
+              <button class="spot-card-btn view" onclick="showOnMap(${location.lat}, ${location.lon}, ${index})">
+                <i class="fas fa-map-marker-alt"></i> Mappa
+              </button>
+            </div>
+          </div>
+        `;
+        
+        spotsList.appendChild(spotCard);
+      });
+    }
+    
+    function showOnMap(lat, lon, index) {
+      if (map && allMarkers[index]) {
+        // Chiudi sidebar
+        toggleSidebar();
+        
+        // Centra la mappa sulla posizione
+        map.setView([lat, lon], 14);
+        
+        // Apri il popup del marker
+        allMarkers[index].openPopup();
+      }
+    }
+    
+    // ===== FUNZIONI DI UTILITY =====
     
     // Controlla se coordinate sono in Italia
     function isInItaly(lat, lon) {
@@ -949,18 +1027,12 @@
     
     // ===== PROCESSAMENTO DATI =====
     
-    async function processDataInBatches(data, batchSize, progressCallback) {
+    async function processDataInBatches(data, batchSize) {
       const total = data.length;
-      const batches = Math.ceil(total / batchSize);
       const results = [];
       
-      stats.totalCSV = total;
-      updateProgress(0, total, 0);
-      
-      for (let i = 0; i < batches; i++) {
-        const start = i * batchSize;
-        const end = Math.min(start + batchSize, total);
-        const batch = data.slice(start, end);
+      for (let i = 0; i < total; i += batchSize) {
+        const batch = data.slice(i, i + batchSize);
         
         // Processa batch
         for (const item of batch) {
@@ -999,12 +1071,11 @@
             description: desc.substring(0, 150),
             image: image || null
           });
-          
-          stats.totalItaly++;
         }
         
-        // Aggiorna progresso
-        updateProgress(end, total, Math.min(3, Math.floor((end / total) * 4)));
+        // Aggiorna loader
+        const progress = Math.min(Math.round((i + batchSize) / total * 100), 100);
+        document.getElementById('loaderStatus').textContent = `Caricamento luoghi... ${progress}%`;
         
         // Piccola pausa per non bloccare l'UI
         await new Promise(resolve => setTimeout(resolve, 0));
@@ -1018,7 +1089,7 @@
     function initializeMap() {
       // Crea mappa senza controlli zoom
       map = L.map('map', {
-        zoomControl: false, // Rimuove i controlli +/-
+        zoomControl: false,
         attributionControl: false,
         preferCanvas: true,
         maxZoom: 18,
@@ -1035,61 +1106,23 @@
       markersLayer = L.layerGroup().addTo(map);
     }
     
-    // Icona marker personalizzata (rossa con icona nera)
-    function createCustomIcon() {
-      return L.divIcon({
-        className: 'custom-marker',
-        html: `
-          <div style="
-            width: 32px;
-            height: 32px;
-            background: #d32f2f;
-            border: 3px solid #121212;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.7);
-            position: relative;
-          ">
-            <div style="
-              color: #000000;
-              font-size: 16px;
-              font-weight: bold;
-              transform: translateY(-1px);
-            ">
-              <i class="fas fa-map-pin"></i>
-            </div>
-            <div style="
-              position: absolute;
-              bottom: -5px;
-              width: 0;
-              height: 0;
-              border-left: 6px solid transparent;
-              border-right: 6px solid transparent;
-              border-top: 8px solid #121212;
-            "></div>
-          </div>
-        `,
-        iconSize: [32, 40],
-        iconAnchor: [16, 40],
-        popupAnchor: [0, -35]
-      });
-    }
-    
     function addMarkersToMap(locations) {
       if (!map || !markersLayer) return;
       
       // Cancella marker esistenti
       markersLayer.clearLayers();
       
-      // Crea icona personalizzata
-      const customIcon = createCustomIcon();
-      
-      // Crea tutti i marker
+      // Crea tutti i marker (pallini semplici per performance)
       allMarkers = locations.map(location => {
-        const marker = L.marker([location.lat, location.lon], {
-          icon: customIcon
+        // Crea marker semplice per performance
+        const marker = L.circleMarker([location.lat, location.lon], {
+          radius: 10,
+          fillColor: "#d32f2f",
+          fillOpacity: 0.9,
+          color: "#121212",
+          weight: 3,
+          opacity: 1,
+          className: 'simple-marker'
         }).addTo(markersLayer);
         
         // Popup content (creato solo al click)
@@ -1200,6 +1233,12 @@
       window.open(url, '_blank');
     }
     
+    function zoomToItaly() {
+      if (map) {
+        map.setView(CONFIG.ITALY_CENTER, CONFIG.DEFAULT_ZOOM);
+      }
+    }
+    
     function hideLoader() {
       const loader = document.getElementById('loader');
       loader.style.opacity = '0';
@@ -1219,37 +1258,36 @@
       try {
         // 1. Inizializza mappa (vuota)
         initializeMap();
-        updateProgress(10, 100, 0);
+        document.getElementById('loaderStatus').textContent = "Inizializzazione mappa...";
         
         // 2. Carica dati CSV
         const response = await fetch('spot.csv');
         if (!response.ok) throw new Error(`Errore caricamento dati: ${response.status}`);
         
         const csvText = await response.text();
-        updateProgress(20, 100, 1);
+        document.getElementById('loaderStatus').textContent = "Analisi dati CSV...";
         
         // 3. Converti CSV
         const csvData = csvToObjects(csvText);
         if (!csvData.length) throw new Error("Nessun dato trovato nel file");
         
-        updateProgress(30, 100, 2);
+        document.getElementById('loaderStatus').textContent = "Filtro per Italia...";
         
         // 4. Processa dati (in batch per non bloccare UI)
-        filteredLocations = await processDataInBatches(csvData, CONFIG.BATCH_SIZE, updateProgress);
+        filteredLocations = await processDataInBatches(csvData, CONFIG.BATCH_SIZE);
         
         if (filteredLocations.length === 0) {
           throw new Error("Nessun luogo valido trovato in Italia");
         }
         
-        updateProgress(95, 100, 3);
+        document.getElementById('loaderStatus').textContent = "Creazione mappa...";
         
         // 5. Aggiungi TUTTI i marker in una volta
         addMarkersToMap(filteredLocations);
         
-        // 6. Aggiorna statistiche finali
-        updateProgress(100, 100, 4);
+        document.getElementById('loaderStatus').textContent = "Mappa pronta!";
         
-        // 7. Nascondi loader dopo breve delay
+        // 6. Nascondi loader dopo breve delay
         setTimeout(hideLoader, 500);
         
       } catch (error) {
@@ -1257,7 +1295,6 @@
         
         // Mostra errore nel loader
         document.getElementById('loaderStatus').textContent = `Errore: ${error.message}`;
-        document.getElementById('progressBar').style.background = "#ff4444";
         
         // Inizializza comunque mappa vuota
         if (!map) initializeMap();
@@ -1269,7 +1306,12 @@
     
     // ===== INIZIALIZZA APP =====
     
-    document.addEventListener('DOMContentLoaded', initializeSocialUnlock);
+    document.addEventListener('DOMContentLoaded', () => {
+      initializeSocialUnlock();
+      
+      // Chiudi sidebar quando si clicca sull'overlay
+      document.getElementById('sidebarOverlay').addEventListener('click', toggleSidebar);
+    });
     
     // Gestisci resize window
     let resizeTimeout;
