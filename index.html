@@ -39,23 +39,36 @@
       color: var(--text-light);
     }
     
-    /* Modalità video - effetti blur */
+    /* Modalità video - effetti blur e oscuramento completo */
     body.video-mode .popup-title,
     body.video-mode .popup-coords,
     body.video-mode .popup-description,
     body.video-mode .spot-card-title,
     body.video-mode .spot-card-desc,
     body.video-mode .spot-card-actions,
-    body.video-mode .popup-image {
-      filter: blur(8px);
+    body.video-mode .popup-image,
+    body.video-mode .brand-text h1,
+    body.video-mode .brand-text p,
+    body.video-mode .action-btn span,
+    body.video-mode .sidebar-header h3 {
+      filter: blur(10px);
       user-select: none;
       pointer-events: none;
+      color: transparent !important;
+      text-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
     }
     
     body.video-mode .popup-image {
-      background: linear-gradient(45deg, #333, #666, #333) !important;
+      background: linear-gradient(45deg, #222, #444, #222) !important;
       background-size: 400% 400% !important;
       animation: gradientShift 3s ease infinite !important;
+    }
+    
+    body.video-mode .logo i,
+    body.video-mode .action-btn i,
+    body.video-mode .sidebar-header h3 i {
+      filter: blur(0);
+      color: var(--text-gray) !important;
     }
     
     @keyframes gradientShift {
@@ -66,7 +79,7 @@
     
     body.video-mode .coordinates-blurred {
       color: transparent;
-      text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
     }
     
     /* Video mode indicator */
@@ -74,7 +87,7 @@
       position: fixed;
       top: 70px;
       right: 20px;
-      background: rgba(211, 47, 47, 0.9);
+      background: rgba(76, 175, 80, 0.9);
       color: white;
       padding: 10px 15px;
       border-radius: 8px;
@@ -103,7 +116,7 @@
       left: 50%;
       transform: translateX(-50%);
       background: rgba(18, 18, 18, 0.95);
-      border: 2px solid var(--primary-red);
+      border: 2px solid #4CAF50;
       border-radius: 10px;
       padding: 15px 20px;
       z-index: 1002;
@@ -120,13 +133,13 @@
     }
     
     .video-mode-controls h4 {
-      color: var(--primary-red);
+      color: #4CAF50;
       margin-bottom: 5px;
       font-size: 16px;
     }
     
     .exit-video-btn {
-      background: var(--primary-red);
+      background: #4CAF50;
       color: white;
       border: none;
       padding: 10px 20px;
@@ -140,7 +153,7 @@
     }
     
     .exit-video-btn:hover {
-      background: var(--primary-red-dark);
+      background: #388E3C;
       transform: scale(1.05);
     }
     
@@ -176,14 +189,14 @@
       align-items: center;
       justify-content: center;
       font-size: 16px;
-      color: #000000; /* ICONA NERA */
+      color: #000000;
       font-weight: bold;
     }
     
     .brand-text h1 {
       font-size: 16px;
       font-weight: 700;
-      color: var(--primary-red); /* TESTO ROSSO */
+      color: var(--primary-red);
       line-height: 1.2;
       text-transform: uppercase;
       letter-spacing: 0.5px;
@@ -255,13 +268,13 @@
     
     .social-logo i {
       font-size: 36px;
-      color: #000000; /* Icona nera */
+      color: #000000;
     }
     
     .social-title {
       font-size: 28px;
       font-weight: 700;
-      color: var(--primary-red); /* Titolo rosso */
+      color: var(--primary-red);
       margin-bottom: 10px;
       text-align: center;
     }
@@ -683,13 +696,13 @@
     
     .loader-logo i {
       font-size: 32px;
-      color: #000000; /* Icona nera */
+      color: #000000;
     }
     
     .loader-text {
       font-size: 22px;
       font-weight: 700;
-      color: var(--primary-red); /* Testo rosso */
+      color: var(--primary-red);
       margin-bottom: 8px;
       text-align: center;
     }
@@ -826,19 +839,19 @@
       }
       
       .action-btn {
-        padding: 8px; /* Più spazio per il tocco */
+        padding: 8px;
         font-size: 11px;
-        min-width: 40px; /* Assicura dimensione minima */
+        min-width: 40px;
         min-height: 40px;
         justify-content: center;
       }
       
       .action-btn span {
-        display: none; /* Nascondi testo su mobile */
+        display: none;
       }
       
       .action-btn i {
-        font-size: 16px; /* Icone più grandi */
+        font-size: 16px;
         margin: 0 !important;
       }
       
@@ -867,7 +880,6 @@
         gap: 12px;
       }
       
-      /* Fix per testo verifica su mobile */
       .social-btn span {
         flex: 1;
         overflow: hidden;
@@ -916,7 +928,6 @@
         padding: 12px;
       }
       
-      /* Video mode mobile */
       .video-mode-indicator {
         top: 60px;
         right: 10px;
@@ -937,7 +948,6 @@
         font-size: 14px;
       }
       
-      /* Assicura che l'icona del bottone Italia sia visibile */
       .action-btn[onclick="zoomToItaly()"] i {
         display: block !important;
         color: white !important;
@@ -1010,14 +1020,14 @@
       border-radius: 50%;
     }
     
-    /* Video mode marker - Norvegia */
+    /* Video mode marker - Germania */
     .video-mode-marker {
-      background: #4CAF50;
-      border: 3px solid #1B5E20;
+      background: #FF9800;
+      border: 3px solid #F57C00;
       border-radius: 50%;
       width: 28px !important;
       height: 28px !important;
-      box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+      box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.3);
       transform: translate(-14px, -14px);
       cursor: pointer;
       display: flex;
@@ -1026,12 +1036,16 @@
     }
     
     .video-mode-marker::after {
-      content: '🎥';
-      font-size: 14px;
+      content: '';
+      font-size: 0;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      width: 12px;
+      height: 12px;
+      background: #000000;
+      border-radius: 50%;
     }
     
     /* Evita scroll nei popup su mobile */
@@ -1255,12 +1269,12 @@
         maxLon: 18.5
       },
       
-      // Video mode waypoint - Centro Italia (molto visibile)
+      // Video mode waypoint - Germania (vicino al confine)
       VIDEO_MODE_WAYPOINT: {
-        lat: 43.7687,
-        lon: 11.2569, // Firenze, Italia
-        title: "Modalità Video",
-        description: "Clicca per attivare la modalità video. Tutti i dati sensibili verranno oscurati."
+        lat: 50.1109,
+        lon: 8.6821, // Francoforte, Germania
+        title: "Video Mode",
+        description: ""
       },
       
       // Social unlock settings - RIDOTTO A 20 SECONDI
@@ -1349,7 +1363,7 @@
     function setupVideoModeWaypoint() {
       if (!map) return;
       
-      // Crea icona personalizzata per il waypoint video
+      // Crea icona personalizzata per il waypoint video (arancione)
       const videoIcon = L.divIcon({
         className: 'video-mode-marker',
         html: '',
@@ -1358,44 +1372,14 @@
         popupAnchor: [0, -30]
       });
       
-      // Aggiungi il waypoint in Italia (Firenze)
+      // Aggiungi il waypoint in Germania - senza popup, solo click
       videoModeMarker = L.marker([CONFIG.VIDEO_MODE_WAYPOINT.lat, CONFIG.VIDEO_MODE_WAYPOINT.lon], {
         icon: videoIcon
       }).addTo(map);
       
-      // Popup per spiegare la funzionalità
-      const popupContent = `
-        <div style="padding: 15px; max-width: 300px;">
-          <div style="font-size: 18px; font-weight: bold; color: #4CAF50; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
-            <i class="fas fa-video"></i> Modalità Video
-          </div>
-          <div style="font-size: 14px; line-height: 1.5; color: #333; margin-bottom: 15px;">
-            Clicca qui per attivare la modalità video. Tutti i dati sensibili (titoli, coordinate, foto) verranno oscurati con effetto blur per permetterti di fare video senza rivelare informazioni.
-          </div>
-          <button onclick="activateVideoMode()" style="
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            font-size: 14px;
-          ">
-            <i class="fas fa-play"></i> Attiva Modalità Video
-          </button>
-        </div>
-      `;
-      
-      videoModeMarker.bindPopup(popupContent);
-      
-      // Aggiungi anche un listener per il click diretto sul marker
+      // Al click attiva direttamente la modalità video senza popup
       videoModeMarker.on('click', function() {
-        setTimeout(() => {
-          activateVideoMode();
-          this.closePopup();
-        }, 100);
+        activateVideoMode();
       });
     }
     
@@ -1404,10 +1388,7 @@
       document.body.classList.add('video-mode');
       document.getElementById('videoModeIndicator').classList.add('active');
       
-      // Notifica all'utente
-      showNotification("Modalità video attivata! Tutti i dati sensibili sono oscurati.", "success");
-      
-      // Chiudi tutti i popup aperti
+      // Nascondi tutti i popup aperti
       map.closePopup();
       
       // Chiudi sidebar se aperta
@@ -1418,10 +1399,18 @@
         overlay.classList.remove('active');
       }
       
+      // Aggiorna tutti i marker per mostrare contenuti censurati
+      updateMarkersForVideoMode();
+      
+      // Aggiorna la lista spot per mostrare contenuti censurati
+      if (document.getElementById('spotsSidebar').classList.contains('open')) {
+        populateSpotsList();
+      }
+      
       // Centra la mappa sull'Italia per mostrare meglio gli spot
       setTimeout(() => {
         zoomToItaly();
-      }, 500);
+      }, 300);
     }
     
     function exitVideoMode() {
@@ -1429,8 +1418,38 @@
       document.body.classList.remove('video-mode');
       document.getElementById('videoModeIndicator').classList.remove('active');
       
-      // Notifica all'utente
-      showNotification("Modalità video disattivata", "info");
+      // Ripristina i marker normali
+      updateMarkersForNormalMode();
+      
+      // Ripristina la lista spot normale
+      if (document.getElementById('spotsSidebar').classList.contains('open')) {
+        populateSpotsList();
+      }
+    }
+    
+    function updateMarkersForVideoMode() {
+      // Cambia colore e stile di tutti i marker
+      allMarkers.forEach(marker => {
+        marker.setStyle({
+          fillColor: '#666',
+          color: '#333',
+          fillOpacity: 0.7,
+          weight: 2
+        });
+      });
+    }
+    
+    function updateMarkersForNormalMode() {
+      // Ripristina stile originale dei marker
+      allMarkers.forEach(marker => {
+        marker.setStyle({
+          fillColor: "#d32f2f",
+          fillOpacity: 0.9,
+          color: "#121212",
+          weight: 3,
+          opacity: 1
+        });
+      });
     }
     
     function showNotification(message, type) {
@@ -1714,36 +1733,51 @@
         const spotCard = document.createElement('div');
         spotCard.className = `spot-card ${location.isFake ? 'secret' : ''}`;
         
-        if (!location.isFake) {
+        if (!location.isFake && !videoModeActive) {
           spotCard.onclick = () => showOnMap(location.lat, location.lon, index);
         }
         
-        const coords = location.isFake ? 'N/A' : `${location.lat.toFixed(6)}, ${location.lon.toFixed(6)}`;
-        
-        spotCard.innerHTML = `
-          ${location.image && !location.isFake ? `<img src="${location.image}" class="spot-card-image" alt="${escapeHtml(location.title)}" onerror="this.style.display='none'">` : ''}
-          <div class="spot-card-content">
-            <div class="spot-card-title">
-              ${escapeHtml(location.title)}
-              ${location.isFake ? '<span class="secret-badge">TOP SECRET</span>' : ''}
+        // Se in modalità video, mostra tutto oscurato
+        if (videoModeActive) {
+          spotCard.innerHTML = `
+            <div class="spot-card-content">
+              <div class="spot-card-title">
+                <span class="coordinates-blurred">███ ████ ████</span>
+                <span class="secret-badge">RISERVATO</span>
+              </div>
+              <div class="spot-card-desc">
+                <span class="coordinates-blurred">███ ████ ████ ████ ████ ████ ████ ████ ████ ████ ████ ████</span>
+              </div>
             </div>
-            <div class="spot-card-desc">
-              ${location.isFake 
-                ? 'Accesso riservato. Questo spot è disponibile solo nella versione completa riservata ai membri del team.' 
-                : escapeHtml(location.description || 'Nessuna descrizione disponibile')}
+          `;
+        } else {
+          const coords = location.isFake ? 'N/A' : `${location.lat.toFixed(6)}, ${location.lon.toFixed(6)}`;
+          
+          spotCard.innerHTML = `
+            ${location.image && !location.isFake ? `<img src="${location.image}" class="spot-card-image" alt="${escapeHtml(location.title)}" onerror="this.style.display='none'">` : ''}
+            <div class="spot-card-content">
+              <div class="spot-card-title">
+                ${escapeHtml(location.title)}
+                ${location.isFake ? '<span class="secret-badge">TOP SECRET</span>' : ''}
+              </div>
+              <div class="spot-card-desc">
+                ${location.isFake 
+                  ? 'Accesso riservato. Questo spot è disponibile solo nella versione completa riservata ai membri del team.' 
+                  : escapeHtml(location.description || 'Nessuna descrizione disponibile')}
+              </div>
+              ${!location.isFake ? `
+              <div class="spot-card-actions">
+                <button class="spot-card-btn maps" onclick="event.stopPropagation(); openMaps(${location.lat}, ${location.lon})">
+                  <i class="fab fa-google"></i> Maps
+                </button>
+                <button class="spot-card-btn copy" onclick="event.stopPropagation(); copyCoords(${location.lat}, ${location.lon}, this)">
+                  <i class="far fa-copy"></i> Copia
+                </button>
+              </div>
+              ` : ''}
             </div>
-            ${!location.isFake ? `
-            <div class="spot-card-actions">
-              <button class="spot-card-btn maps" onclick="event.stopPropagation(); openMaps(${location.lat}, ${location.lon})">
-                <i class="fab fa-google"></i> Maps
-              </button>
-              <button class="spot-card-btn copy" onclick="event.stopPropagation(); copyCoords(${location.lat}, ${location.lon}, this)">
-                <i class="far fa-copy"></i> Copia
-              </button>
-            </div>
-            ` : ''}
-          </div>
-        `;
+          `;
+        }
         
         spotsList.appendChild(spotCard);
       });
@@ -2066,6 +2100,36 @@
     }
     
     function createPopupContent(location) {
+      // Se in modalità video, mostra contenuto completamente oscurato
+      if (videoModeActive) {
+        return `
+          <div class="popup-header">
+            <div class="popup-title">
+              <span class="coordinates-blurred">████ ██████</span>
+            </div>
+            <div class="popup-coords">
+              <i class="fas fa-map-marker-alt"></i>
+              <span class="coordinates-blurred">███ ████ ████</span>
+            </div>
+          </div>
+          <div class="popup-body">
+            <div class="popup-image" style="background: linear-gradient(45deg, #222, #444, #222); background-size: 400% 400%; animation: gradientShift 3s ease infinite;"></div>
+            <div class="popup-description">
+              <span class="coordinates-blurred">██████ ██████ ██████ ██████ ██████ ██████ ██████ ██████ ██████ ██████</span>
+            </div>
+            <div class="popup-actions">
+              <button class="popup-btn copy" style="opacity: 0.5; cursor: not-allowed;">
+                <i class="far fa-copy"></i> <span class="coordinates-blurred">████</span>
+              </button>
+              <button class="popup-btn maps" style="opacity: 0.5; cursor: not-allowed;">
+                <i class="fab fa-google"></i> <span class="coordinates-blurred">█████</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }
+      
+      // Contenuto normale
       const coords = `${location.lat.toFixed(6)}, ${location.lon.toFixed(6)}`;
       
       return `
@@ -2073,7 +2137,7 @@
           <div class="popup-title">${escapeHtml(location.title)}</div>
           <div class="popup-coords">
             <i class="fas fa-map-marker-alt"></i>
-            ${videoModeActive ? '<span class="coordinates-blurred">███ ████ ████</span>' : coords}
+            ${coords}
           </div>
         </div>
         <div class="popup-body">
@@ -2151,7 +2215,6 @@
     
     function openMaps(lat, lon) {
       if (videoModeActive) {
-        showNotification("Funzione disabilitata in modalità video", "info");
         return;
       }
       
