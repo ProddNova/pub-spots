@@ -39,7 +39,7 @@
       color: var(--text-light);
     }
     
-    /* Header branding */
+    /* Header branding - ROSSO e NERO */
     .header {
       position: absolute;
       top: 0;
@@ -71,15 +71,17 @@
       align-items: center;
       justify-content: center;
       font-size: 16px;
-      color: white;
+      color: #000000; /* ICONA NERA */
       font-weight: bold;
     }
     
     .brand-text h1 {
       font-size: 16px;
-      font-weight: 600;
-      color: var(--text-light);
+      font-weight: 700;
+      color: var(--primary-red); /* TESTO ROSSO */
       line-height: 1.2;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     
     .brand-text p {
@@ -148,13 +150,13 @@
     
     .social-logo i {
       font-size: 36px;
-      color: white;
+      color: #000000; /* Icona nera */
     }
     
     .social-title {
       font-size: 28px;
       font-weight: 700;
-      color: var(--text-light);
+      color: var(--primary-red); /* Titolo rosso */
       margin-bottom: 10px;
       text-align: center;
     }
@@ -253,6 +255,18 @@
     }
     
     .social-btn.verifying .verification-text {
+      display: block;
+    }
+    
+    .verification-info {
+      font-size: 12px;
+      color: var(--text-gray);
+      text-align: center;
+      margin-top: 5px;
+      display: none;
+    }
+    
+    .social-btn.verifying .verification-info {
       display: block;
     }
     
@@ -379,6 +393,9 @@
       padding: 20px;
       border-bottom: 2px solid var(--primary-red);
       background: var(--primary-black);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     
     .sidebar-header h3 {
@@ -392,6 +409,25 @@
     
     .sidebar-header h3 i {
       color: var(--primary-red);
+    }
+    
+    .close-sidebar-btn {
+      background: none;
+      border: none;
+      color: var(--text-light);
+      font-size: 20px;
+      cursor: pointer;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 5px;
+      transition: all 0.2s;
+    }
+    
+    .close-sidebar-btn:hover {
+      background: var(--primary-red);
     }
     
     .spots-list {
@@ -415,6 +451,31 @@
       transform: translateY(-2px);
     }
     
+    .spot-card.secret {
+      border-color: #555;
+      opacity: 0.8;
+    }
+    
+    .spot-card.secret .spot-card-title {
+      color: #999;
+    }
+    
+    .spot-card.secret .spot-card-desc {
+      color: #666;
+    }
+    
+    .secret-badge {
+      background: linear-gradient(135deg, #333, #555);
+      color: #ccc;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: 1px solid #666;
+    }
+    
     .spot-card-image {
       width: 100%;
       height: 150px;
@@ -431,6 +492,9 @@
       font-weight: 600;
       color: var(--text-light);
       margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
     
     .spot-card-desc {
@@ -514,13 +578,13 @@
     
     .loader-logo i {
       font-size: 32px;
-      color: white;
+      color: #000000; /* Icona nera */
     }
     
     .loader-text {
       font-size: 22px;
       font-weight: 700;
-      color: var(--text-light);
+      color: var(--primary-red); /* Testo rosso */
       margin-bottom: 8px;
       text-align: center;
     }
@@ -638,7 +702,7 @@
       background: var(--primary-red-dark);
     }
     
-    /* Mobile optimization */
+    /* Mobile optimization - IMPORTANTE */
     @media (max-width: 768px) {
       .header {
         padding: 8px 15px;
@@ -657,16 +721,20 @@
       }
       
       .action-btn {
-        padding: 6px 10px;
+        padding: 8px; /* Più spazio per il tocco */
         font-size: 11px;
+        min-width: 40px; /* Assicura dimensione minima */
+        min-height: 40px;
+        justify-content: center;
       }
       
       .action-btn span {
-        display: none;
+        display: none; /* Nascondi testo su mobile */
       }
       
       .action-btn i {
-        margin: 0;
+        font-size: 16px; /* Icone più grandi */
+        margin: 0 !important;
       }
       
       .spots-sidebar {
@@ -685,11 +753,41 @@
       
       .social-buttons {
         padding: 0 15px;
+        gap: 12px;
       }
       
       .social-btn {
         padding: 12px 15px;
         font-size: 14px;
+        gap: 12px;
+      }
+      
+      /* Fix per testo verifica su mobile */
+      .social-btn span {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      
+      .verification-text {
+        position: absolute;
+        right: 10px;
+        font-size: 10px;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 2px 6px;
+        border-radius: 4px;
+        white-space: nowrap;
+      }
+      
+      .verification-info {
+        position: absolute;
+        top: -20px;
+        left: 0;
+        right: 0;
+        font-size: 10px;
+        color: var(--primary-red);
+        text-align: center;
       }
       
       .warning-content {
@@ -712,18 +810,17 @@
       .popup-body {
         padding: 12px;
       }
+      
+      /* Assicura che l'icona del bottone Italia sia visibile */
+      .action-btn[onclick="zoomToItaly()"] i {
+        display: block !important;
+        color: white !important;
+      }
     }
     
     @media (max-width: 480px) {
       .header {
         padding: 8px 10px;
-      }
-      
-      .action-btn {
-        padding: 8px;
-        width: 40px;
-        height: 40px;
-        justify-content: center;
       }
       
       .social-title {
@@ -860,25 +957,30 @@
         <i class="fab fa-youtube"></i>
         <span>YouTube @LostTrace-Unit</span>
         <div class="checkmark"><i class="fas fa-check"></i></div>
-        <div class="verification-text">Verifica iscrizione...</div>
+        <div class="verification-text">Verifica in corso...</div>
+        <div class="verification-info">Attendi 20 secondi dopo aver seguito</div>
       </a>
       
       <a href="https://www.instagram.com/losttrace__/" target="_blank" class="social-btn instagram disabled" id="instagramBtn">
         <i class="fab fa-instagram"></i>
         <span>Instagram @losttrace__</span>
         <div class="checkmark"><i class="fas fa-check"></i></div>
-        <div class="verification-text">Verifica follower...</div>
+        <div class="verification-text">Verifica in corso...</div>
+        <div class="verification-info">Attendi 20 secondi dopo aver seguito</div>
       </a>
       
       <a href="https://www.tiktok.com/@lt_unit" target="_blank" class="social-btn tiktok disabled" id="tiktokBtn">
         <i class="fab fa-tiktok"></i>
         <span>TikTok @lt_unit</span>
         <div class="checkmark"><i class="fas fa-check"></i></div>
-        <div class="verification-text">Verifica follower...</div>
+        <div class="verification-text">Verifica in corso...</div>
+        <div class="verification-info">Attendi 20 secondi dopo aver seguito</div>
       </a>
     </div>
     
-    <div class="unlock-message" id="unlockMessage"></div>
+    <div class="unlock-message" id="unlockMessage">
+      Clicca su ogni social, segui il canale e attendi 20 secondi per la verifica automatica!
+    </div>
   </div>
   
   <!-- Warning Modal -->
@@ -913,6 +1015,9 @@
   <div class="spots-sidebar" id="spotsSidebar">
     <div class="sidebar-header">
       <h3><i class="fas fa-list"></i> Lista Luoghi (<span id="spotsCount">0</span>)</h3>
+      <button class="close-sidebar-btn" onclick="toggleSidebar()">
+        <i class="fas fa-times"></i>
+      </button>
     </div>
     <div class="spots-list" id="spotsList">
       <!-- Gli spot verranno inseriti qui dinamicamente -->
@@ -934,7 +1039,7 @@
         <i class="fas fa-skull-crossbones"></i>
       </div>
       <div class="brand-text">
-        <h1>Urbex Map LT-Unit</h1>
+        <h1>LT Unit Urbex Map</h1>
         <p>Mappa luoghi abbandonati</p>
       </div>
     </div>
@@ -982,11 +1087,14 @@
         maxLon: 18.5
       },
       
-      // Social unlock settings
-      VERIFICATION_TIME: 30000, // 30 secondi
+      // Social unlock settings - RIDOTTO A 20 SECONDI
+      VERIFICATION_TIME: 20000, // 20 secondi
       
       // Performance settings
-      BATCH_SIZE: 100
+      BATCH_SIZE: 100,
+      
+      // Fake spots settings
+      FAKE_SPOTS_COUNT: 650 // 600-700 spot finti
     };
     
     // Variabili globali
@@ -994,6 +1102,7 @@
     let markersLayer = null;
     let allMarkers = [];
     let filteredLocations = [];
+    let allSpotsList = []; // Include reali + finti
     
     // Variabili social unlock
     let socialVerifications = {
@@ -1008,6 +1117,54 @@
       instagram: null,
       tiktok: null
     };
+    
+    // ===== FUNZIONI PER GENERARE SPOT FINITI =====
+    
+    function generateFakeSpots(count) {
+      const fakeSpots = [];
+      const fakeTitles = [
+        "Struttura Abbandonata", "Edificio Industriale Dismesso", "Villa in Degrado",
+        "Fabbrica Chiusa", "Ospedale Fantasma", "Scuola Desertata",
+        "Caserma Militare", "Centro Commerciale Vuoto", "Hotel in Disuso",
+        "Stazione Ferroviaria", "Complesso Residenziale", "Centro Ricreativo",
+        "Magazzino Industriale", "Impianto Sportivo", "Struttura Religiosa"
+      ];
+      
+      const fakeDescriptions = [
+        "Luogo abbandonato da diversi anni, condizioni precarie",
+        "Struttura dismessa in attesa di riconversione",
+        "Edificio storico in stato di degrado avanzato",
+        "Complesso industriale chiuso negli anni '90",
+        "Struttura militare abbandonata dopo la guerra fredda",
+        "Ex centro sanitario chiuso per mancanza di fondi",
+        "Impianto produttivo dismesso dopo la delocalizzazione"
+      ];
+      
+      // Genera coordinate casuali in Italia
+      for (let i = 0; i < count; i++) {
+        const lat = CONFIG.ITALY_BOUNDS.minLat + 
+                   Math.random() * (CONFIG.ITALY_BOUNDS.maxLat - CONFIG.ITALY_BOUNDS.minLat);
+        const lon = CONFIG.ITALY_BOUNDS.minLon + 
+                   Math.random() * (CONFIG.ITALY_BOUNDS.maxLon - CONFIG.ITALY_BOUNDS.minLon);
+        
+        const titleIndex = Math.floor(Math.random() * fakeTitles.length);
+        const descIndex = Math.floor(Math.random() * fakeDescriptions.length);
+        
+        // Numero casuale per il nome
+        const randomNum = Math.floor(Math.random() * 100) + 1;
+        
+        fakeSpots.push({
+          lat: lat,
+          lon: lon,
+          title: `${fakeTitles[titleIndex]} #${randomNum}`,
+          description: fakeDescriptions[descIndex],
+          image: null,
+          isFake: true // Flag per identificare spot finti
+        });
+      }
+      
+      return fakeSpots;
+    }
     
     // ===== FUNZIONI SOCIAL UNLOCK =====
     
@@ -1076,7 +1233,10 @@
         // Aggiungi classe verifying
         button.classList.add('verifying');
         
-        // Avvia il timer di verifica
+        // Mostra messaggio più chiaro
+        unlockMessage.textContent = `Verifica ${social} in corso... Attendi 20 secondi dopo aver seguito!`;
+        
+        // Avvia il timer di verifica (20 secondi)
         verificationTimers[social] = setTimeout(() => {
           // Verifica completata
           button.classList.remove('verifying');
@@ -1087,6 +1247,9 @@
           
           // Riabilita i bottoni successivi
           updateSocialButtonsState();
+          
+          // Mostra messaggio di successo
+          unlockMessage.textContent = `${social.charAt(0).toUpperCase() + social.slice(1)} verificato!`;
           
           // Controlla se tutti sono verificati
           checkAllSocials();
@@ -1175,16 +1338,16 @@
       const allVerified = socialVerifications.youtube && socialVerifications.instagram && socialVerifications.tiktok;
       
       if (allVerified) {
-        document.getElementById('unlockMessage').textContent = "Tutti i social verificati!";
+        document.getElementById('unlockMessage').textContent = "Tutti i social verificati! Sblocco accesso...";
         
         // Piccolo delay prima di mostrare l'avvertenza
         setTimeout(() => {
           document.getElementById('socialModal').classList.add('hidden');
           document.getElementById('warningModal').classList.add('active');
-        }, 1000);
+        }, 1500);
       } else {
         const remaining = 3 - (socialVerifications.youtube + socialVerifications.instagram + socialVerifications.tiktok);
-        document.getElementById('unlockMessage').textContent = `Segui ancora ${remaining} social per sbloccare l'accesso!`;
+        document.getElementById('unlockMessage').textContent = `Completa ancora ${remaining} social! Ricorda: dopo aver seguito, attendi 20 secondi per la verifica automatica.`;
       }
     }
     
@@ -1233,25 +1396,39 @@
       const spotsList = document.getElementById('spotsList');
       const spotsCount = document.getElementById('spotsCount');
       
-      // Aggiorna contatore
-      spotsCount.textContent = filteredLocations.length;
+      // Aggiorna contatore (reali + finti)
+      spotsCount.textContent = allSpotsList.length;
       
       // Svuota la lista
       spotsList.innerHTML = '';
       
+      // Mescola la lista per mischiare reali e finti
+      const shuffledSpots = [...allSpotsList].sort(() => Math.random() - 0.5);
+      
       // Aggiungi ogni spot alla lista
-      filteredLocations.forEach((location, index) => {
+      shuffledSpots.forEach((location, index) => {
         const spotCard = document.createElement('div');
-        spotCard.className = 'spot-card';
-        spotCard.onclick = () => showOnMap(location.lat, location.lon, index);
+        spotCard.className = `spot-card ${location.isFake ? 'secret' : ''}`;
         
-        const coords = `${location.lat.toFixed(6)}, ${location.lon.toFixed(6)}`;
+        if (!location.isFake) {
+          spotCard.onclick = () => showOnMap(location.lat, location.lon, index);
+        }
+        
+        const coords = location.isFake ? 'N/A' : `${location.lat.toFixed(6)}, ${location.lon.toFixed(6)}`;
         
         spotCard.innerHTML = `
-          ${location.image ? `<img src="${location.image}" class="spot-card-image" alt="${escapeHtml(location.title)}" onerror="this.style.display='none'">` : ''}
+          ${location.image && !location.isFake ? `<img src="${location.image}" class="spot-card-image" alt="${escapeHtml(location.title)}" onerror="this.style.display='none'">` : ''}
           <div class="spot-card-content">
-            <div class="spot-card-title">${escapeHtml(location.title)}</div>
-            <div class="spot-card-desc">${escapeHtml(location.description || 'Nessuna descrizione disponibile')}</div>
+            <div class="spot-card-title">
+              ${escapeHtml(location.title)}
+              ${location.isFake ? '<span class="secret-badge">TOP SECRET</span>' : ''}
+            </div>
+            <div class="spot-card-desc">
+              ${location.isFake 
+                ? 'Accesso riservato. Questo spot è disponibile solo nella versione completa riservata ai membri del team.' 
+                : escapeHtml(location.description || 'Nessuna descrizione disponibile')}
+            </div>
+            ${!location.isFake ? `
             <div class="spot-card-actions">
               <button class="spot-card-btn maps" onclick="event.stopPropagation(); openMaps(${location.lat}, ${location.lon})">
                 <i class="fab fa-google"></i> Maps
@@ -1260,6 +1437,7 @@
                 <i class="far fa-copy"></i> Copia
               </button>
             </div>
+            ` : ''}
           </div>
         `;
         
@@ -1275,9 +1453,14 @@
         // Centra la mappa sulla posizione
         map.setView([lat, lon], 14);
         
-        // Evidenzia il marker (senza aprire popup)
-        if (allMarkers[index]) {
-          const marker = allMarkers[index];
+        // Trova il marker corrispondente (solo per spot reali)
+        const markerIndex = allMarkers.findIndex(marker => 
+          Math.abs(marker.getLatLng().lat - lat) < 0.001 && 
+          Math.abs(marker.getLatLng().lng - lon) < 0.001
+        );
+        
+        if (markerIndex !== -1) {
+          const marker = allMarkers[markerIndex];
           const originalStyle = {
             fillColor: marker.options.fillColor,
             color: marker.options.color,
@@ -1488,7 +1671,8 @@
             lon: coords.lon,
             title: title.substring(0, 80),
             description: desc.substring(0, 150),
-            image: image || null
+            image: image || null,
+            isFake: false
           });
         }
         
@@ -1531,8 +1715,8 @@
       // Cancella marker esistenti
       markersLayer.clearLayers();
       
-      // Crea tutti i marker (pallini semplici per performance)
-      allMarkers = locations.map(location => {
+      // Crea tutti i marker (pallini semplici per performance) - SOLO SPOT REALI
+      allMarkers = locations.filter(loc => !loc.isFake).map(location => {
         // Crea marker semplice per performance
         const marker = L.circleMarker([location.lat, location.lon], {
           radius: 10,
@@ -1699,14 +1883,21 @@
           throw new Error("Nessun luogo valido trovato in Italia");
         }
         
+        // 5. Genera spot finti per la lista
+        document.getElementById('loaderStatus').textContent = "Generazione contenuti esclusivi...";
+        const fakeSpots = generateFakeSpots(CONFIG.FAKE_SPOTS_COUNT);
+        
+        // 6. Combina spot reali e finti per la lista
+        allSpotsList = [...filteredLocations, ...fakeSpots];
+        
         document.getElementById('loaderStatus').textContent = "Creazione mappa...";
         
-        // 5. Aggiungi TUTTI i marker in una volta
+        // 7. Aggiungi TUTTI i marker in una volta (solo spot reali)
         addMarkersToMap(filteredLocations);
         
         document.getElementById('loaderStatus').textContent = "Mappa pronta!";
         
-        // 6. Nascondi loader dopo breve delay
+        // 8. Nascondi loader dopo breve delay
         setTimeout(hideLoader, 500);
         
       } catch (error) {
