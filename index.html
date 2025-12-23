@@ -43,20 +43,20 @@
     .spot-card.vip-locked {
       position: relative;
       overflow: hidden;
-      filter: blur(5px);
+      filter: blur(8px);
       opacity: 0.7;
       pointer-events: none;
       user-select: none;
     }
     
     .spot-card.vip-locked::after {
-      content: "VIP ACCESS REQUIRED";
+      content: "ACCESSO VIP REQUIRED";
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.9);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -68,6 +68,8 @@
       text-align: center;
       padding: 20px;
       gap: 10px;
+      text-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+      letter-spacing: 1px;
     }
     
     .spot-card.vip-locked::before {
@@ -77,6 +79,7 @@
       font-size: 36px;
       color: #ffd700;
       margin-bottom: 10px;
+      filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.8));
     }
     
     .vip-badge {
@@ -103,122 +106,28 @@
       border: 1px solid #4CAF50;
     }
     
-    /* Modalità video - effetti blur e oscuramento completo */
-    body.video-mode .popup-title,
+    /* Modalità video - effetti blur SOLO su coordinate e descrizioni */
     body.video-mode .popup-coords,
     body.video-mode .popup-description,
-    body.video-mode .spot-card-title,
     body.video-mode .spot-card-desc,
-    body.video-mode .spot-card-actions,
-    body.video-mode .popup-image,
-    body.video-mode .brand-text h1,
-    body.video-mode .brand-text p,
-    body.video-mode .action-btn span,
-    body.video-mode .sidebar-header h3 {
-      filter: blur(10px);
+    body.video-mode .coordinates-display {
+      filter: blur(8px);
       user-select: none;
-      pointer-events: none;
       color: transparent !important;
       text-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
     }
     
     body.video-mode .popup-image {
-      background: linear-gradient(45deg, #222, #444, #222) !important;
-      background-size: 400% 400% !important;
-      animation: gradientShift 3s ease infinite !important;
+      filter: none !important;
     }
     
-    body.video-mode .logo i,
-    body.video-mode .action-btn i,
-    body.video-mode .sidebar-header h3 i {
-      filter: blur(0);
-      color: var(--text-gray) !important;
-    }
-    
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    
-    body.video-mode .coordinates-blurred {
-      color: transparent;
-      text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
-    }
-    
-    /* Video mode indicator */
+    /* Video mode indicator - NASCOSTO */
     .video-mode-indicator {
-      position: fixed;
-      top: 70px;
-      right: 20px;
-      background: rgba(76, 175, 80, 0.9);
-      color: white;
-      padding: 10px 15px;
-      border-radius: 8px;
-      z-index: 1002;
-      display: none;
-      align-items: center;
-      gap: 10px;
-      font-weight: bold;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(5px);
-    }
-    
-    .video-mode-indicator.active {
-      display: flex;
-      animation: slideIn 0.3s ease;
-    }
-    
-    @keyframes slideIn {
-      from { transform: translateX(100%); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
+      display: none !important;
     }
     
     .video-mode-controls {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(18, 18, 18, 0.95);
-      border: 2px solid #4CAF50;
-      border-radius: 10px;
-      padding: 15px 20px;
-      z-index: 1002;
-      display: none;
-      flex-direction: column;
-      gap: 10px;
-      align-items: center;
-      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-      backdrop-filter: blur(10px);
-    }
-    
-    body.video-mode .video-mode-controls {
-      display: flex;
-    }
-    
-    .video-mode-controls h4 {
-      color: #4CAF50;
-      margin-bottom: 5px;
-      font-size: 16px;
-    }
-    
-    .exit-video-btn {
-      background: #4CAF50;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s;
-    }
-    
-    .exit-video-btn:hover {
-      background: #388E3C;
-      transform: scale(1.05);
+      display: none !important;
     }
     
     /* Header branding - ROSSO e NERO */
@@ -612,6 +521,41 @@
       background: var(--primary-red);
     }
     
+    /* Filtri per la lista */
+    .sidebar-filters {
+      padding: 15px 20px;
+      background: var(--primary-black);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+    
+    .filter-btn {
+      padding: 8px 15px;
+      background: var(--secondary-black);
+      border: 1px solid var(--border-color);
+      color: var(--text-gray);
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s;
+      flex: 1;
+      text-align: center;
+    }
+    
+    .filter-btn.active {
+      background: var(--primary-red);
+      color: white;
+      border-color: var(--primary-red);
+    }
+    
+    .filter-btn:hover:not(.active) {
+      background: #444;
+      color: white;
+    }
+    
     .spots-list {
       flex: 1;
       overflow-y: auto;
@@ -924,6 +868,15 @@
         right: -100%;
       }
       
+      .sidebar-filters {
+        padding: 10px 15px;
+      }
+      
+      .filter-btn {
+        padding: 8px 10px;
+        font-size: 11px;
+      }
+      
       .social-title {
         font-size: 22px;
       }
@@ -992,31 +945,6 @@
         padding: 12px;
       }
       
-      .video-mode-indicator {
-        top: 60px;
-        right: 10px;
-        padding: 8px 12px;
-        font-size: 12px;
-      }
-      
-      .video-mode-controls {
-        bottom: 10px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 90%;
-        padding: 12px;
-      }
-      
-      .exit-video-btn {
-        padding: 8px 16px;
-        font-size: 14px;
-      }
-      
-      .action-btn[onclick="zoomToItaly()"] i {
-        display: block !important;
-        color: white !important;
-      }
-      
       .spot-card.vip-locked::after {
         font-size: 14px;
         padding: 15px;
@@ -1024,6 +952,11 @@
       
       .spot-card.vip-locked::before {
         font-size: 24px;
+      }
+      
+      .action-btn[onclick="zoomToItaly()"] i {
+        display: block !important;
+        color: white !important;
       }
     }
     
@@ -1176,6 +1109,14 @@
         display: inline;
       }
     }
+    
+    /* Info nella lista spot */
+    .coordinates-display {
+      font-size: 11px;
+      color: #888;
+      font-family: monospace;
+      margin-bottom: 8px;
+    }
   </style>
 </head>
 <body>
@@ -1256,27 +1197,23 @@
         <i class="fas fa-times"></i>
       </button>
     </div>
+    
+    <!-- Filtri per la lista -->
+    <div class="sidebar-filters">
+      <button class="filter-btn active" onclick="setFilter('all')" id="filterAll">
+        Tutti
+      </button>
+      <button class="filter-btn" onclick="setFilter('free')" id="filterFree">
+        Free
+      </button>
+      <button class="filter-btn" onclick="setFilter('premium')" id="filterPremium">
+        Premium
+      </button>
+    </div>
+    
     <div class="spots-list" id="spotsList">
       <!-- Gli spot verranno inseriti qui dinamicamente -->
     </div>
-  </div>
-  
-  <!-- Video mode indicator -->
-  <div class="video-mode-indicator" id="videoModeIndicator">
-    <i class="fas fa-video"></i>
-    <span>Modalità Video Attiva</span>
-  </div>
-  
-  <!-- Video mode controls -->
-  <div class="video-mode-controls">
-    <h4>Modalità Video Attiva</h4>
-    <p style="font-size: 12px; color: var(--text-gray); text-align: center; margin-bottom: 10px;">
-      Tutti i dati sensibili sono nascosti per la registrazione video
-    </p>
-    <button class="exit-video-btn" onclick="exitVideoMode()">
-      <i class="fas fa-times"></i>
-      Esci dalla Modalità Video
-    </button>
   </div>
   
   <!-- Loader per lista -->
@@ -1370,6 +1307,7 @@
     let paidSpots = [];    // Solo spot paid
     let videoModeMarker = null;
     let videoModeActive = false;
+    let currentFilter = 'all'; // 'all', 'free', 'premium'
     
     // Variabili social unlock
     let socialVerifications = {
@@ -1462,10 +1400,11 @@
     function activateVideoMode() {
       videoModeActive = true;
       document.body.classList.add('video-mode');
-      document.getElementById('videoModeIndicator').classList.add('active');
+      
+      // NON mostrare indicatori HUD
       
       // Nascondi tutti i popup aperti
-      map.closePopup();
+      if (map) map.closePopup();
       
       // Chiudi sidebar se aperta
       const sidebar = document.getElementById('spotsSidebar');
@@ -1475,10 +1414,9 @@
         overlay.classList.remove('active');
       }
       
-      // Aggiorna tutti i marker per mostrare contenuti censurati
-      updateMarkersForVideoMode();
+      // I pin rimangono ROSSI (non cambiano colore)
       
-      // Aggiorna la lista spot per mostrare contenuti censurati
+      // Aggiorna la lista spot per mostrare contenuti censurati (solo coordinate e descrizioni)
       if (document.getElementById('spotsSidebar').classList.contains('open')) {
         populateSpotsList();
       }
@@ -1492,40 +1430,11 @@
     function exitVideoMode() {
       videoModeActive = false;
       document.body.classList.remove('video-mode');
-      document.getElementById('videoModeIndicator').classList.remove('active');
-      
-      // Ripristina i marker normali
-      updateMarkersForNormalMode();
       
       // Ripristina la lista spot normale
       if (document.getElementById('spotsSidebar').classList.contains('open')) {
         populateSpotsList();
       }
-    }
-    
-    function updateMarkersForVideoMode() {
-      // Cambia colore e stile di tutti i marker
-      allMarkers.forEach(marker => {
-        marker.setStyle({
-          fillColor: '#666',
-          color: '#333',
-          fillOpacity: 0.7,
-          weight: 2
-        });
-      });
-    }
-    
-    function updateMarkersForNormalMode() {
-      // Ripristina stile originale dei marker
-      allMarkers.forEach(marker => {
-        marker.setStyle({
-          fillColor: "#d32f2f",
-          fillOpacity: 0.9,
-          color: "#121212",
-          weight: 3,
-          opacity: 1
-        });
-      });
     }
     
     function showNotification(message, type) {
@@ -1765,6 +1674,22 @@
       startMapLoading();
     }
     
+    // ===== FUNZIONI FILTRI LISTA =====
+    
+    function setFilter(filter) {
+      currentFilter = filter;
+      
+      // Aggiorna bottoni attivi
+      document.getElementById('filterAll').classList.remove('active');
+      document.getElementById('filterFree').classList.remove('active');
+      document.getElementById('filterPremium').classList.remove('active');
+      
+      document.getElementById(`filter${filter.charAt(0).toUpperCase() + filter.slice(1)}`).classList.add('active');
+      
+      // Ripopola la lista con il filtro applicato
+      populateSpotsList();
+    }
+    
     // ===== FUNZIONI SIDEBAR =====
     
     async function toggleSidebar() {
@@ -1795,17 +1720,36 @@
       const spotsList = document.getElementById('spotsList');
       const spotsCount = document.getElementById('spotsCount');
       
-      // Aggiorna contatore (reali + finti)
-      spotsCount.textContent = allSpotsList.length;
+      // Filtra gli spot in base al filtro corrente
+      let filteredSpots = [];
+      
+      switch(currentFilter) {
+        case 'free':
+          filteredSpots = [...freeSpots];
+          break;
+        case 'premium':
+          // Include paid spots reali e finti
+          filteredSpots = [...paidSpots, ...allSpotsList.filter(spot => spot.isFake)];
+          break;
+        case 'all':
+        default:
+          filteredSpots = [...allSpotsList];
+          break;
+      }
+      
+      // Aggiorna contatore
+      spotsCount.textContent = filteredSpots.length;
       
       // Svuota la lista
       spotsList.innerHTML = '';
       
-      // Mescola la lista per mischiare reali e finti
-      const shuffledSpots = [...allSpotsList].sort(() => Math.random() - 0.5);
+      // Mescola la lista per mischiare reali e finti (solo se filtro 'all' o 'premium')
+      if (currentFilter === 'all' || currentFilter === 'premium') {
+        filteredSpots = [...filteredSpots].sort(() => Math.random() - 0.5);
+      }
       
       // Aggiungi ogni spot alla lista
-      shuffledSpots.forEach((location, index) => {
+      filteredSpots.forEach((location, index) => {
         const spotCard = document.createElement('div');
         
         // Determina la classe in base al tipo di spot
@@ -1813,17 +1757,35 @@
         let onClick = null;
         let isVipLocked = false;
         
-        // Se in modalità video, mostra tutto oscurato
+        // Se in modalità video, mostra tutto normalmente ma blurra solo coordinate e descrizioni
         if (videoModeActive) {
+          const coords = location.isFake ? 'N/A' : `${location.lat.toFixed(6)}, ${location.lon.toFixed(6)}`;
+          
           spotCard.innerHTML = `
+            ${location.image && !location.isFake ? `<img src="${location.image}" class="spot-card-image" alt="${escapeHtml(location.title)}" onerror="this.style.display='none'">` : ''}
             <div class="spot-card-content">
               <div class="spot-card-title">
-                <span class="coordinates-blurred">███ ████ ████</span>
-                <span class="secret-badge">RISERVATO</span>
+                ${escapeHtml(location.title)}
+                ${location.tag === 'paid' ? '<span class="vip-badge">VIP</span>' : 
+                  location.tag === 'free' ? '<span class="free-badge">FREE</span>' : 
+                  location.isFake ? '<span class="secret-badge">TOP SECRET</span>' : ''}
+              </div>
+              <div class="coordinates-display">
+                ${coords}
               </div>
               <div class="spot-card-desc">
-                <span class="coordinates-blurred">███ ████ ████ ████ ████ ████ ████ ████ ████ ████ ████ ████</span>
+                ${escapeHtml(location.description || 'Nessuna descrizione disponibile')}
               </div>
+              ${!location.isFake && location.tag === 'free' ? `
+              <div class="spot-card-actions">
+                <button class="spot-card-btn maps" onclick="event.stopPropagation(); openMaps(${location.lat}, ${location.lon})">
+                  <i class="fab fa-google"></i> Maps
+                </button>
+                <button class="spot-card-btn copy" onclick="event.stopPropagation(); copyCoords(${location.lat}, ${location.lon}, this)">
+                  <i class="far fa-copy"></i> Copia
+                </button>
+              </div>
+              ` : ''}
             </div>
           `;
         } else {
@@ -1841,11 +1803,15 @@
           if (isVipLocked) {
             // Per spot VIP locked (paid o finti)
             spotCard.innerHTML = `
+              ${location.image && !location.isFake ? `<img src="${location.image}" class="spot-card-image" alt="${escapeHtml(location.title)}" onerror="this.style.display='none'">` : ''}
               <div class="spot-card-content">
                 <div class="spot-card-title">
                   ${escapeHtml(location.title)}
                   ${location.tag === 'paid' ? '<span class="vip-badge">VIP</span>' : 
                     location.isFake ? '<span class="secret-badge">TOP SECRET</span>' : ''}
+                </div>
+                <div class="coordinates-display">
+                  ${coords}
                 </div>
                 <div class="spot-card-desc">
                   ${location.isFake 
@@ -1862,6 +1828,9 @@
                 <div class="spot-card-title">
                   ${escapeHtml(location.title)}
                   <span class="free-badge">FREE</span>
+                </div>
+                <div class="coordinates-display">
+                  ${coords}
                 </div>
                 <div class="spot-card-desc">
                   ${escapeHtml(location.description || 'Nessuna descrizione disponibile')}
@@ -2209,29 +2178,34 @@
     }
     
     function createPopupContent(location) {
-      // Se in modalità video, mostra contenuto completamente oscurato
+      // Se in modalità video, mostra tutto normalmente ma blurra solo coordinate e descrizioni
       if (videoModeActive) {
+        const coords = `${location.lat.toFixed(6)}, ${location.lon.toFixed(6)}`;
+        
         return `
           <div class="popup-header">
-            <div class="popup-title">
-              <span class="coordinates-blurred">████ ██████</span>
-            </div>
+            <div class="popup-title">${escapeHtml(location.title)}</div>
             <div class="popup-coords">
               <i class="fas fa-map-marker-alt"></i>
-              <span class="coordinates-blurred">███ ████ ████</span>
+              <span>${coords}</span>
             </div>
           </div>
           <div class="popup-body">
-            <div class="popup-image" style="background: linear-gradient(45deg, #222, #444, #222); background-size: 400% 400%; animation: gradientShift 3s ease infinite;"></div>
+            ${location.image ? `
+              <img src="${location.image}" class="popup-image" 
+                   alt="${escapeHtml(location.title)}"
+                   loading="lazy"
+                   onerror="this.style.display='none'">
+            ` : ''}
             <div class="popup-description">
-              <span class="coordinates-blurred">██████ ██████ ██████ ██████ ██████ ██████ ██████ ██████ ██████ ██████</span>
+              ${escapeHtml(location.description || 'Nessuna descrizione disponibile')}
             </div>
             <div class="popup-actions">
-              <button class="popup-btn copy" style="opacity: 0.5; cursor: not-allowed;">
-                <i class="far fa-copy"></i> <span class="coordinates-blurred">████</span>
+              <button class="popup-btn copy" onclick="copyCoords(${location.lat}, ${location.lon}, this)">
+                <i class="far fa-copy"></i> Copia
               </button>
-              <button class="popup-btn maps" style="opacity: 0.5; cursor: not-allowed;">
-                <i class="fab fa-google"></i> <span class="coordinates-blurred">█████</span>
+              <button class="popup-btn maps" onclick="openMaps(${location.lat}, ${location.lon})">
+                <i class="fab fa-google"></i> Mappe
               </button>
             </div>
           </div>
