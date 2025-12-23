@@ -39,6 +39,70 @@
       color: var(--text-light);
     }
     
+    /* Stile per spot VIP (paid) nella lista */
+    .spot-card.vip-locked {
+      position: relative;
+      overflow: hidden;
+      filter: blur(5px);
+      opacity: 0.7;
+      pointer-events: none;
+      user-select: none;
+    }
+    
+    .spot-card.vip-locked::after {
+      content: "VIP ACCESS REQUIRED";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.85);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #ffd700;
+      font-size: 18px;
+      font-weight: bold;
+      z-index: 10;
+      text-align: center;
+      padding: 20px;
+      gap: 10px;
+    }
+    
+    .spot-card.vip-locked::before {
+      content: "\f521";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      font-size: 36px;
+      color: #ffd700;
+      margin-bottom: 10px;
+    }
+    
+    .vip-badge {
+      background: linear-gradient(135deg, #ffd700, #ff9800);
+      color: #000;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: 1px solid #ffd700;
+    }
+    
+    .free-badge {
+      background: linear-gradient(135deg, #4CAF50, #2E7D32);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: 1px solid #4CAF50;
+    }
+    
     /* Modalità video - effetti blur e oscuramento completo */
     body.video-mode .popup-title,
     body.video-mode .popup-coords,
@@ -952,6 +1016,15 @@
         display: block !important;
         color: white !important;
       }
+      
+      .spot-card.vip-locked::after {
+        font-size: 14px;
+        padding: 15px;
+      }
+      
+      .spot-card.vip-locked::before {
+        font-size: 24px;
+      }
     }
     
     @media (max-width: 480px) {
@@ -1293,6 +1366,8 @@
     let allMarkers = [];
     let filteredLocations = [];
     let allSpotsList = []; // Include reali + finti
+    let freeSpots = [];    // Solo spot free
+    let paidSpots = [];    // Solo spot paid
     let videoModeMarker = null;
     let videoModeActive = false;
     
@@ -1351,7 +1426,8 @@
           title: `${fakeTitles[titleIndex]} #${randomNum}`,
           description: fakeDescriptions[descIndex],
           image: null,
-          isFake: true // Flag per identificare spot finti
+          isFake: true, // Flag per identificare spot finti
+          tag: "paid"   // Gli spot finti sono sempre paid
         });
       }
       
@@ -1731,11 +1807,11 @@
       // Aggiungi ogni spot alla lista
       shuffledSpots.forEach((location, index) => {
         const spotCard = document.createElement('div');
-        spotCard.className = `spot-card ${location.isFake ? 'secret' : ''}`;
         
-        if (!location.isFake && !videoModeActive) {
-          spotCard.onclick = () => showOnMap(location.lat, location.lon, index);
-        }
+        // Determina la classe in base al tipo di spot
+        let cardClass = 'spot-card';
+        let onClick = null;
+        let isVipLocked = false;
         
         // Se in modalità video, mostra tutto oscurato
         if (videoModeActive) {
@@ -1751,32 +1827,61 @@
             </div>
           `;
         } else {
+          // Non in modalità video
+          if (location.isFake || location.tag === 'paid') {
+            cardClass += ' vip-locked';
+            isVipLocked = true;
+          } else {
+            // Solo per free, aggiungi l'evento click
+            onClick = () => showOnMap(location.lat, location.lon, index);
+          }
+          
           const coords = location.isFake ? 'N/A' : `${location.lat.toFixed(6)}, ${location.lon.toFixed(6)}`;
           
-          spotCard.innerHTML = `
-            ${location.image && !location.isFake ? `<img src="${location.image}" class="spot-card-image" alt="${escapeHtml(location.title)}" onerror="this.style.display='none'">` : ''}
-            <div class="spot-card-content">
-              <div class="spot-card-title">
-                ${escapeHtml(location.title)}
-                ${location.isFake ? '<span class="secret-badge">TOP SECRET</span>' : ''}
+          if (isVipLocked) {
+            // Per spot VIP locked (paid o finti)
+            spotCard.innerHTML = `
+              <div class="spot-card-content">
+                <div class="spot-card-title">
+                  ${escapeHtml(location.title)}
+                  ${location.tag === 'paid' ? '<span class="vip-badge">VIP</span>' : 
+                    location.isFake ? '<span class="secret-badge">TOP SECRET</span>' : ''}
+                </div>
+                <div class="spot-card-desc">
+                  ${location.isFake 
+                    ? 'Accesso riservato. Questo spot è disponibile solo nella versione completa riservata ai membri del team.' 
+                    : 'Accesso riservato ai membri VIP. Per sbloccare, contattaci sui nostri social.'}
+                </div>
               </div>
-              <div class="spot-card-desc">
-                ${location.isFake 
-                  ? 'Accesso riservato. Questo spot è disponibile solo nella versione completa riservata ai membri del team.' 
-                  : escapeHtml(location.description || 'Nessuna descrizione disponibile')}
+            `;
+          } else {
+            // Spot free: normale
+            spotCard.innerHTML = `
+              ${location.image ? `<img src="${location.image}" class="spot-card-image" alt="${escapeHtml(location.title)}" onerror="this.style.display='none'">` : ''}
+              <div class="spot-card-content">
+                <div class="spot-card-title">
+                  ${escapeHtml(location.title)}
+                  <span class="free-badge">FREE</span>
+                </div>
+                <div class="spot-card-desc">
+                  ${escapeHtml(location.description || 'Nessuna descrizione disponibile')}
+                </div>
+                <div class="spot-card-actions">
+                  <button class="spot-card-btn maps" onclick="event.stopPropagation(); openMaps(${location.lat}, ${location.lon})">
+                    <i class="fab fa-google"></i> Maps
+                  </button>
+                  <button class="spot-card-btn copy" onclick="event.stopPropagation(); copyCoords(${location.lat}, ${location.lon}, this)">
+                    <i class="far fa-copy"></i> Copia
+                  </button>
+                </div>
               </div>
-              ${!location.isFake ? `
-              <div class="spot-card-actions">
-                <button class="spot-card-btn maps" onclick="event.stopPropagation(); openMaps(${location.lat}, ${location.lon})">
-                  <i class="fab fa-google"></i> Maps
-                </button>
-                <button class="spot-card-btn copy" onclick="event.stopPropagation(); copyCoords(${location.lat}, ${location.lon}, this)">
-                  <i class="far fa-copy"></i> Copia
-                </button>
-              </div>
-              ` : ''}
-            </div>
-          `;
+            `;
+          }
+        }
+        
+        spotCard.className = cardClass;
+        if (onClick) {
+          spotCard.onclick = onClick;
         }
         
         spotsList.appendChild(spotCard);
@@ -1791,7 +1896,7 @@
         // Centra la mappa sulla posizione
         map.setView([lat, lon], 14);
         
-        // Trova il marker corrispondente (solo per spot reali)
+        // Trova il marker corrispondente (solo per spot free)
         const markerIndex = allMarkers.findIndex(marker => 
           Math.abs(marker.getLatLng().lat - lat) < 0.001 && 
           Math.abs(marker.getLatLng().lng - lon) < 0.001
@@ -2004,13 +2109,17 @@
             ""
           ).trim();
           
+          // Ottieni il tag (default "free" se non specificato)
+          const tag = (item["tag"] || "free").toLowerCase().trim();
+          
           results.push({
             lat: coords.lat,
             lon: coords.lon,
             title: title.substring(0, 80),
             description: desc.substring(0, 150),
             image: image || null,
-            isFake: false
+            isFake: false,
+            tag: tag
           });
         }
         
@@ -2056,8 +2165,8 @@
       // Cancella marker esistenti
       markersLayer.clearLayers();
       
-      // Crea tutti i marker (pallini semplici per performance) - SOLO SPOT REALI
-      allMarkers = locations.filter(loc => !loc.isFake).map(location => {
+      // Crea tutti i marker (pallini semplici per performance) - SOLO SPOT FREE
+      allMarkers = locations.filter(loc => loc.tag === 'free').map(location => {
         // Crea marker semplice per performance
         const marker = L.circleMarker([location.lat, location.lon], {
           radius: 10,
@@ -2250,7 +2359,7 @@
         document.getElementById('loaderStatus').textContent = "Inizializzazione mappa...";
         
         // 2. Carica dati CSV
-        const response = await fetch('spot.csv');
+        const response = await fetch('spots_with_tags.csv');
         if (!response.ok) throw new Error(`Errore caricamento dati: ${response.status}`);
         
         const csvText = await response.text();
@@ -2269,21 +2378,25 @@
           throw new Error("Nessun luogo valido trovato in Italia");
         }
         
-        // 5. Genera spot finti per la lista
+        // 5. Separazione spot free e paid
+        freeSpots = filteredLocations.filter(loc => loc.tag === 'free');
+        paidSpots = filteredLocations.filter(loc => loc.tag === 'paid');
+        
+        // 6. Genera spot finti per la lista (tutti paid)
         document.getElementById('loaderStatus').textContent = "Generazione contenuti esclusivi...";
         const fakeSpots = generateFakeSpots(CONFIG.FAKE_SPOTS_COUNT);
         
-        // 6. Combina spot reali e finti per la lista
-        allSpotsList = [...filteredLocations, ...fakeSpots];
+        // 7. Combina spot reali e finti per la lista
+        allSpotsList = [...freeSpots, ...paidSpots, ...fakeSpots];
         
         document.getElementById('loaderStatus').textContent = "Creazione mappa...";
         
-        // 7. Aggiungi TUTTI i marker in una volta (solo spot reali)
-        addMarkersToMap(filteredLocations);
+        // 8. Aggiungi SOLO spot FREE sulla mappa
+        addMarkersToMap(freeSpots);
         
         document.getElementById('loaderStatus').textContent = "Mappa pronta!";
         
-        // 8. Nascondi loader dopo breve delay
+        // 9. Nascondi loader dopo breve delay
         setTimeout(hideLoader, 500);
         
       } catch (error) {
